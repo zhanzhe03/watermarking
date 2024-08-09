@@ -21,6 +21,7 @@ public class CharityUI {
                 + "\n 2. Donee Management"
                 + "\n 3. Donation Management"
                 + "\n 4. Donation Distribution"
+                + "\n 5. sb jianquan"
                 + "\n 9. Exit Program");
         System.out.print("\nopt > ");
         String opt = scanner.nextLine();
