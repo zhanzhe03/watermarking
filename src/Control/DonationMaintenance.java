@@ -100,10 +100,10 @@ public class DonationMaintenance {
                     int quantity = Integer.parseInt(donationUI.getInputString("Quantity : "));
                     double valuePerItem = Double.parseDouble(donationUI.getInputString("Value Per Item : "));
                     if (type.equalsIgnoreCase("Food") || type.equalsIgnoreCase("Water")) {
-                        Date expiryDate = new Date(0,0,0);
-                        item = new Item(itemId,type,quantity,valuePerItem,expiryDate);
-                    }else{
-                        item = new Item(itemId,type,quantity,valuePerItem);
+                        Date expiryDate = new Date(0, 0, 0);
+                        item = new Item(itemId, type, quantity, valuePerItem, expiryDate);
+                    } else {
+                        item = new Item(itemId, type, quantity, valuePerItem);
                     }
                     n++;
                     newDonation.assignItems(item);
@@ -275,7 +275,11 @@ public class DonationMaintenance {
         int localDay = donationUI.getLocalDate().getDayOfMonth();
         int localMonth = donationUI.getLocalDate().getMonthValue();
         int localYear = donationUI.getLocalDate().getYear();
-        if (year < 2000 || year > localYear || month > localMonth || day > localDay) {
+        if (year < 2000 || year > localYear) {
+            return false;
+        } else if (year <= localYear && month > localMonth) {
+            return false;
+        } else if (year <= localYear && month <= localMonth && day > localDay) {
             return false;
         } else if ((month == 4 || month == 6 || month == 9 || month == 11) && (day == 31)) {
             return false;
