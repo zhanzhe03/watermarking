@@ -17,7 +17,6 @@ public class Charity {
     private CharityUI charityUI = new CharityUI();
     private EntityInitializer entityInitialize = new EntityInitializer();
     
-    private EventMaintenance eventMaintenance = new EventMaintenance();
     private DonationMaintenance donationMaintenance = new DonationMaintenance();
     
     public void runCharityProgram() {
