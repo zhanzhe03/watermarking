@@ -13,14 +13,22 @@ import java.util.Objects;
 public class Donor implements Comparable<Donor> {
     private String donorId;
     private String name;
-    private String email;
+    private String contactPerson; //can be same as name 
     private String contact;
+    private String email;
+    private String address;
+    private String category; //government,public, private
+    private String status; //active,inactive, prospect, banned
 
-    public Donor(String donorId, String name, String email, String contact) {
+    public Donor(String donorId, String name, String contactPerson,String contact, String email, String address,String category, String status ) {
         this.donorId = donorId;
         this.name = name;
         this.email = email;
         this.contact = contact;
+        this.address = address;
+        this.category = category;
+        this.contactPerson = contactPerson;
+        this.status = status;
     }
 
     public String getDonorId() {
@@ -53,6 +61,38 @@ public class Donor implements Comparable<Donor> {
 
     public void setContact(String contact) {
         this.contact = contact;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

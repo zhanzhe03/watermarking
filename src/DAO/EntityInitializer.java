@@ -30,9 +30,9 @@ public class EntityInitializer {
     }
     
     public void entityEnitialize() {
-        Donor donor1 = new Donor("DR001","Chew Zhan Zhe","zhanzhe@gmail.com","012-6730810");
-        Donor donor2 = new Donor("DR002","Tee Yi Hang","yihang@gmail.com","012-5837395");
-        Donor donor3 = new Donor("DR003","Lim Jun Hong","junhong@gmail.com","012-9123389");
+        Donor donor1 = new Donor("DR001","Chew Zhan Zhe","Chew Zhan Zhe","012-6730810","zhanzhe@gmail.com","Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor","public", "prospect");
+        Donor donor2 = new Donor("DR002","Tee Yi Hang","Tee Yi Hang","012-5837395", "yihang@gmail.com","5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur", "private", "inactive");
+        Donor donor3 = new Donor("DR003","Department of Sustainable Development and Welfare","Lim Jun Hong","012-9123389","junhong@gmail.com","Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur", "government","active");
         
         Donee donee1 = new Donee("DE001","INDIVIDUAL","TAN JIAN QUAN","jianquan@gmail.com","012-5030510","No80 Taman Gembira", "Location A");
         Donee donee2 = new Donee("DE002","ORGANIZATION","TARUMT FOOD BANK","tarumtoffice@gmail.com","012-5558888","JALAN TUNKU ABDUL RAHMAN", "Location B");
