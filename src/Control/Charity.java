@@ -18,6 +18,7 @@ public class Charity {
     private EntityInitializer entityInitialize = new EntityInitializer();
     
     private DonationMaintenance donationMaintenance = new DonationMaintenance();
+    private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
     
     public void runCharityProgram() {
         entityInitialize.entityEnitialize();
@@ -33,6 +34,7 @@ public class Charity {
                     case 1:
                         break;
                     case 2:
+                        doneeMaintenance.doneeManagement(entityInitialize);
                         break;
                     case 3:
                         donationMaintenance.donationManagement(entityInitialize);

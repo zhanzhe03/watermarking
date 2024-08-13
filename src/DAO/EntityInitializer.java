@@ -15,6 +15,7 @@ public class EntityInitializer {
 
     private SortedListSetInterface<Donation> donations = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donor> donors = new SortedDoublyLinkedListSet<>();
+    private SortedListSetInterface<Donee> donees = new SortedDoublyLinkedListSet<>();
     
     public SortedListSetInterface<Donation> getDonations() {
         return donations;
@@ -24,10 +25,19 @@ public class EntityInitializer {
         return donors;
     }
     
+    public SortedListSetInterface<Donee> getDonees() {
+        return donees;
+    }
+    
     public void entityEnitialize() {
         Donor donor1 = new Donor("DR001","Chew Zhan Zhe","zhanzhe@gmail.com","012-6730810");
         Donor donor2 = new Donor("DR002","Tee Yi Hang","yihang@gmail.com","012-5837395");
         Donor donor3 = new Donor("DR003","Lim Jun Hong","junhong@gmail.com","012-9123389");
+        
+        Donee donee1 = new Donee("DE001","INDIVIDUAL","TAN JIAN QUAN","jianquan@gmail.com","012-5030510","No80 Taman Gembira", "Location A");
+        Donee donee2 = new Donee("DE002","ORGANIZATION","TARUMT FOOD BANK","tarumtoffice@gmail.com","012-5558888","JALAN TUNKU ABDUL RAHMAN", "Location B");
+        Donee donee3 = new Donee("DE003","FAMILY","LIM FAMILY","qiern@gmail.com","012-5030512","No82 Taman Gilang", "Location C");
+        
         
         Item item1 = new Item("I001","Cash",200);
         Item item2 = new Item("I002","Book",3,15);
@@ -60,5 +70,9 @@ public class EntityInitializer {
         donations.add(donation2);
         donations.add(donation3);
         donations.add(donation4);
+        
+        donees.add(donee1);
+        donees.add(donee2);
+        donees.add(donee3);
     }
 }
