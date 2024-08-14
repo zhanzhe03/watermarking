@@ -44,7 +44,7 @@ public class DoneeUI {
     }
     
     public void printAllDonees(SortedListSetInterface<Donee> donees){
-        System.out.println(donees);
+        System.out.println("\n" + donees);
     }
     
     public void printNumberOfEntries(SortedListSetInterface<Donee> donees){

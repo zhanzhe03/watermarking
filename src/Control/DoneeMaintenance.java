@@ -74,8 +74,11 @@ public class DoneeMaintenance {
 
     public void ListAllDonee(SortedListSetInterface<Donee> donees) {
         doneeUI.printText("All Donees Records");
+        MessageUI.diplayEnDash();
         doneeUI.printDoneeTitle();
+        MessageUI.diplayEnDash();
         doneeUI.printAllDonees(donees);
+        MessageUI.diplayEnDash();
         doneeUI.printNumberOfEntries(donees);
     }
 
