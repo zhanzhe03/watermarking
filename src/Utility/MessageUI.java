@@ -46,4 +46,12 @@ public class MessageUI {
     public static void displayExitMessage() {
         System.out.println("\nHave a Nice Day !");
     }
+    
+    public static void displayInvalidEmailMessage() {
+        System.out.println(ANSI_RED + "Invalid email address. Please make sure the email contains the '@' symbol." + ANSI_BLACK);
+    }
+    
+    public static void displayInvalidContactMessage() {
+        System.out.println(ANSI_RED + "Invalid contact number. It must start with '0' and be no longer than 11 digits."+ ANSI_BLACK);
+    }
 }

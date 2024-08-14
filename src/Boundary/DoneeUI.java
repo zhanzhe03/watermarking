@@ -3,17 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Boundary;
+
 import ADT.SortedListSetInterface;
 import java.time.LocalDate;
 import java.util.Scanner;
 import Entity.Donee;
+
 /**
  *
  * @author TANJIANQUAN
  */
 public class DoneeUI {
+
     Scanner scanner = new Scanner(System.in);
-    
+
     public String getDoneeMenu() {
         System.out.println(""
                 + "\nDONEE MANAGEMENT"
@@ -30,24 +33,56 @@ public class DoneeUI {
         String opt = scanner.nextLine();
         return opt;
     }
-    
 
-    
-    
     public void printText(String text) {
         System.out.println("\n" + text + "\n");
     }
-    
-    
-    public void printDoneeTitle(){
+
+    public void printDoneeTitle() {
         System.out.printf("\n%-20s %-20s %-20s %-25s %-20s %-35s %-20s\n", "Donee ID", "Donee Type", "Donee Name", "Email", "Contact", "Address", "Location");
     }
-    
-    public void printAllDonees(SortedListSetInterface<Donee> donees){
+
+    public void printAllDonees(SortedListSetInterface<Donee> donees) {
         System.out.println("\n" + donees);
     }
+
+    public void printNumberOfEntries(SortedListSetInterface<Donee> donees) {
+        System.out.println("\nTotal Number of Donees > " + donees.getNumberOfEntries());
+    }
+
+    public void printAddDoneeTitle() {
+        System.out.println("\nAdd New Donee \n");
+    }
+
+    public void printAddDoneeName() {
+        System.out.print("\nEnter name :");
+    }
+
+    public void printAddDoneeType() {
+        System.out.println("\nPlease select the type of Donee:");
+        System.out.println(String.format("%-5s %-15s", "1 = ", "INDIVIDUAL"));
+        System.out.println(String.format("%-5s %-15s", "2 = ", "ORGANIZATION"));
+        System.out.println(String.format("%-5s %-15s", "3 = ", "FAMILY"));
+        System.out.print("\nopt (1-3) >");
+    }
     
-    public void printNumberOfEntries(SortedListSetInterface<Donee> donees){
-        System.out.println("\nTotal Number of Donation > " + donees.getNumberOfEntries());
+    public void printAddDoneeEmail() {
+        System.out.print("Enter email :");
+    }
+    
+    public void printAddDoneeContact() {
+        System.out.print("Enter contact :");
+    }
+    
+    public void printAddDoneeAddress() {
+        System.out.print("Enter address :");
+    }
+    
+    public void printAddDoneeLocation() {
+        System.out.println("\nPlease select the location of Donee:");
+        System.out.println(String.format("%-5s %-15s", "1 = ", "Location A"));
+        System.out.println(String.format("%-5s %-15s", "2 = ", "Location B"));
+        System.out.println(String.format("%-5s %-15s", "3 = ", "Location C"));
+        System.out.print("\nopt (1-3) >");
     }
 }

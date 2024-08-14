@@ -40,9 +40,11 @@ public class EntityInitializer {
         Donor donor2 = new Donor("DR002","Tee Yi Hang","Tee Yi Hang","012-5837395", "yihang@gmail.com","5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur", "private", "inactive");
         Donor donor3 = new Donor("DR003","Department of Sustainable Development and Welfare","Lim Jun Hong","012-9123389","junhong@gmail.com","Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur", "government","active");
         
-        Donee donee1 = new Donee("DE001","INDIVIDUAL","TAN JIAN QUAN","jianquan@gmail.com","012-5030510","No80 Taman Gembira", "Location A");
-        Donee donee2 = new Donee("DE002","ORGANIZATION","TARUMT FOOD BANK","tarumtoffice@gmail.com","012-5558888","JALAN TUNKU ABDUL RAHMAN", "Location B");
-        Donee donee3 = new Donee("DE003","FAMILY","LIM FAMILY","qiern@gmail.com","012-5030512","No82 Taman Gilang", "Location C");
+        Donee donee1 = new Donee("DE001","INDIVIDUAL","TAN JIAN QUAN","jianquan@gmail.com","0125030510","No80 Taman Gembira", "Location A");
+        Donee donee2 = new Donee("DE002","ORGANIZATION","TARUMT FOOD BANK","tarumtoffice@gmail.com","0125558888","JALAN TUNKU ABDUL RAHMAN", "Location B");
+        Donee donee3 = new Donee("DE003","FAMILY","LIM FAMILY","qiern@gmail.com","0125030512","No82 Taman Gilang", "Location C");
+        Donee donee4 = new Donee("DE004","INDIVIDUAL","KIKI GUO","kiki@gmail.com","012503251","No20 Taman Gembira", "Location A");
+        Donee donee5 = new Donee("DE005","INDIVIDUAL","DARREN LIM","darren@gmail.com","0123030520","No30 Taman Gembira", "Location A");
         
         
         Item item1 = new Item("I001","Cash",200);
@@ -98,5 +100,7 @@ public class EntityInitializer {
         donees.add(donee1);
         donees.add(donee2);
         donees.add(donee3);
+        donees.add(donee4);
+        donees.add(donee5);
     }
 }

@@ -88,6 +88,10 @@ public class Donee implements Comparable<Donee> {
         this.address = address;
         this.location = location;
     }
+    
+    public Donee () {
+      
+    }
 
     @Override
     public int hashCode() {
