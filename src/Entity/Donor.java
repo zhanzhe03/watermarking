@@ -4,6 +4,8 @@
  */
 package Entity;
 
+import ADT.SortedDoublyLinkedListSet;
+import ADT.SortedListSetInterface;
 import java.util.Objects;
 
 /**
@@ -20,7 +22,7 @@ public class Donor implements Comparable<Donor> {
     private String category; //government,public, private
     private String status; //active,inactive, prospect, banned
 
-    public Donor(String donorId, String name, String contactPerson,String contact, String email, String address,String category, String status ) {
+    public Donor(String donorId, String name, String contactPerson,String contact, String email, String address,String category, String status) {
         this.donorId = donorId;
         this.name = name;
         this.email = email;
@@ -29,6 +31,17 @@ public class Donor implements Comparable<Donor> {
         this.category = category;
         this.contactPerson = contactPerson;
         this.status = status;
+    }
+    
+     public Donor(String donorId, String name,String contact, String email, String address,String category) {
+        this.donorId = donorId;
+        this.name = name;
+        this.email = email;
+        this.contact = contact;
+        this.address = address;
+        this.category = category;
+        this.contactPerson = name;
+        this.status = "prospect";
     }
 
     public String getDonorId() {
