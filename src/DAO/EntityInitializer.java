@@ -16,7 +16,9 @@ public class EntityInitializer {
     private SortedListSetInterface<Donation> donations = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donor> donors = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donee> donees = new SortedDoublyLinkedListSet<>();
+    private SortedListSetInterface<Distribution> distributions = new SortedDoublyLinkedListSet<>();
     
+        
     public SortedListSetInterface<Donation> getDonations() {
         return donations;
     }
@@ -27,6 +29,10 @@ public class EntityInitializer {
     
     public SortedListSetInterface<Donee> getDonees() {
         return donees;
+    }
+    
+    public SortedListSetInterface<Distribution> getDistributions() {
+        return distributions;
     }
     
     public void entityEnitialize() {
@@ -53,6 +59,24 @@ public class EntityInitializer {
         Donation donation3 = new Donation("D003",new Date(3,3,3),donor3);
         Donation donation4 = new Donation("D004",new Date(4,4,4), donor2);
         
+  
+
+        Distribution distribution = new Distribution("Dist001", new Date(1,1,1));
+
+     
+
+        // Create a selected item
+        SelectedItem selectedItem1 = new SelectedItem("I001", 50);
+        SelectedItem selectedItem2 = new SelectedItem("I002",22.22);
+
+        // Add selected item to the distribution
+        distribution.addSelectedItem(selectedItem1);
+        distribution.addSelectedItem(selectedItem2);
+        
+        distributions.add(distribution);
+        System.out.println(distributions);
+
+
         donation1.assignItems(item1);
         donation1.assignItems(item2);
         donation1.assignItems(item3);
