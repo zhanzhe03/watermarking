@@ -137,35 +137,35 @@ public class DonationMaintenance {
                     }
                 } while (iterator.hasNext());
 
-                if (newDonation.getDonor() == null) {
-                    int lastDonorId = Integer.parseInt(donors.getLastEntries().getDonorId().substring(2)) + 1;
-                    String newDonorId = "DR" + String.format("%03d", lastDonorId);
-                    int opt = 0;
-                    do {
-                        try {
-                            opt = Integer.parseInt(donationUI.getRegisteredMenu());
-                            switch (opt) {
-                                case 1:
-                                    String name = donationUI.getInputString("Name : ");
-                                    String email = donationUI.getInputString("Email : ");
-                                    Donor newDonor = new Donor(newDonorId, name, email, contact);
-                                    newDonation.setDonor(newDonor);
-                                    donors.add(newDonor);
-                                    break;
-                                case 2:
-                                    Donor anonymousDonor = new Donor(newDonorId, "Anonymous", "Anonymous", contact);
-                                    newDonation.setDonor(anonymousDonor);
-                                    donors.add(anonymousDonor);
-                                    break;
-                                default:
-                                    MessageUI.displayInvalidOptionMessage();
-                                    break;
-                            }
-                        } catch (NumberFormatException ex) {
-                            MessageUI.displayInvalidIntegerMessage();
-                        }
-                    } while (opt < 1 || opt > 2);
-                }
+//                if (newDonation.getDonor() == null) {
+//                    int lastDonorId = Integer.parseInt(donors.getLastEntries().getDonorId().substring(2)) + 1;
+//                    String newDonorId = "DR" + String.format("%03d", lastDonorId);
+//                    int opt = 0;
+//                    do {
+//                        try {
+//                            opt = Integer.parseInt(donationUI.getRegisteredMenu());
+//                            switch (opt) {
+//                                case 1:
+//                                    String name = donationUI.getInputString("Name : ");
+//                                    String email = donationUI.getInputString("Email : ");
+//                                    newDonor = new Donor(newDonorId, name, email, contact);
+//                                    newDonation.setDonor(newDonor);
+//                                    donors.add(newDonor);
+//                                    break;
+//                                case 2:
+//                                    Donor anonymousDonor = new Donor(newDonorId, "Anonymous", "Anonymous", contact);
+//                                    newDonation.setDonor(anonymousDonor);
+//                                    donors.add(anonymousDonor);
+//                                    break;
+//                                default:
+//                                    MessageUI.displayInvalidOptionMessage();
+//                                    break;
+//                            }
+//                        } catch (NumberFormatException ex) {
+//                            MessageUI.displayInvalidIntegerMessage();
+//                        }
+//                    } while (opt < 1 || opt > 2);
+//                }
                 donations.add(newDonation);
                 MessageUI.displaySuccessfulMessage();
             } else {

@@ -16,7 +16,9 @@ public class EntityInitializer {
     private SortedListSetInterface<Donation> donations = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donor> donors = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donee> donees = new SortedDoublyLinkedListSet<>();
+    private SortedListSetInterface<Distribution> distributions = new SortedDoublyLinkedListSet<>();
     
+        
     public SortedListSetInterface<Donation> getDonations() {
         return donations;
     }
@@ -29,10 +31,14 @@ public class EntityInitializer {
         return donees;
     }
     
+    public SortedListSetInterface<Distribution> getDistributions() {
+        return distributions;
+    }
+    
     public void entityEnitialize() {
-        Donor donor1 = new Donor("DR001","Chew Zhan Zhe","zhanzhe@gmail.com","012-6730810");
-        Donor donor2 = new Donor("DR002","Tee Yi Hang","yihang@gmail.com","012-5837395");
-        Donor donor3 = new Donor("DR003","Lim Jun Hong","junhong@gmail.com","012-9123389");
+        Donor donor1 = new Donor("DR001","Chew Zhan Zhe","Chew Zhan Zhe","012-6730810","zhanzhe@gmail.com","Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor","public", "prospect");
+        Donor donor2 = new Donor("DR002","Tee Yi Hang","Tee Yi Hang","012-5837395", "yihang@gmail.com","5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur", "private", "inactive");
+        Donor donor3 = new Donor("DR003","Department of Sustainable Development and Welfare","Lim Jun Hong","012-9123389","junhong@gmail.com","Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur", "government","active");
         
         Donee donee1 = new Donee("DE001","INDIVIDUAL","TAN JIAN QUAN","jianquan@gmail.com","012-5030510","No80 Taman Gembira", "Location A");
         Donee donee2 = new Donee("DE002","ORGANIZATION","TARUMT FOOD BANK","tarumtoffice@gmail.com","012-5558888","JALAN TUNKU ABDUL RAHMAN", "Location B");
@@ -53,6 +59,24 @@ public class EntityInitializer {
         Donation donation3 = new Donation("D003",new Date(3,3,3),donor3);
         Donation donation4 = new Donation("D004",new Date(4,4,4), donor2);
         
+  
+
+        Distribution distribution = new Distribution("Dist001", new Date(1,1,1));
+
+     
+
+        // Create a selected item
+        SelectedItem selectedItem1 = new SelectedItem("I001", 50);
+        SelectedItem selectedItem2 = new SelectedItem("I002",22.22);
+
+        // Add selected item to the distribution
+        distribution.addSelectedItem(selectedItem1);
+        distribution.addSelectedItem(selectedItem2);
+        
+        distributions.add(distribution);
+        System.out.println(distributions);
+
+
         donation1.assignItems(item1);
         donation1.assignItems(item2);
         donation1.assignItems(item3);
