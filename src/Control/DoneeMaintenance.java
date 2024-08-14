@@ -13,6 +13,7 @@ import Entity.Donor;
 import Utility.ClearScreen;
 import Utility.MessageUI;
 import java.util.Scanner;
+import java.util.Iterator;
 
 /**
  *
@@ -49,12 +50,13 @@ public class DoneeMaintenance {
                         AddNewDonee(donees);
                         break;
                     case 3:
-                        ClearScreen.clearJavaConsoleScreen();
-                        SearchDonation(donees);
+
                         break;
                     case 4:
                         break;
                     case 5:
+                        ClearScreen.clearJavaConsoleScreen();
+                        SearchDonation(donees);
                         break;
                     case 6:
                         break;
@@ -83,19 +85,20 @@ public class DoneeMaintenance {
         doneeUI.printNumberOfEntries(donees);
     }
 
-    public void AddNewDonee(SortedListSetInterface<Donee> Donees) {
+    public void AddNewDonee(SortedListSetInterface<Donee> donees) {
         String doneeType = "";
         String email;
         int choose;
         String contact;
         String location = "";
+        boolean validInput = false;
 
         Scanner scanner = new Scanner(System.in);
 
         //auto generate DoneeID
         String lastId = "DE000"; // Default ID if no donees are present
-        if (!Donees.isEmpty()) {
-            Donee lastDonee = Donees.getLastEntries();
+        if (!donees.isEmpty()) {
+            Donee lastDonee = donees.getLastEntries();
             lastId = lastDonee.getDoneeId(); // 
         }
         int lastNumericPart = Integer.parseInt(lastId.substring(2));
@@ -103,6 +106,7 @@ public class DoneeMaintenance {
         String doneeId = String.format("DE%03d", nextNumericPart);
 
         //Title
+        MessageUI.diplayEnDash();
         doneeUI.printAddDoneeTitle();
         MessageUI.diplayEnDash();
 
@@ -112,21 +116,13 @@ public class DoneeMaintenance {
 
         //Type
         do {
-            doneeUI.printAddDoneeType();
-            while (!scanner.hasNextInt()) {
-                MessageUI.displayInvalidIntegerMessage();
-                scanner.next(); // Clear the invalid input
-                doneeUI.printAddDoneeType(); // Prompt the user again
-            }
-
-            choose = scanner.nextInt();
-            scanner.nextLine();
-
-            if (choose < 1 || choose > 3) {
+            choose = doneeUI.getDoneeType();
+            if (choose >= 1 && choose <= 3) {
+                validInput = true; // Valid input received
+            } else {
                 MessageUI.displayInvalidOptionMessage();
             }
-
-        } while (choose < 1 || choose > 3);
+        } while (!validInput);
 
         switch (choose) {
             case 1:
@@ -171,20 +167,13 @@ public class DoneeMaintenance {
 
         //Location
         do {
-            doneeUI.printAddDoneeLocation();  // Prompt the user to select the location
-
-            while (!scanner.hasNextInt()) {
-                MessageUI.displayInvalidIntegerMessage();  // Display an error message for non-integer input
-                scanner.next();  // Clear the invalid input
-                doneeUI.printAddDoneeLocation();  // Prompt the user again
+            choose = doneeUI.getDoneeLocation();
+            if (choose >= 1 && choose <= 3) {
+                validInput = true; // Valid input received
+            } else {
+                MessageUI.displayInvalidOptionMessage();
             }
-            choose = scanner.nextInt();
-            scanner.nextLine();
-            if (choose < 1 || choose > 3) {
-                MessageUI.displayInvalidOptionMessage();  // Display an error message for invalid option
-            }
-
-        } while (choose < 1 || choose > 3);
+        } while (!validInput);
 
         switch (choose) {
             case 1:
@@ -201,13 +190,139 @@ public class DoneeMaintenance {
         }
 
         Donee newDonee = new Donee(doneeId, doneeType, name, email, contact, address, location);
-        Donees.add(newDonee);
-        System.out.println("Donee added successfully: " + newDonee);
+        donees.add(newDonee);
+        doneeUI.printText(newDonee.toString());
 
     }
 
-    public void SearchDonation(SortedListSetInterface<Donee> Donees) {
+    public void SearchDonation(SortedListSetInterface<Donee> donees) {
+        Scanner scanner = new Scanner(System.in);
+        Iterator<Donee> iterator = donees.getIterator();
 
+        boolean founded = false;
+        boolean validInput = false;
+        int choose;
+        int opt = 0;
+        String type = "";
+        do {
+            try {
+                MessageUI.diplayEnDash();
+                opt = Integer.parseInt(doneeUI.getDoneeSearchMenu());
+                MessageUI.diplayEnDash();
+                switch (opt) {
+                    case 1:
+                        
+                        doneeUI.printDoneeID();
+                        String inputId = scanner.nextLine();
+                        founded = false;
+                        iterator = donees.getIterator();                      
+                        while (iterator.hasNext()) {
+                            Donee donee = iterator.next();
+                            if (donee.getDoneeId().equalsIgnoreCase(inputId)) {
+                                if (!founded) {
+                                    // Print header only if at least one match is found
+                                    doneeUI.printText("Search Result\n\n");
+                                    doneeUI.printDoneeTitle();
+                                    MessageUI.diplayEnDash();
+                                    founded = true;
+                                }
+                                doneeUI.printText(donee.toString());
+                            }
+                        }
+                        if (!founded) {
+                            doneeUI.printText("\n\nNo results found for type: " + inputId + "\n\n");
+                        }
+                        break;
+                    case 2:
+                        do {
+                            choose = doneeUI.getDoneeType();
+                            if (choose >= 1 && choose <= 3) {
+                                validInput = true;
+                            } else {
+                                MessageUI.displayInvalidOptionMessage();
+                            }
+                        } while (!validInput);
+                        switch (choose) {
+                            case 1:
+                                type = "INDIVIDUAL";
+                                break;
+                            case 2:
+                                type = "ORGANIZATION";
+                                break;
+                            case 3:
+                                type = "FAMILY";
+                                break;
+                            default:
+                                break;
+                        }
+                        founded = false;
+                        iterator = donees.getIterator();
+                        while (iterator.hasNext()) {
+                            Donee donee = iterator.next();
+                            if (donee.getDoneeType().equalsIgnoreCase(type)) {
+                                if (!founded) {
+                                    doneeUI.printText("Search Result\n\n");
+                                    doneeUI.printDoneeTitle();
+                                    MessageUI.diplayEnDash();
+                                    founded = true;
+                                }
+                                doneeUI.printText(donee.toString());
+                            }
+                        }
+                        if (!founded) {
+                            doneeUI.printText("\n\nNo results found for type: " + type + "\n\n");
+                        }
+                        break;
+                    case 3:
+                        do {
+                            choose = doneeUI.getDoneeLocation();
+                            if (choose >= 1 && choose <= 3) {
+                                validInput = true;
+                            } else {
+                                MessageUI.displayInvalidOptionMessage();
+                            }
+                        } while (!validInput);
+                        String location = "";
+                        switch (choose) {
+                            case 1:
+                                location = "Location A";
+                                break;
+                            case 2:
+                                location = "Location B";
+                                break;
+                            case 3:
+                                location = "Location C";
+                                break;
+                            default:
+                                break;
+                        }
+                        founded = false;
+                        iterator = donees.getIterator();
+                        while (iterator.hasNext()) {
+                            Donee donee = iterator.next();
+                            if (donee.getLocation().equalsIgnoreCase(location)) {
+                                if (!founded) {
+                                    // Print header only if at least one match is found
+                                    doneeUI.printText("Search Result\n\n");
+                                    doneeUI.printDoneeTitle();
+                                    MessageUI.diplayEnDash();
+                                    founded = true;
+                                }
+                                doneeUI.printText(donee.toString());
+                            }
+                        }
+                        if (!founded) {
+                            doneeUI.printText("\n\nNo results found for type: " + location + "\n\n");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+            } catch (NumberFormatException ex) {
+                MessageUI.displayInvalidIntegerMessage();
+            }
+
+        } while (opt != 4);
     }
-
 }

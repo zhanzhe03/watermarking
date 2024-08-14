@@ -34,6 +34,40 @@ public class DoneeUI {
         return opt;
     }
 
+    public String getDoneeSearchMenu() {
+        System.out.println(""
+                + "\nDONEE SEARCH MANAGEMENT"
+                + "\n 1. Donee ID"
+                + "\n 2. Donee Type"
+                + "\n 3. Donee location"
+                + "\n 4. Back to Donee MENU");
+        System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+    }
+
+    public int getDoneeType() {
+        System.out.println("\nPlease select the type of Donee:");
+        System.out.println(String.format("%-5s %-15s", "1 = ", "INDIVIDUAL"));
+        System.out.println(String.format("%-5s %-15s", "2 = ", "ORGANIZATION"));
+        System.out.println(String.format("%-5s %-15s", "3 = ", "FAMILY"));
+        System.out.print("\nopt > ");
+        int opt = scanner.nextInt();
+        scanner.nextLine();
+        return opt;
+    }
+
+    public int getDoneeLocation() {
+        System.out.println("\nPlease select the location of Donee:");
+        System.out.println(String.format("%-5s %-15s", "1 = ", "Location A"));
+        System.out.println(String.format("%-5s %-15s", "2 = ", "Location B"));
+        System.out.println(String.format("%-5s %-15s", "3 = ", "Location C"));
+        System.out.print("\nopt (1-3) >");
+        int opt = scanner.nextInt();
+        scanner.nextLine();
+        return opt;
+    }
+
     public void printText(String text) {
         System.out.println("\n" + text + "\n");
     }
@@ -58,31 +92,21 @@ public class DoneeUI {
         System.out.print("\nEnter name :");
     }
 
-    public void printAddDoneeType() {
-        System.out.println("\nPlease select the type of Donee:");
-        System.out.println(String.format("%-5s %-15s", "1 = ", "INDIVIDUAL"));
-        System.out.println(String.format("%-5s %-15s", "2 = ", "ORGANIZATION"));
-        System.out.println(String.format("%-5s %-15s", "3 = ", "FAMILY"));
-        System.out.print("\nopt (1-3) >");
+    public void printDoneeID() {
+        System.out.print("\nEnter Donee ID :");
+
     }
-    
+
     public void printAddDoneeEmail() {
         System.out.print("Enter email :");
     }
-    
+
     public void printAddDoneeContact() {
         System.out.print("Enter contact :");
     }
-    
+
     public void printAddDoneeAddress() {
         System.out.print("Enter address :");
     }
-    
-    public void printAddDoneeLocation() {
-        System.out.println("\nPlease select the location of Donee:");
-        System.out.println(String.format("%-5s %-15s", "1 = ", "Location A"));
-        System.out.println(String.format("%-5s %-15s", "2 = ", "Location B"));
-        System.out.println(String.format("%-5s %-15s", "3 = ", "Location C"));
-        System.out.print("\nopt (1-3) >");
-    }
+
 }
