@@ -54,4 +54,10 @@ public class MessageUI {
     public static void displayInvalidContactMessage() {
         System.out.println(ANSI_RED + "Invalid contact number. It must start with '0' and be no longer than 11 digits."+ ANSI_BLACK);
     }
+    
+        //szewen
+    public static void displayExceedMessage(){
+        System.out.println(ANSI_RED + "\nYour input quantity has exceeded." + ANSI_BLACK);
+    }
+    
 }

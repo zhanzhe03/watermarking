@@ -16,13 +16,16 @@ public class Charity {
 
     private CharityUI charityUI = new CharityUI();
     private EntityInitializer entityInitialize = new EntityInitializer();
-    
+
     private DonationMaintenance donationMaintenance = new DonationMaintenance();
     private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
-    
+
+    //szewen
+    private DistributionManager distributionManager = new DistributionManager();
+
     public void runCharityProgram() {
         entityInitialize.entityEnitialize();
-        
+
         int opt = 0;
 
         do {
@@ -40,6 +43,7 @@ public class Charity {
                         donationMaintenance.donationManagement(entityInitialize);
                         break;
                     case 4:
+                        distributionManager.distributionManager(entityInitialize);
                         break;
                     case 9:
                         MessageUI.displayExitMessage();
@@ -48,6 +52,7 @@ public class Charity {
                         MessageUI.displayInvalidOptionMessage();
                 }
             } catch (NumberFormatException ex) {
+                System.out.println("1");
                 MessageUI.displayInvalidIntegerMessage();
             }
 
