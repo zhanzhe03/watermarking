@@ -62,7 +62,7 @@ public class DoneeUI {
         System.out.println(String.format("%-5s %-15s", "1 = ", "Location A"));
         System.out.println(String.format("%-5s %-15s", "2 = ", "Location B"));
         System.out.println(String.format("%-5s %-15s", "3 = ", "Location C"));
-        System.out.print("\nopt (1-3) >");
+        System.out.print("\nopt (1-3 ) >");
         int opt = scanner.nextInt();
         scanner.nextLine();
         return opt;

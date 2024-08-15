@@ -492,7 +492,7 @@ public class DoneeMaintenance {
                             donees.remove(donee);
                         }
                     } else {
-                        doneeUI.printText("Removal cancelled.");
+                        doneeUI.printText("Remove cancelled!");
                     }
                 } else {
                     doneeUI.printText("\nNo Donees found in the range from " + inputId1 + " to " + inputId2 + "\n");
