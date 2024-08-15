@@ -80,6 +80,18 @@ public class DoneeUI {
         return opt;
     }
     
+    public int getDoneeUpdateMenu() {
+        System.out.println(""
+                + "\nDONEE UPDATE MANAGEMENT"
+                + "\n 1. Donee Name"
+                + "\n 2. Donee Contact"
+                + "\n 3. Donee Location");
+        System.out.print("\nopt > ");
+        int opt = scanner.nextInt();
+        scanner.nextLine();
+        return opt;
+    }
+    
     public String getConfirmation() {
         System.out.print("Confirm to perform this operation ? (Y = Yes)");
         System.out.print("\nopt > ");
@@ -118,15 +130,15 @@ public class DoneeUI {
     }
 
     public void printAddDoneeEmail() {
-        System.out.print("Enter email :");
+        System.out.print("\nEnter email :");
     }
 
     public void printAddDoneeContact() {
-        System.out.print("Enter contact :");
+        System.out.print("\nEnter contact :");
     }
 
     public void printAddDoneeAddress() {
-        System.out.print("Enter address :");
+        System.out.print("\nEnter address :");
     }
     
     

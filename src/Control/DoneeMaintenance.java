@@ -507,6 +507,72 @@ public class DoneeMaintenance {
     }
 
     public void UpdateDonee(SortedListSetInterface<Donee> donees) {
+        Scanner scanner = new Scanner(System.in);
+        Iterator<Donee> iterator = donees.getIterator();
+        boolean founded = false;
+        String newLocation = null;
+        Donee targetDonee = null;
+
+        while (!founded) {
+            iterator = donees.getIterator();
+            doneeUI.printDoneeID();
+            String inputID = scanner.nextLine();
+            while (iterator.hasNext()) {
+                Donee donee = iterator.next();
+                if (donee.getDoneeId().equalsIgnoreCase(inputID)) {
+                    founded = true;
+                    targetDonee = donee; // Store the found Donee for further processing
+                    break;  // Exit the inner loop once the Donee is found
+                }
+            }
+
+            if (!founded) {
+                doneeUI.printText("Donee with ID " + inputID + " not found");
+            }
+        }
+
+        if (founded) {
+            int choose = doneeUI.getDoneeUpdateMenu();
+            MessageUI.diplayEnDash();
+            switch (choose) {
+                case 1:
+                    doneeUI.printAddDoneeName();
+                    String newName = scanner.nextLine();
+                    targetDonee.setName(newName);
+                    doneeUI.printText("Donee name updated successfully.");
+                    break;
+                case 2:
+                    // Update location
+                    doneeUI.printAddDoneeContact();
+                    String newContact = scanner.nextLine();
+                    targetDonee.setContact(newContact);
+                    doneeUI.printText("Donee contact updated successfully.");
+                    break;
+                case 3:
+                    int opt = doneeUI.getDoneeLocation();
+                    switch (opt) {
+                        case 1:
+                            newLocation = "Location A";
+                            break;
+                        case 2:
+                            newLocation = "Location B";
+                            break;
+                        case 3:
+                            newLocation = "Location C";
+                            break;
+                        default:
+                            MessageUI.displayInvalidOptionMessage();
+                            break;
+                    }
+                    if (newLocation != null) {
+                        targetDonee.setLocation(newLocation);
+                    }
+                    break;
+                default:
+                    MessageUI.displayInvalidOptionMessage();
+                    break;
+            }
+        }
 
     }
 
