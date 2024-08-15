@@ -76,7 +76,7 @@ public class DistributionManager {
         int localMonth = distributionUI.getLocalDate().getMonthValue();
         int localYear = distributionUI.getLocalDate().getYear();
         Date distibutedDate = new Date(localDay, localMonth, localYear);
-        int lastDistributionId = Integer.parseInt(distributions.getLastEntries().getDistributionId().substring(1)) + 1;
+        int lastDistributionId = Integer.parseInt(distributions.getLastEntries().getDistributionId().substring(4)) + 1;
         String newDistId = "DIST" + String.format("%03d", lastDistributionId);
         //Genarate newInfo
 
@@ -115,11 +115,6 @@ public class DistributionManager {
                             if (keepAdding.equalsIgnoreCase("N")) {
                                 distributions.add(newDistribution); // Add the distribution to the list
                             } else {
-                                distributionUI.PrintDonatedItemList(donatedItemList);
-                                input = distributionUI.getInputString(">>>>");
-                                if (input.equalsIgnoreCase("Q")) {   // Quit the loop 
-                                    break;
-                                }
                                 isContinue = true; // Set to true to continue adding items
                             }
                         } else {
@@ -134,7 +129,7 @@ public class DistributionManager {
             }
 
         } while (isContinue);  // Continue until the user decides to quit
-        System.out.println(distributions);
+        System.out.println("Updated Distribution List: " + distributions);
 
     }
 
