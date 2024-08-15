@@ -4,9 +4,6 @@
  */
 package Entity;
 
-import ADT.*;
-import java.util.Objects;
-
 /**
  *
  * @author USER
@@ -14,41 +11,42 @@ import java.util.Objects;
 public class Item implements Comparable<Item> {
 
     private String itemId;
-    private String type; //cash, book, clothes, food, drink
-    //private String desc; //cash, story book, clothes, pants, rice, bottle water
+    private String type;
+    private String desc;
     private int quantity;
-    private double valuePerItem; //for real items
-    private double totalAmount; //for cash
+    private double valuePerItem;
+    private double totalAmount;
     private Date expiryDate;
 
     public Item() {
     }
 
-    public Item(String itemId, String type) {
+    //Monetary donations
+    public Item(String itemId, String type, String desc, double totalAmount) {
         this.itemId = itemId;
-        this.type = type;
-    }
-
-    public Item(String itemId, String type, double totalAmount) {
-        this.itemId = itemId;
+        this.desc = desc;
         this.type = type;
         this.totalAmount = totalAmount;
     }
 
-    public Item(String itemId, String type, int quantity, double valuePerItem) {
+    //Except Monetary, Food, and Beverage donations
+    public Item(String itemId, String type, String desc, int quantity, double valuePerItem) {
         this.itemId = itemId;
         this.type = type;
+        this.desc = desc;
         this.quantity = quantity;
         this.valuePerItem = valuePerItem;
-        this.totalAmount = calculateTotalAmount(quantity, valuePerItem);
+        this.totalAmount = calculateTotalAmount();
     }
 
-    public Item(String itemId, String type, int quantity, double valuePerItem, Date expiryDate) {
+    //Food, and Beverage donations
+    public Item(String itemId, String type, String desc, int quantity, double valuePerItem, Date expiryDate) {
         this.itemId = itemId;
         this.type = type;
+        this.desc = desc;
         this.quantity = quantity;
         this.valuePerItem = valuePerItem;
-        this.totalAmount = calculateTotalAmount(quantity, valuePerItem);
+        this.totalAmount = calculateTotalAmount();
         this.expiryDate = expiryDate;
     }
 
@@ -68,12 +66,21 @@ public class Item implements Comparable<Item> {
         this.type = type;
     }
 
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     public int getQuantity() {
         return quantity;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+        this.totalAmount = calculateTotalAmount();
     }
 
     public double getValuePerItem() {
@@ -100,8 +107,8 @@ public class Item implements Comparable<Item> {
         this.expiryDate = expiryDate;
     }
 
-    private double calculateTotalAmount(int quantity, double valuePerItem) {
-        return (double) quantity * valuePerItem;
+    private double calculateTotalAmount() {
+        return (double) this.quantity * this.valuePerItem;
     }
 
     @Override
@@ -112,10 +119,10 @@ public class Item implements Comparable<Item> {
     @Override
     public String toString() {
         return (expiryDate != null)
-                ? String.format("%-15s  %-15s  %-15d  %-15.2f  %-15.2f  %-15s", itemId, type, quantity, valuePerItem, totalAmount, expiryDate)
+                ? String.format("%-10s  %-24s  %-19s  %8d  %17.2f  %15.2f  %14s", itemId, type, desc, quantity, valuePerItem, totalAmount, expiryDate)
                 : (quantity != 0)
-                        ? String.format("%-15s  %-15s  %-15d  %-15.2f  %-15.2f  %-15s", itemId, type, quantity, valuePerItem, totalAmount, "-")
-                        : String.format("%-15s  %-15s  %-15s  %-15s  %-15.2f  %-15s", itemId, type, "-", "-", totalAmount, "-");
+                        ? String.format("%-10s  %-24s  %-19s  %8d  %17.2f  %15.2f  %14s", itemId, type, desc, quantity, valuePerItem, totalAmount, "-")
+                        : String.format("%-10s  %-24s  %-19s  %8s  %17s  %15.2f  %14s", itemId, type, desc, "-", "-", totalAmount, "-");
     }
 
 }

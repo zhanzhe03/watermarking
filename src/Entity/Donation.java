@@ -4,7 +4,6 @@
  */
 package Entity;
 
-import java.io.Serializable;
 import ADT.*;
 import java.util.Iterator;
 import java.util.Objects;
@@ -86,13 +85,13 @@ public class Donation implements Comparable<Donation> {
 
     @Override
     public String toString() {
-        String outputStr = String.format("\n%-15s  %-15s  ", donationId, donationDate);
+        String outputStr = String.format("\n%-14s  %-16s  ", donationId, donationDate);
         Iterator<Item> iterator = donatedItemList.getIterator();
         Item item = iterator.next();
         outputStr += String.format(item + "");
         while (iterator.hasNext()) {
             item = iterator.next();
-            outputStr += String.format("\n%-15s  %-15s  ", "", "");
+            outputStr += String.format("\n%-14s  %-16s  ", "", "");
             outputStr += String.format(item + "");
         }
 //        if(donor != null){
