@@ -37,14 +37,14 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
     }
 
 
-    public void assignItems(SelectedItem item) {
-        distributedItemList.add(item);
+    public void assignItems(SelectedItem selecteditem) {
+        distributedItemList.add(selecteditem);
     }
 
     public void addSelectedItem(SelectedItem selectedItem) {
-     //   if (selectedItem.getSelectedQuantity() > item.getQuantity()) {
-       //     throw new IllegalArgumentException("Selected quantity exceeds available quantity.");
-        //}
+    //    if (selectedItem.getSelectedQuantity() > item.getQuantity()) {
+     //       throw new IllegalArgumentException("Selected quantity exceeds available quantity.");
+       // }
         distributedItemList.add(selectedItem);
     }
 

@@ -31,6 +31,12 @@ public class SelectedItem implements Comparable<SelectedItem> {
      //   }
   //  }
 
+    public SelectedItem(String itemId) {
+        this.itemId = itemId;
+    }
+    
+    
+
     public SelectedItem(String itemId, int selectedQuantity) {
         this.itemId = itemId;
         this.selectedQuantity = selectedQuantity;
