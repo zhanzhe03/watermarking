@@ -68,6 +68,26 @@ public class DoneeUI {
         return opt;
     }
 
+    public int getDoneeDeleteMenu() {
+        System.out.println(""
+                + "\nDONEE DELETE MANAGEMENT"
+                + "\n 1. Donee ID"
+                + "\n 2. Donee Location"
+                + "\n 3. Donee Range");
+        System.out.print("\nopt > ");
+        int opt = scanner.nextInt();
+        scanner.nextLine();
+        return opt;
+    }
+    
+    public String getConfirmation() {
+        System.out.print("Confirm to perform this operation ? (Y = Yes)");
+        System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+        
+    }
+
     public void printText(String text) {
         System.out.println("\n" + text + "\n");
     }
@@ -108,5 +128,7 @@ public class DoneeUI {
     public void printAddDoneeAddress() {
         System.out.print("Enter address :");
     }
+    
+    
 
 }
