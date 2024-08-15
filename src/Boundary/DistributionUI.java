@@ -48,9 +48,7 @@ public class DistributionUI {
         System.out.println("Enter 'F' to filter item by category");
     }
 
-    //  public void FilterDonatedItemList(SortedListSetInterface<Item> donatedItemList){
-//
-    // }
+
     public String getInputString(String desc) {
         System.out.print(desc);
         return scanner.nextLine();
@@ -69,12 +67,9 @@ public class DistributionUI {
     
     public void displayMessage(String msg){
         System.out.println(msg);
+        
     }
     
-    
-    public String keepAddingItem(){
-        System.out.println("Do you want to add another item into this distribution? (y/n)");
-        return scanner.nextLine();
-    }
+
 
 }
