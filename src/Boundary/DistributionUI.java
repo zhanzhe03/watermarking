@@ -8,6 +8,7 @@ import ADT.SortedDoublyLinkedListSet;
 import ADT.SortedListSetInterface;
 import Entity.*;
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -44,8 +45,10 @@ public class DistributionUI {
 
     public void PrintDonatedItemList(SortedListSetInterface<Item> donatedItemList) {
         System.out.println(donatedItemList);
-        System.out.println("Please enter the Item ID that you would like to distribute");
-        System.out.println("Enter 'F' to filter item by category");
+    }
+    
+    public void PrintItemList(Item item){
+        System.out.println(item);
     }
 
 
@@ -69,6 +72,19 @@ public class DistributionUI {
         System.out.println(msg);
         
     }
+    
+   /* public void filterItemByType(SortedListSetInterface<Item> donatedItemList,String type){
+    
+          Iterator<Item> iterator = donatedItemList.getIterator();
+
+          System.out.println("Item List filter by " + type + ": ");
+    while (iterator.hasNext()) {
+        Item currentItem = iterator.next();
+        if (currentItem.getType().equalsIgnoreCase(type)) {
+            System.out.println(currentItem);
+        }
+    }
+    }*/
     
 
 

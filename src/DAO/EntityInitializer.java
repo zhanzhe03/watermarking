@@ -107,8 +107,7 @@ public class EntityInitializer {
         distribution.addSelectedItem(selectedItem2);
         
         distributions.add(distribution);
-        System.out.println(distributions);
-
+      
         
         donors.add(donor1);
         donors.add(donor2);
