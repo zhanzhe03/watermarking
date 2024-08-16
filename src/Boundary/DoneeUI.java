@@ -116,29 +116,34 @@ public class DoneeUI {
         System.out.println("\nTotal Number of Donees > " + donees.getNumberOfEntries());
     }
 
-    public void printAddDoneeTitle() {
-        System.out.println("\nAdd New Donee \n");
-    }
-
-    public void printAddDoneeName() {
+    public String getDoneeName() {
         System.out.print("\nEnter name :");
+        String name = scanner.nextLine();
+        return name;
     }
 
-    public void printDoneeID() {
+    public String getDoneeID() {
         System.out.print("\nEnter Donee ID :");
-
+        String doneeId = scanner.nextLine();
+        return doneeId;
     }
 
-    public void printAddDoneeEmail() {
+    public String getDoneeEmail() {
         System.out.print("\nEnter email :");
+        String email = scanner.nextLine();
+        return email;
     }
 
-    public void printAddDoneeContact() {
+    public String getDoneeContact() {
         System.out.print("\nEnter contact :");
+        String contact = scanner.nextLine();
+        return contact;
     }
 
-    public void printAddDoneeAddress() {
+    public String getDoneeAddress() {
         System.out.print("\nEnter address :");
+        String address = scanner.nextLine();
+        return address;
     }
     
     
