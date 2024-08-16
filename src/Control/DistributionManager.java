@@ -25,7 +25,6 @@ public class DistributionManager {
 
         SortedListSetInterface<Distribution> distributions = entityInitialize.getDistributions();
         SortedListSetInterface<Item> donatedItemList = entityInitialize.getItems();
-        
 
         int opt = 0;
         do {
@@ -35,7 +34,7 @@ public class DistributionManager {
                 switch (opt) {
                     case 1:
                         //ClearScreen.clearJavaConsoleScreen();
-                        ListAllDistributions(distributions);
+                        ListAllDistributions(distributions); 
                         break;
                     case 2:
                         //ClearScreen.clearJavaConsoleScreen();
@@ -83,27 +82,27 @@ public class DistributionManager {
 
         String input;
         boolean isContinue = false;
+        boolean foundtype;
 
         Distribution newDistribution = new Distribution(newDistId, distributedDate);
 
         do {
             try {
                 distributionUI.PrintDonatedItemList(donatedItemList);   // Display the list of donated items
-                distributionUI.displayMessage("Please enter the Item ID that you would like to distribute");
-                distributionUI.displayMessage("Enter 'F' to filter item by category");
-                input = distributionUI.getInputString("Enter item ID or Q to quit > ");
+                input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ( 'Q' quit ; 'F' filter ) > ");
 
                 if (input.equalsIgnoreCase("Q")) {  // Quit the loop
                     break;
                 }
 
                 if (input.equalsIgnoreCase("F")) {
-                    String inputType = distributionUI.getInputString("Please enter the type you would like to show > ");
-                    ClearScreen.clearJavaConsoleScreen();
-                    filterItemByType(donatedItemList, inputType);
-                    distributionUI.displayMessage("Please enter the Item ID that you would like to distribute");
-
-                    input = distributionUI.getInputString("Enter item ID or Q to quit > ");
+                    do {
+                        distributionUI.PrintDonatedItemList(donatedItemList);   // Display the list of donated items
+                        String inputType = distributionUI.getInputString("Please enter the type you would like to show > ");
+                        ClearScreen.clearJavaConsoleScreen();
+                        foundtype = filterItemByType(donatedItemList, inputType);
+                    } while (!foundtype);
+                    input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ( 'Q' quit ; 'F' filter ) > ");
 
                     if (input.equalsIgnoreCase("Q")) {  // Quit the loop
                         break;
@@ -201,19 +200,27 @@ public class DistributionManager {
     }
     //**** Adding purpose
 
-    private void filterItemByType(SortedListSetInterface<Item> donatedItemList, String type) {
+    private boolean filterItemByType(SortedListSetInterface<Item> donatedItemList, String type) {
+        boolean foundtype = false;
         Iterator<Item> iterator = donatedItemList.getIterator();
         distributionUI.displayMessage("Item List filter by " + type + " : ");
         while (iterator.hasNext()) {
             Item currentItem = iterator.next();
-            if (currentItem.getType().equalsIgnoreCase(type)) {            
+            if (currentItem.getType().equalsIgnoreCase(type)) {
                 distributionUI.PrintItemList(currentItem);
+                foundtype = true;
             }
         }
+        if (!foundtype) {
+            distributionUI.displayMessage("No item match < " + type + " > type.\n\n");
+        }
+        return foundtype;
     }
 }
 
-//**** Searching purpose
+//**** Searching purpose   
 //public void SearchDistribution(SortedListSetInterface<Item> donatedItemList,)
+//search by distID/distributeditem (type/id)
+//incorporate into list 
     
 //}

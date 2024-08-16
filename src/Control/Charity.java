@@ -21,7 +21,7 @@ public class Charity {
     private DonorMaintenance donorMaintenance = new DonorMaintenance();
     private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
     //szewen
-    private DistributionManager distributionManager = new DistributionManager();    
+    private DistributionManager distributionManager = new DistributionManager();
 
     public void runCharityProgram() {
         entityInitialize.entityEnitialize();
