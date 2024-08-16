@@ -20,6 +20,28 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
     public SortedDoublyLinkedListSet() {
         clear();
     }
+    
+    @Override
+    public boolean merge(SortedListSetInterface<T> otherListSet) {
+        Iterator<T> iterator = otherListSet.getIterator();
+        do{
+            T anEntry = iterator.next();
+            add(anEntry);
+        }while(iterator.hasNext());
+        return true;
+    }
+    
+    @Override
+    public boolean relativeComplement(SortedListSetInterface<T> otherListSet){
+        Iterator<T> iterator = otherListSet.getIterator();
+        do{
+            T anEntry = iterator.next();
+            if(contains(anEntry)){
+                remove(anEntry);
+            }
+        }while(iterator.hasNext());
+        return true;
+    }
 
     @Override
     public boolean add(T newEntry) {
