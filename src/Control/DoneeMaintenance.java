@@ -120,12 +120,11 @@ public class DoneeMaintenance {
 
         //Title
         MessageUI.diplayEnDash();
-        doneeUI.printAddDoneeTitle();
+        doneeUI.printText("Add New Donee");
         MessageUI.diplayEnDash();
 
         //Name
-        doneeUI.printAddDoneeName();
-        String name = scanner.nextLine();
+        String name = doneeUI.getDoneeName();
 
         //Type
         do {
@@ -154,19 +153,16 @@ public class DoneeMaintenance {
 
         //Emial
         do {
-            doneeUI.printAddDoneeEmail();           // Prompt the user to enter an email
-            email = scanner.nextLine();                 // Capture the email input
-
+            email = doneeUI.getDoneeEmail();         
             if (!email.contains("@")) {
-                MessageUI.displayInvalidEmailMessage();  // Display an error message if '@' is missing
+                MessageUI.displayInvalidEmailMessage(); 
             }
 
         } while (!email.contains("@"));
 
         //Contact
         do {
-            doneeUI.printAddDoneeContact();
-            contact = scanner.nextLine();
+            contact = doneeUI.getDoneeContact();
 
             if (contact.length() > 11 || !contact.startsWith("0") || !contact.matches("\\d+")) {
                 MessageUI.displayInvalidContactMessage();  // Display an error message if invalid
@@ -175,8 +171,7 @@ public class DoneeMaintenance {
         } while (contact.length() > 11 || !contact.startsWith("0") || !contact.matches("\\d+"));
 
         //Address
-        doneeUI.printAddDoneeAddress();
-        String address = scanner.nextLine();
+        String address = doneeUI.getDoneeAddress();
 
         //Location
         do {
@@ -224,16 +219,13 @@ public class DoneeMaintenance {
                 MessageUI.diplayEnDash();
                 switch (opt) {
                     case 1:
-
-                        doneeUI.printDoneeID();
-                        String inputId = scanner.nextLine();
+                        String inputId = doneeUI.getDoneeID();
                         founded = false;
                         iterator = donees.getIterator();
                         while (iterator.hasNext()) {
                             Donee donee = iterator.next();
                             if (donee.getDoneeId().equalsIgnoreCase(inputId)) {
                                 if (!founded) {
-                                    // Print header only if at least one match is found
                                     doneeUI.printText("Search Result\n\n");
                                     doneeUI.printDoneeTitle();
                                     MessageUI.diplayEnDash();
@@ -361,8 +353,7 @@ public class DoneeMaintenance {
             case 1:
                 // Remove Donee by ID
                 iterator = donees.getIterator();
-                doneeUI.printDoneeID();
-                String inputID = scanner.nextLine();
+                 String inputID = doneeUI.getDoneeID();
                 founded = false;
 
                 while (iterator.hasNext()) {
@@ -391,6 +382,7 @@ public class DoneeMaintenance {
                     doneeUI.printText("\nDonee not found: " + inputID + "\n");
                 }
                 break;
+                
             //remove from location;
             case 2:
                 do {
@@ -454,10 +446,8 @@ public class DoneeMaintenance {
             case 3:
                 doneeUI.printText("Enter first Donee ID and seconde Donee ID");
                 MessageUI.diplayEnDash();
-                doneeUI.printDoneeID();
-                String inputId1 = scanner.nextLine();
-                doneeUI.printDoneeID();
-                String inputId2 = scanner.nextLine();
+                String inputId1 = doneeUI.getDoneeID();
+                String inputId2 = doneeUI.getDoneeID();
                 founded = false;
                 iterator = donees.getIterator();
                 while (iterator.hasNext()) {
@@ -515,8 +505,7 @@ public class DoneeMaintenance {
 
         while (!founded) {
             iterator = donees.getIterator();
-            doneeUI.printDoneeID();
-            String inputID = scanner.nextLine();
+            String inputID = doneeUI.getDoneeID();
             while (iterator.hasNext()) {
                 Donee donee = iterator.next();
                 if (donee.getDoneeId().equalsIgnoreCase(inputID)) {
@@ -536,15 +525,13 @@ public class DoneeMaintenance {
             MessageUI.diplayEnDash();
             switch (choose) {
                 case 1:
-                    doneeUI.printAddDoneeName();
-                    String newName = scanner.nextLine();
+                    String newName = doneeUI.getDoneeName();
                     targetDonee.setName(newName);
                     doneeUI.printText("Donee name updated successfully.");
                     break;
                 case 2:
                     // Update location
-                    doneeUI.printAddDoneeContact();
-                    String newContact = scanner.nextLine();
+                    String newContact = doneeUI.getDoneeContact();
                     targetDonee.setContact(newContact);
                     doneeUI.printText("Donee contact updated successfully.");
                     break;
@@ -577,7 +564,7 @@ public class DoneeMaintenance {
     }
 
     public void DoneeWithDistribute(SortedListSetInterface<Donee> donees) {
-
+        //hiihi
     }
 
     public void FilterDonee(SortedListSetInterface<Donee> donees) {
