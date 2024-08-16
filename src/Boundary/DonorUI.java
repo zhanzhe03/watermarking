@@ -4,6 +4,8 @@
  */
 package Boundary;
 
+import ADT.SortedListSetInterface;
+import Entity.Donor;
 import java.util.Scanner;
 
 /**
@@ -35,6 +37,54 @@ public class DonorUI {
     }
     
      public void printDonorTitle() {
-        System.out.printf("\n%-20s %-20s %-20s %-25s %-20s %-35s %-20s %-20s\n", "Donor ID", "Donor Category", "Donor Name", "Contact Person", "Contact","Email", "Address" , "Status");
+        System.out.printf("\n%-10s %-15s %-40s %-20s %-15s %-20s %-70s %-10s\n", "Donor ID", "Donor Category", "Donor Name", "Contact Person", "Contact","Email", "Address" , "Status");
+    }
+     
+     public void printAllDonors(SortedListSetInterface<Donor> donors) {
+        System.out.println("\n" + donors);
+    }
+
+    public void printNumberOfEntries(SortedListSetInterface<Donor> donors) {
+        System.out.println("\nTotal Number of Donors > " + donors.getNumberOfEntries());
+    }
+    
+    public String getDonorCategory() {
+        System.out.println("Please select the type of Donor:");
+        System.out.println(String.format("%-5s %-15s", "1 = ", "Public"));
+        System.out.println(String.format("%-5s %-15s", "2 = ", "Private"));
+        System.out.println(String.format("%-5s %-15s", "3 = ", "Government"));
+        System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+    }
+    
+    public String getDonorName() {
+        System.out.print("\nEnter name :");
+        String name = scanner.nextLine();
+        return name;
+    }
+
+    public String getDonorEmail() {
+        System.out.print("\nEnter email :");
+        String email = scanner.nextLine();
+        return email;
+    }
+    
+    public String getDonorContactPerson() {
+        System.out.print("\nEnter contact person :");
+        String contact = scanner.nextLine();
+        return contact;
+    }
+
+    public String getDonorContact() {
+        System.out.print("\nEnter contact with (-) :");
+        String contact = scanner.nextLine();
+        return contact;
+    }
+
+    public String getDonorAddress() {
+        System.out.print("\nEnter address :");
+        String address = scanner.nextLine();
+        return address;
     }
 }

@@ -24,23 +24,23 @@ public class Donor implements Comparable<Donor> {
 
     public Donor(String donorId, String name, String contactPerson,String contact, String email, String address,String category, String status) {
         this.donorId = donorId;
+         this.category = category;
         this.name = name;
-        this.email = email;
-        this.contact = contact;
-        this.address = address;
-        this.category = category;
         this.contactPerson = contactPerson;
+        this.contact = contact;
+        this.email = email;
+        this.address = address;
         this.status = status;
     }
     
-     public Donor(String donorId, String name,String contact, String email, String address,String category) {
+     public Donor(String donorId,String category, String name,String contactName, String contact, String email, String address) {
         this.donorId = donorId;
-        this.name = name;
-        this.email = email;
-        this.contact = contact;
-        this.address = address;
         this.category = category;
-        this.contactPerson = name;
+        this.name = name;
+        this.contactPerson = contactName;
+        this.contact = contact;
+        this.email = email;   
+        this.address = address;
         this.status = "prospect";
     }
 
@@ -126,20 +126,25 @@ public class Donor implements Comparable<Donor> {
             return false;
         }
         final Donor other = (Donor) obj;
-        if (!Objects.equals(this.donorId, other.donorId)) {
-            return false;
-        }
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
-        return Objects.equals(this.contact, other.contact);
+        return Objects.equals(donorId, other.donorId)
+                && Objects.equals(name, other.name)
+                && Objects.equals(contactPerson, other.contactPerson)
+                && Objects.equals(contact, other.contact)
+                && Objects.equals(email, other.email)
+                && Objects.equals(address, other.address)
+                && Objects.equals(category, other.category)
+                && Objects.equals(status, other.status);
     }
     
     @Override
     public int compareTo(Donor other) {
         return this.donorId.compareTo(other.donorId);
+    } 
+    
+   @Override
+    public String toString() {
+        return String.format("\n%-10s %-15s %-40s %-20s %-15s %-20s %-70s %-10s\n",
+                             donorId, category, name, contactPerson, contact, email, address, status);
     }
+        
 }

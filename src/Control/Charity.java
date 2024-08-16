@@ -19,9 +19,8 @@ public class Charity {
 
     private DonationMaintenance donationMaintenance = new DonationMaintenance();
     private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
-
-    //szewen
-    private DistributionManager distributionManager = new DistributionManager();
+	//szewen
+    private DistributionManager distributionManager = new DistributionManager();    
 
     public void runCharityProgram() {
         entityInitialize.entityEnitialize();
@@ -35,6 +34,7 @@ public class Charity {
 
                 switch (opt) {
                     case 1:
+                        donorMaintenance.donorManagement(entityInitialize);
                         break;
                     case 2:
                         doneeMaintenance.doneeManagement(entityInitialize);
