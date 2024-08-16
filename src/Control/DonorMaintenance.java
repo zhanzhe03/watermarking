@@ -10,6 +10,7 @@ import DAO.EntityInitializer;
 import Entity.Donor;
 import Utility.ClearScreen;
 import Utility.MessageUI;
+import java.util.Iterator;
 
 /**
  *
@@ -75,50 +76,53 @@ public class DonorMaintenance {
     }
 
     private void AddNewDonor(SortedListSetInterface<Donor> donors) {
-        boolean validInput = false;
-        
-        
-         String lastId = "DR001"; // Default ID if no donees are present
+       
+         String lastId = "DR001"; 
         if (!donors.isEmpty()) {
             Donor lastDonor = donors.getLastEntries();
-            lastId = lastDonor.getDonorId(); // 
+            lastId = lastDonor.getDonorId(); 
         }
         int lastNumericPart = Integer.parseInt(lastId.substring(2));
-        int nextNumericPart = lastNumericPart + 1; //
+        int nextNumericPart = lastNumericPart + 1; 
         String donorId = String.format("DR%03d", nextNumericPart);
 
         donorUI.printText("[ Add new donor ]");
         
         String category = "";
+        String input = "";
+        try{
         do{
-        String input = donorUI.getDonorCategory();
+        input = donorUI.getDonorCategory();
+        ;
         if(input == "1"){
             category = "Public";
-            validInput = true;
-        }else if (input =="2"){
+            
+        }else if (input == "2" ){
             category = "Private";
-            validInput = true;
+            
         }else if(input == "3"){
             category = "Government";
-            validInput = true;
+            
         }else{
             MessageUI.displayInvalidOptionMessage();
-            validInput = false;
         }
-        }while(validInput);
+        }while(Integer.parseInt(input) <= 3 && Integer.parseInt(input)>=1);
+        }catch(Exception ex){
+            MessageUI.displayInvalidOptionMessage();
+        }
          
         String name = donorUI.getDonorName();
         
         String contactName = donorUI.getDonorContactPerson();
         String contact = "";
-        validInput = false;
+        
         do{
         contact = donorUI.getDonorContact();
          if (contact.length() > 11 || !contact.startsWith("0") || !contact.matches("\\d+")) {
                 MessageUI.displayInvalidContactMessage();  // Display an error message if invalid
-                validInput = false;
+                
             }
-        }while(validInput);
+        }while(contact.length() > 11 || !contact.startsWith("0") || !contact.matches("\\d+"));
         
         String email = donorUI.getDonorEmail();
         
@@ -131,8 +135,107 @@ public class DonorMaintenance {
         
     }
 
-    private void SearchDonor(SortedListSetInterface<Donor> donees) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void SearchDonor(SortedListSetInterface<Donor> donors) {
+        Iterator<Donor> iterator = donors.getIterator();
+
+        boolean founded = false;
+        boolean validInput = false;
+        int choose;
+        int opt = 0;
+        String type = "";
+        do {
+            try {
+                MessageUI.diplayEnDash();
+                opt = Integer.parseInt(donorUI.getDonorSearchMenu());
+                MessageUI.diplayEnDash();
+                switch (opt) {
+                    case 1:
+                        String inputId = donorUI.getDonorID();
+                        founded = false;
+                        iterator = donors.getIterator();
+                        while (iterator.hasNext()) {
+                            Donor donor = iterator.next();
+                            if (donor.getDonorId().equalsIgnoreCase(inputId)) {
+
+                                donorUI.printText("Search Result : \n\n");
+                                donorUI.printDonorTitle();
+                                MessageUI.diplayEnDash();
+                                founded = true;
+                                donorUI.printText(donor.toString());
+                                break;
+                            }
+                        }
+                        if (!founded) {
+                            donorUI.printText("\n\nNo results found for " + inputId + "\n\n");
+                        }
+                        break;
+                    case 2:
+                        String inputName = donorUI.getDonorName();
+                        founded = false;
+                        iterator = donors.getIterator();
+                        while (iterator.hasNext()) {
+                            Donor donor = iterator.next();
+                            if (donor.getName().equalsIgnoreCase(inputName)) {
+
+                                donorUI.printText("Search Result : \n\n");
+                                donorUI.printDonorTitle();
+                                MessageUI.diplayEnDash();
+                                founded = true;
+                                donorUI.printText(donor.toString());
+                                break;
+                            }
+                        }
+                        if (!founded) {
+                            donorUI.printText("\n\nNo results found for " + inputName + "\n\n");
+                        }
+                        break;
+                    case 3:
+                        String inputContactName = donorUI.getDonorName();
+                        founded = false;
+                        iterator = donors.getIterator();
+                        while (iterator.hasNext()) {
+                            Donor donor = iterator.next();
+                            if (donor.getContactPerson().equalsIgnoreCase(inputContactName)) {
+
+                                donorUI.printText("Search Result : \n\n");
+                                donorUI.printDonorTitle();
+                                MessageUI.diplayEnDash();
+                                founded = true;
+                                donorUI.printText(donor.toString());
+                                break;
+                            }
+                        }
+                        if (!founded) {
+                            donorUI.printText("\n\nNo results found for " + inputContactName + "\n\n");
+                        }
+                        break;
+                    case 4: 
+                        String inputContact = donorUI.getDonorName();
+                        founded = false;
+                        iterator = donors.getIterator();
+                        while (iterator.hasNext()) {
+                            Donor donor = iterator.next();
+                            if (donor.getContact().equals(inputContact)) {
+
+                                donorUI.printText("Search Result : \n\n");
+                                donorUI.printDonorTitle();
+                                MessageUI.diplayEnDash();
+                                founded = true;
+                                donorUI.printText(donor.toString());
+                                break;
+                            }
+                        }
+                        if (!founded) {
+                            donorUI.printText("\n\nNo results found for " + inputContact + "\n\n");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }catch(NumberFormatException ex){
+                MessageUI.displayInvalidIntegerMessage();
+            }
+        }while(opt != 5);
     }
 
     private void RemoveDonor(SortedListSetInterface<Donor> donees) {

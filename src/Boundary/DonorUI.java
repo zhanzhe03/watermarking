@@ -59,32 +59,52 @@ public class DonorUI {
     }
     
     public String getDonorName() {
-        System.out.print("\nEnter name :");
+        System.out.print("\nEnter Donor's Name :");
         String name = scanner.nextLine();
         return name;
     }
 
     public String getDonorEmail() {
-        System.out.print("\nEnter email :");
+        System.out.print("\nEnter Donor's Email :");
         String email = scanner.nextLine();
         return email;
     }
     
     public String getDonorContactPerson() {
-        System.out.print("\nEnter contact person :");
+        System.out.print("\nEnter Donor's Contact Person :");
         String contact = scanner.nextLine();
         return contact;
     }
 
     public String getDonorContact() {
-        System.out.print("\nEnter contact with (-) :");
+        System.out.print("\nEnter Donor's Contact with (-) :");
         String contact = scanner.nextLine();
         return contact;
     }
 
     public String getDonorAddress() {
-        System.out.print("\nEnter address :");
+        System.out.print("\nEnter Donor's Address :");
         String address = scanner.nextLine();
         return address;
+    }
+    
+    public String getDonorSearchMenu(){
+         System.out.println(""
+                + "\n Search Donor by : "
+                + "\n 1. Donor ID"
+                + "\n 2. Donor Name"
+                + "\n 3. Donor Contact Person"
+                + "\n 4. Donor Contact"
+                + "\n 5. Back"
+                );
+          System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+    }
+    
+    public String getDonorID(){
+        System.out.print("\nEnter Donor ID:");
+        String donorID = scanner.nextLine();
+        return donorID;
     }
 }
