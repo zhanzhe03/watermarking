@@ -18,8 +18,9 @@ public class Charity {
     private EntityInitializer entityInitialize = new EntityInitializer();
 
     private DonationMaintenance donationMaintenance = new DonationMaintenance();
+    private DonorMaintenance donorMaintenance = new DonorMaintenance();
     private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
-	//szewen
+    //szewen
     private DistributionManager distributionManager = new DistributionManager();    
 
     public void runCharityProgram() {
