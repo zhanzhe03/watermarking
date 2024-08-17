@@ -100,6 +100,7 @@ public class DoneeMaintenance {
 
     public void AddNewDonee(SortedListSetInterface<Donee> donees) {
         String doneeType = "";
+        String name;
         String email;
         int choose;
         String contact;
@@ -124,7 +125,12 @@ public class DoneeMaintenance {
         MessageUI.diplayEnDash();
 
         //Name
-        String name = doneeUI.getDoneeName();
+        do {
+            name = doneeUI.getDoneeName();
+            if (name.length() > 20) {
+                MessageUI.displayExceedMessage();
+            }
+        } while (name.length() > 20);
 
         //Type
         do {
@@ -153,9 +159,9 @@ public class DoneeMaintenance {
 
         //Emial
         do {
-            email = doneeUI.getDoneeEmail();         
+            email = doneeUI.getDoneeEmail();
             if (!email.contains("@")) {
-                MessageUI.displayInvalidEmailMessage(); 
+                MessageUI.displayInvalidEmailMessage();
             }
 
         } while (!email.contains("@"));
@@ -164,16 +170,25 @@ public class DoneeMaintenance {
         do {
             contact = doneeUI.getDoneeContact();
 
-            if (contact.length() > 11 || !contact.startsWith("0") || !contact.matches("\\d+")) {
-                MessageUI.displayInvalidContactMessage();  // Display an error message if invalid
+            if (!contact.startsWith("0")) {
+                MessageUI.displayInvalidContactMessage();
+            } else if (contact.startsWith("011") && contact.length() != 11) {
+                MessageUI.displayInvalidContactMessage();
+            } else if (contact.startsWith("01") && !contact.startsWith("011") && contact.length() != 10) {
+                MessageUI.displayInvalidContactMessage();
+            } else if (!contact.matches("\\d+")) {
+                MessageUI.displayInvalidContactMessage();
+            } else {
+                break;  // Valid contact, exit the loop
             }
 
-        } while (contact.length() > 11 || !contact.startsWith("0") || !contact.matches("\\d+"));
+        } while (true);
 
         //Address
         String address = doneeUI.getDoneeAddress();
 
         //Location
+        validInput = false;
         do {
             choose = doneeUI.getDoneeLocation();
             if (choose >= 1 && choose <= 3) {
@@ -353,7 +368,7 @@ public class DoneeMaintenance {
             case 1:
                 // Remove Donee by ID
                 iterator = donees.getIterator();
-                 String inputID = doneeUI.getDoneeID();
+                String inputID = doneeUI.getDoneeID();
                 founded = false;
 
                 while (iterator.hasNext()) {
@@ -382,7 +397,7 @@ public class DoneeMaintenance {
                     doneeUI.printText("\nDonee not found: " + inputID + "\n");
                 }
                 break;
-                
+
             //remove from location;
             case 2:
                 do {
@@ -502,6 +517,8 @@ public class DoneeMaintenance {
         boolean founded = false;
         String newLocation = null;
         Donee targetDonee = null;
+        String newName;
+        String newContact;
 
         while (!founded) {
             iterator = donees.getIterator();
@@ -525,17 +542,38 @@ public class DoneeMaintenance {
             MessageUI.diplayEnDash();
             switch (choose) {
                 case 1:
-                    String newName = doneeUI.getDoneeName();
+                    //Update Name
+                    do {
+                        newName = doneeUI.getDoneeName();
+                        if (newName.length() > 20) {
+                            MessageUI.displayExceedMessage();
+                        }
+                    } while (newName.length() > 20);
                     targetDonee.setName(newName);
                     doneeUI.printText("Donee name updated successfully.");
                     break;
                 case 2:
-                    // Update location
-                    String newContact = doneeUI.getDoneeContact();
+                    // Update Contact
+                    do {
+                        newContact = doneeUI.getDoneeContact();
+                        if (!newContact.startsWith("0")) {
+                            MessageUI.displayInvalidContactMessage();
+                        } else if (newContact.startsWith("011") && newContact.length() != 11) {
+                            MessageUI.displayInvalidContactMessage();
+                        } else if (newContact.startsWith("01") && !newContact.startsWith("011") && newContact.length() != 10) {
+                            MessageUI.displayInvalidContactMessage();
+                        } else if (!newContact.matches("\\d+")) {
+                            MessageUI.displayInvalidContactMessage();
+                        } else {
+                            break;  // Valid contact, exit the loop
+                        }
+
+                    } while (true);
                     targetDonee.setContact(newContact);
                     doneeUI.printText("Donee contact updated successfully.");
                     break;
                 case 3:
+                    //Update Location
                     int opt = doneeUI.getDoneeLocation();
                     switch (opt) {
                         case 1:
