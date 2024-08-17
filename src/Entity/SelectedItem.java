@@ -65,6 +65,16 @@ public class SelectedItem implements Comparable<SelectedItem> {
         this.selectedQuantity = selectedQuantity;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+    
+    
+
  /* private boolean isValidItem() {
         Iterator<Item> iterator = donation.getDonatedItemList().getIterator();
         while (iterator.hasNext()) {

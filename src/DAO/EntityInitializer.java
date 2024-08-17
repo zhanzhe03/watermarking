@@ -99,8 +99,8 @@ public class EntityInitializer {
 
  
         // Create a selected item
-        SelectedItem selectedItem1 = new SelectedItem("I001", 50);
-        SelectedItem selectedItem2 = new SelectedItem("I002",22.22);
+        SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
+        SelectedItem selectedItem2 = new SelectedItem("I002",50);
 
         // Add selected item to the distribution
         distribution.addSelectedItem(selectedItem1);

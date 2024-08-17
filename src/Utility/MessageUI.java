@@ -60,4 +60,9 @@ public class MessageUI {
         System.out.println(ANSI_RED + "\nYour input quantity has exceeded." + ANSI_BLACK);
     }
     
+        public static void displayInvalidAmountMessage(){
+        System.out.println(ANSI_RED + "\nPlease enter a valid amount." + ANSI_BLACK);
+    }
+    
+    
 }
