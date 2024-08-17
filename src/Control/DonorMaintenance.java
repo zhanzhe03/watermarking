@@ -139,10 +139,7 @@ public class DonorMaintenance {
         Iterator<Donor> iterator = donors.getIterator();
 
         boolean founded = false;
-        boolean validInput = false;
-        int choose;
         int opt = 0;
-        String type = "";
         do {
             try {
                 MessageUI.diplayEnDash();
@@ -229,7 +226,10 @@ public class DonorMaintenance {
                             donorUI.printText("\n\nNo results found for " + inputContact + "\n\n");
                         }
                         break;
+                    case 5:
+                        break;
                     default:
+                        MessageUI.displayInvalidOptionMessage();
                         break;
                 }
             }catch(NumberFormatException ex){
@@ -238,12 +238,173 @@ public class DonorMaintenance {
         }while(opt != 5);
     }
 
-    private void RemoveDonor(SortedListSetInterface<Donor> donees) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void RemoveDonor(SortedListSetInterface<Donor> donors) {
+      Iterator<Donor> iterator = donors.getIterator();
+
+        boolean founded = false;
+        int opt = 0;
+        do {
+            try {
+                MessageUI.diplayEnDash();
+                opt = Integer.parseInt(donorUI.getDonorDeleteMenu());
+                MessageUI.diplayEnDash();
+                switch (opt) {
+                    case 1:
+                        String inputId = donorUI.getDonorID();
+                        founded = false;
+                        iterator = donors.getIterator();
+                        while (iterator.hasNext()) {
+                            Donor donor = iterator.next();
+                            if (donor.getDonorId().equalsIgnoreCase(inputId)) {
+
+                                donorUI.printText("Donor Found : \n\n");
+                                donorUI.printDonorTitle();
+                                MessageUI.diplayEnDash();
+                                founded = true;
+                                donorUI.printText(donor.toString());
+
+                                String YesNo = donorUI.getDeleteConfirmation();
+
+                                if (YesNo.equalsIgnoreCase("y")) {
+                                    donors.remove(donor);
+                                    donorUI.printText("Donor ID : " + inputId + " has been removed successfully.");
+                                    
+                                } else {
+                                    donorUI.printText("Removal cancelled.");
+                                }
+                               
+                                break;
+                            }
+                        }
+                        
+                        if (!founded) {
+                            donorUI.printText("\n\nNo results found for " + inputId + "\n\n");
+                        }
+                        
+                        break;
+                    case 2 :
+                        String inputName = donorUI.getDonorName();
+                        founded = false;
+                        iterator = donors.getIterator();
+                        while (iterator.hasNext()) {
+                            Donor donor = iterator.next();
+                            if (donor.getName().equalsIgnoreCase(inputName)) {
+
+                                donorUI.printText("Donor Found : \n\n");
+                                donorUI.printDonorTitle();
+                                MessageUI.diplayEnDash();
+                                founded = true;
+                                donorUI.printText(donor.toString());
+
+                                String inputNameId = donorUI.getDonorID();
+                                String YesNo = donorUI.getDeleteConfirmation();
+
+                                if (YesNo.equalsIgnoreCase("y")) {
+                                    donors.remove(donor);
+                                    donorUI.printText("Donor ID : " + inputNameId + " has been removed successfully.");
+                                    
+                                } else {
+                                    donorUI.printText("Removal cancelled.");
+                                }
+                               
+                                break;
+                            }
+                        }
+                        
+                        if (!founded) {
+                            donorUI.printText("\n\nNo results found for " + inputName + "\n\n");
+                        }
+                        break;
+                        
+                    case 3: 
+                        String inputContact = donorUI.getDonorContact();
+                        founded = false;
+                        iterator = donors.getIterator();
+                        while (iterator.hasNext()) {
+                            Donor donor = iterator.next();
+                            if (donor.getDonorId().equalsIgnoreCase(inputContact)) {
+
+                                donorUI.printText("Donor Found : \n\n");
+                                donorUI.printDonorTitle();
+                                MessageUI.diplayEnDash();
+                                founded = true;
+                                donorUI.printText(donor.toString());
+
+                                String YesNo = donorUI.getDeleteConfirmation();
+
+                                if (YesNo.equalsIgnoreCase("y")) {
+                                    donors.remove(donor);
+                                    donorUI.printText("Donor with Contact : " + inputContact + " has been removed successfully.");
+                                    
+                                } else {
+                                    donorUI.printText("Removal cancelled.");
+                                }
+                               
+                                break;
+                            }
+                        }
+                        
+                        if (!founded) {
+                            donorUI.printText("\n\nNo results found for " + inputContact + "\n\n");
+                        }
+                        break;
+                        
+                    case 4 :
+                        String inputCuzId = donorUI.getDeleteDonorID();
+                        String[] donorsID = inputCuzId.split("\\+");
+                        String[] foundedID = new String[donorsID.length]; 
+                        int foundCount = 0;
+                        iterator = donors.getIterator();
+
+                        for (String id : donorsID) {  // For-each loop to iterate over each ID
+                            while (iterator.hasNext()) {  // Iterate through the donor list
+                                Donor donor = iterator.next();
+                                if (donor.getDonorId().equalsIgnoreCase(id)) {  // Check if the donor ID matches the current ID
+
+                                    donorUI.printText("Donor Found : \n\n");
+                                    donorUI.printDonorTitle();
+                                    MessageUI.diplayEnDash();
+                                    foundedID[foundCount] = id;  // Store the found ID in the array
+                                    foundCount++;
+                                    donorUI.printText(donor.toString());
+                    
+                                    String YesNo = donorUI.getDeleteConfirmation();
+
+                                    if (YesNo.equalsIgnoreCase("y")) {
+                                        donors.remove(donor);
+                                        donorUI.printText("Donor with ID: " + id + " has been removed successfully.");
+                                    } else {
+                                        donorUI.printText("Removal cancelled.");
+                                    }
+
+                                    break;
+                                    
+                                }
+                            }
+                            // Reset the iterator to search through the donor list again for the next ID
+                            iterator = donors.getIterator();
+                        }
+
+                        if (foundCount == 0) {
+                            donorUI.printText("No donors were found with the provided IDs.");
+                        }
+                        break;
+                    case 5:
+                        break;
+                        
+                    default:
+                        MessageUI.displayInvalidOptionMessage();
+                        break;
+               
+                }
+            }catch(NumberFormatException ex){
+                MessageUI.displayInvalidOptionMessage();
+            }
+        }while(opt != 5);              
     }
 
     private void UpdateDonor(SortedListSetInterface<Donor> donors) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
 
