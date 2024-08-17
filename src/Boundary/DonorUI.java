@@ -102,6 +102,34 @@ public class DonorUI {
         return opt;
     }
     
+    public String getDonorDeleteMenu(){
+         System.out.println(""
+                + "\n Remove Donor by search: "
+                + "\n 1. Donor ID"
+                + "\n 2. Donor Name"
+                + "\n 3. Donor Contact"
+                + "\n 4. Cuztomize delete"
+                + "\n 5. Back"
+                );
+          System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+    }
+    
+    public String getDeleteDonorID(){
+        System.out.print("\n Note : Use + to delete more donors"
+                + "\nNote : Enter 0 to exit"
+                + "\nEnter Donor ID to delete :");
+        String donorID = scanner.nextLine();
+        return donorID;
+    }
+    
+    public String getDeleteConfirmation(){
+        System.out.print("\n\nDo you sure to delete (Y/N): " );
+        String yesno = scanner.nextLine();
+        return yesno;
+    }
+    
     public String getDonorID(){
         System.out.print("\nEnter Donor ID:");
         String donorID = scanner.nextLine();
