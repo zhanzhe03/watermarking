@@ -135,4 +135,19 @@ public class DonorUI {
         String donorID = scanner.nextLine();
         return donorID;
     }
+    
+    public String getDonorUpdateMenu(){
+        System.out.println(""
+                + "\n Update Donor Details by : "
+                + "\n 1. Donor Name"
+                + "\n 2. Donor Contact Person"
+                + "\n 3. Donor Contact"
+                + "\n 4. Donor Email"
+                + "\n 5. Donor Address"
+                + "\n 6. Back"
+                );
+          System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+    }
 }
