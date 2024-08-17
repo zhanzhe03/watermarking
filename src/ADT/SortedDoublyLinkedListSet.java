@@ -124,6 +124,17 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
     public T getLastEntries(){
         return lastNode.data;
     }
+    
+ 
+    @Override
+    public T getEntry(int givenPosition){
+        Node currentNode =firstNode;
+           for (int counter = 1; counter < givenPosition; counter++) {
+            currentNode = currentNode.next;
+        }
+
+        return currentNode.data;
+    }
 
     @Override
     public int getNumberOfEntries() {
@@ -163,6 +174,8 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
     public Iterator<T> getIterator() {
         return new SortedDoublyLinkedListSetIterator();
     }
+
+
 
     private class SortedDoublyLinkedListSetIterator implements Iterator<T> {
 

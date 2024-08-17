@@ -68,6 +68,16 @@ public class DistributionUI {
         System.out.print(distributions);
     }
     
+    public void printDistributionRecord(Distribution record){
+        System.out.println(record);
+        
+    }
+    
+    public void printDistriburedItemList(SortedListSetInterface<SelectedItem> selectedItem){
+        System.out.println(selectedItem);
+    }
+ 
+    
     public void displayMessage(String msg){
         System.out.println(msg);
         

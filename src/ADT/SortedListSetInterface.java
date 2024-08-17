@@ -32,4 +32,6 @@ public interface SortedListSetInterface<T extends Comparable<T>> {
     public void clear();
 
     public Iterator<T> getIterator();
+    
+    public T getEntry(int givenPosition);   //szewen
 }
