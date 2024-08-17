@@ -404,8 +404,97 @@ public class DonorMaintenance {
     }
 
     private void UpdateDonor(SortedListSetInterface<Donor> donors) {
-        
+        Iterator<Donor> iterator = donors.getIterator();
+        boolean founded = false;  
+        Donor tempDonor = null;
+        String newName;
+        String newContactPerson;
+        String newContact;
+        String newEmail;
+        String newAddress;
+
+        while (!founded) {
+            iterator = donors.getIterator();
+            String inputID = donorUI.getDonorID();
+            while (iterator.hasNext()) {
+                Donor donor = iterator.next();
+                if (donor.getDonorId().equalsIgnoreCase(inputID)) {
+                    founded = true;
+                    tempDonor = donor; 
+                    break;  
+                }
+            }
+
+            if (!founded) {
+                donorUI.printText("Donee with ID " + inputID + " not found");
+            }
+        }
+
+        if (founded) {
+            int choose = Integer.parseInt(donorUI.getDonorUpdateMenu());          
+            switch (choose) {
+                case 1: 
+                   
+                    newName = donorUI.getDonorName();
+                    tempDonor.setName(newName);
+                    donorUI.printText("Donor name updated successfully.");
+                    break;
+
+                case 2: 
+                    
+                    newContactPerson = donorUI.getDonorContactPerson();
+                    tempDonor.setName(newContactPerson);
+                    donorUI.printText("Donor Contact Person updated successfully.");
+                    break;
+                    
+                case 3:
+                    
+                    do{
+                        newContact = donorUI.getDonorContact();
+                    
+                        if (!newContact.startsWith("0")) {
+                            MessageUI.displayInvalidContactMessage();
+                        } else if (newContact.startsWith("011") && newContact.length() != 11) {
+                            MessageUI.displayInvalidContactMessage();
+                        } else if (newContact.startsWith("01") && !newContact.startsWith("011") && newContact.length() != 10) {
+                            MessageUI.displayInvalidContactMessage();
+                        } else if (!newContact.matches("\\d+")) {
+                            MessageUI.displayInvalidContactMessage();
+                        } 
+                        
+                    }while(newContact.startsWith("0"));
+                    
+                    tempDonor.setContact(newContact);
+                    donorUI.printText("Donor contact updated successfully.");
+                    break;
+                    
+                case 4:
+                    do{
+                        newEmail = donorUI.getDonorEmail();
+                        
+                        if(!newEmail.contains("@")){
+                            MessageUI.displayInvalidEmailMessage();
+                        }
+                    }while(newEmail.contains("@"));
+                    tempDonor.setEmail(newEmail);
+                    donorUI.printText("Donor email updated successfully.");
+                    break;
+                    
+                case 5:
+                    
+                    newAddress = donorUI.getDonorAddress();
+
+                    tempDonor.setEmail(newAddress);
+                    donorUI.printText("Donor Address updated successfully.");
+                    break;
+                    
+                case 6:
+                    break;
+                default:
+                    MessageUI.displayInvalidOptionMessage();
+                    break;
+            }
+        }
+
     }
-
-
 }
