@@ -48,10 +48,11 @@ public class DistributionManager {
                         UpdateDonationDistribution(donatedItemList, distributions);
                         break;
                     case 4:
-
+                        ClearScreen.clearJavaConsoleScreen();
+                        SearchDonationDistribution(distributions, donatedItemList);
                         break;
                     case 5:
-                        SearchDonationDistribution(distributions,donatedItemList);
+                        SearchDonationDistribution(distributions, donatedItemList);
                         //**** Searching purpose   
                         //search by distID/distributeditem (type/id)/distDate
                         //incorporate into list 
@@ -426,11 +427,53 @@ public class DistributionManager {
         return null;
     }
     //**** Update purpose
-    
-    public void SearchDonationDistribution(SortedListSetInterface<Distribution> distributions,SortedListSetInterface<Item> donatedItemList){
-        
+
+    public void SearchDonationDistribution(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
+        String input = distributionUI.getInputString("Please enter the keyword to search....");
+        String lowerinput = input.toLowerCase();
+        boolean found = false;
+
+        // Iterate over all distributions
+        Iterator<Distribution> distributionIterator = distributions.getIterator();
+        while (distributionIterator.hasNext()) {
+            Distribution currentDistribution = distributionIterator.next();
+
+            // Check if the distribution ID contains the keyword
+            if (currentDistribution.getDistributionId().toLowerCase().contains(lowerinput)) {
+                distributionUI.displayMessage("Result(s) with " + input);
+                distributionUI.printDistributionRecord(currentDistribution);
+
+                found = true;
+            } else if (currentDistribution.getDistributionDate().toString().contains(lowerinput)) {
+                distributionUI.displayMessage("Result(s) with " + input);
+                distributionUI.printDistributionRecord(currentDistribution);
+
+                found = true;
+            }
+            Iterator<SelectedItem> selectedItemIterator = currentDistribution.getDistributedItemList().getIterator();
+            while (selectedItemIterator.hasNext()) {
+                SelectedItem selectedItem = selectedItemIterator.next();
+                Item correspondingItem = findDonatedItem(donatedItemList, selectedItem.getItemId());
+
+                // Check if the item ID or name contains the keyword (case-insensitive)
+                if (correspondingItem != null
+                        && (correspondingItem.getItemId().toLowerCase().contains(lowerinput)
+                        || correspondingItem.getDesc().toLowerCase().contains(lowerinput)
+                        || correspondingItem.getType().toLowerCase().contains(lowerinput))) {
+                    distributionUI.displayMessage(currentDistribution.getDistributionId()+"\n"+selectedItem);
+                    found = true;
+                }
+            }
+            
+            if (!found) {
+        distributionUI.displayMessage("No matching distributions or items found for the keyword: " + input);
+    }
+        }
+
     }
 }
+
+
 
     
 //}
