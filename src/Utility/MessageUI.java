@@ -63,6 +63,8 @@ public class MessageUI {
         public static void displayInvalidAmountMessage(){
         System.out.println(ANSI_RED + "\nPlease enter a valid amount." + ANSI_BLACK);
     }
+        
+
     
     
 }

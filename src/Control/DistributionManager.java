@@ -44,18 +44,16 @@ public class DistributionManager {
                         AddNewDistribution(donatedItemList, distributions);
                         break;
                     case 3:
-                        ClearScreen.clearJavaConsoleScreen();
+                        // ClearScreen.clearJavaConsoleScreen();
                         UpdateDonationDistribution(donatedItemList, distributions);
                         break;
                     case 4:
-                        ClearScreen.clearJavaConsoleScreen();
+                        //ClearScreen.clearJavaConsoleScreen();
                         SearchDonationDistribution(distributions, donatedItemList);
                         break;
                     case 5:
-                        SearchDonationDistribution(distributions, donatedItemList);
-                        //**** Searching purpose   
-                        //search by distID/distributeditem (type/id)/distDate
-                        //incorporate into list 
+                        //ClearScreen.clearJavaConsoleScreen();
+                        RemoveDonationDistribution(distributions);
                         break;
                     case 6:
                         break;
@@ -267,11 +265,11 @@ public class DistributionManager {
         }
     }
 
-    public Distribution checkDistributionExist(SortedListSetInterface<Distribution> distributions, String updateDistID) {
+    public Distribution checkDistributionExist(SortedListSetInterface<Distribution> distributions, String checkDistID) {
         Iterator<Distribution> iterator = distributions.getIterator();
         while (iterator.hasNext()) {
             Distribution currentRecord = iterator.next();
-            if (currentRecord.getDistributionId().equalsIgnoreCase(updateDistID)) {
+            if (currentRecord.getDistributionId().equalsIgnoreCase(checkDistID)) {
                 ClearScreen.clearJavaConsoleScreen();
                 //   distributionUI.displayMessage(""+currentRecord);
                 distributionUI.printDistributionRecord(currentRecord);
@@ -428,8 +426,9 @@ public class DistributionManager {
     }
     //**** Update purpose
 
+    //**** Search purpose
     public void SearchDonationDistribution(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-        String input = distributionUI.getInputString("Please enter the keyword to search....");
+        String input = distributionUI.getInputString("Please enter the keyword to search > ");
         String lowerinput = input.toLowerCase();
         boolean found = false;
 
@@ -460,17 +459,57 @@ public class DistributionManager {
                         && (correspondingItem.getItemId().toLowerCase().contains(lowerinput)
                         || correspondingItem.getDesc().toLowerCase().contains(lowerinput)
                         || correspondingItem.getType().toLowerCase().contains(lowerinput))) {
-                    distributionUI.displayMessage(currentDistribution.getDistributionId()+"\n"+selectedItem);
+                    distributionUI.displayMessage(currentDistribution.getDistributionId() + "\n" + selectedItem);
                     found = true;
                 }
             }
-            
+
             if (!found) {
-        distributionUI.displayMessage("No matching distributions or items found for the keyword: " + input);
-    }
+                distributionUI.displayMessage("No matching distributions or items found for the keyword: " + input);
+            }
         }
 
     }
+    //**** Search purpose
+
+    //**** Remove purpose
+    public void RemoveDonationDistribution(SortedListSetInterface<Distribution> distributions) {
+        distributionUI.displayMessage("Remove Distribution Donation");
+
+        // Check if there are distributions available
+        if (distributions.getNumberOfEntries() == 0) {
+            distributionUI.displayMessage("No distributions available to remove.");
+            return;
+        }
+
+        boolean removeSuccessful = false;
+
+        do {
+            // List all available distributions
+            distributionUI.listAllDistributions(distributions);
+
+            // Get the distribution ID to be removed
+            String inputDistID = distributionUI.getInputString("\nPlease enter the distribution ID that you would like to remove > ");
+
+            // Check if the distribution with the given ID exists
+            Distribution distributionToRemove = checkDistributionExist(distributions, inputDistID);
+
+            if (distributionToRemove != null) {
+                // Remove the distribution
+
+                distributions.remove(distributionToRemove);
+
+                distributionUI.displayMessage("Distribution with ID " + inputDistID + " has been removed successfully.\n");
+
+                removeSuccessful = true;
+            } else {
+                // Inform the user if the distribution ID was not found
+                distributionUI.displayMessage("Distribution with ID " + inputDistID + " not found. Please try again.\n");
+            }
+
+        } while (!removeSuccessful); // Repeat until a valid ID is entered and removal is successful
+    }
+
 }
 
 
