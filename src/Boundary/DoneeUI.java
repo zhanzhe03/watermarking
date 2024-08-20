@@ -16,6 +16,11 @@ import Entity.Donee;
 public class DoneeUI {
 
     Scanner scanner = new Scanner(System.in);
+    
+    public void displayEnDash(){
+        for (int i = 0; i < 160; i++) 
+            System.out.print("-");
+    }
 
     public String getDoneeMenu() {
         System.out.println(""
@@ -46,25 +51,23 @@ public class DoneeUI {
         return opt;
     }
 
-    public int getDoneeType() {
+    public String getDoneeType() {
         System.out.println("\nPlease select the type of Donee:");
         System.out.println(String.format("%-5s %-15s", "1 = ", "INDIVIDUAL"));
         System.out.println(String.format("%-5s %-15s", "2 = ", "ORGANIZATION"));
         System.out.println(String.format("%-5s %-15s", "3 = ", "FAMILY"));
         System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
 
-    public int getDoneeLocation() {
+    public String getDoneeLocation() {
         System.out.println("\nPlease select the location of Donee:");
         System.out.println(String.format("%-5s %-15s", "1 = ", "Location A"));
         System.out.println(String.format("%-5s %-15s", "2 = ", "Location B"));
         System.out.println(String.format("%-5s %-15s", "3 = ", "Location C"));
         System.out.print("\nopt (1-3 ) >");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
 
@@ -73,7 +76,8 @@ public class DoneeUI {
                 + "\nDONEE DELETE MANAGEMENT"
                 + "\n 1. Donee ID"
                 + "\n 2. Donee Location"
-                + "\n 3. Donee Range");
+                + "\n 3. Donee Range"
+                + "\n 4. Back to Donee MENU");
         System.out.print("\nopt > ");
         int opt = scanner.nextInt();
         scanner.nextLine();
@@ -85,7 +89,8 @@ public class DoneeUI {
                 + "\nDONEE UPDATE MANAGEMENT"
                 + "\n 1. Donee Name"
                 + "\n 2. Donee Contact"
-                + "\n 3. Donee Location");
+                + "\n 3. Donee Location"
+                + "\n 4. BACK to Donee MENU");
         System.out.print("\nopt > ");
         int opt = scanner.nextInt();
         scanner.nextLine();
@@ -144,6 +149,13 @@ public class DoneeUI {
         System.out.print("\nEnter address :");
         String address = scanner.nextLine();
         return address;
+    }
+    
+    public String comfirmOperation(){
+        System.out.println("Confirm to perform operation ? (Y = Yes)");
+        System.out.print("Opt >");
+        String yesNo = scanner.nextLine();
+        return yesNo;
     }
     
     

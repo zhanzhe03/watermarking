@@ -33,6 +33,120 @@ public class DoneeMaintenance {
 
     private DoneeUI doneeUI = new DoneeUI();
 
+    private String generateNewDoneeId(SortedListSetInterface<Donee> donees) {
+        String lastId = donees.isEmpty() ? "DE000" : donees.getLastEntries().getDoneeId();
+        int nextNumericPart = Integer.parseInt(lastId.substring(2)) + 1;
+        return String.format("DE%03d", nextNumericPart);
+    }
+   
+    private String inputName() {
+        String name;
+        do {
+            name = doneeUI.getDoneeName();
+            if (name.length() > 20) {
+                MessageUI.displayExceedMessage();
+            }
+        } while (name.length() > 20);
+        return name;
+    }
+
+    private String inputType() {
+        String doneeType = "";
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                int choose = Integer.parseInt(doneeUI.getDoneeType());
+                switch (choose) {
+                    case 1:
+                        doneeType = "INDIVIDUAL";
+                        validInput = true; //
+                        break;
+                    case 2:
+                        doneeType = "ORGANIZATION";
+                        validInput = true; // 
+                        break;
+                    case 3:
+                        doneeType = "FAMILY";
+                        validInput = true; // 
+                        break;
+                    default:
+                        MessageUI.displayInvalidOptionMessage();
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                MessageUI.displayInvalidOptionMessage();
+            }
+        }
+
+        return doneeType;
+    }
+
+    private String inputEmail() {
+        String email;
+        do {
+            email = doneeUI.getDoneeEmail();
+            if (!email.contains("@")) {
+                MessageUI.displayInvalidEmailMessage();
+            }
+
+        } while (!email.contains("@"));
+        return email;
+    }
+
+    private String inputContact() {
+        String contact;
+        do {
+            contact = doneeUI.getDoneeContact();
+
+            if (!contact.startsWith("0")) {
+                MessageUI.displayInvalidContactMessage();
+            } else if (contact.startsWith("011") && contact.length() != 11) {
+                MessageUI.displayInvalidContactMessage();
+            } else if (contact.startsWith("01") && !contact.startsWith("011") && contact.length() != 10) {
+                MessageUI.displayInvalidContactMessage();
+            } else if (!contact.matches("\\d+")) {
+                MessageUI.displayInvalidContactMessage();
+            } else {
+                break;  // Valid contact, exit the loop
+            }
+
+        } while (true);
+        return contact;
+    }
+
+    private String inputLocation() {
+        String location = "";
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                int choose = Integer.parseInt(doneeUI.getDoneeLocation());
+                switch (choose) {
+                    case 1:
+                        location = "Location A";
+                        validInput = true; // Valid input received, exit loop
+                        break;
+                    case 2:
+                        location = "Location B";
+                        validInput = true; // Valid input received, exit loop
+                        break;
+                    case 3:
+                        location = "Location C";
+                        validInput = true; // Valid input received, exit loop
+                        break;
+                    default:
+                        MessageUI.displayInvalidOptionMessage();
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                MessageUI.displayInvalidOptionMessage();
+            }
+        }
+
+        return location;
+    }
+
     public void doneeManagement(EntityInitializer entityInitialize) {
         SortedListSetInterface<Donee> donees = entityInitialize.getDonees();
 
@@ -88,6 +202,73 @@ public class DoneeMaintenance {
         } while (opt != 9);
     }
 
+    private SortedListSetInterface<Donee> findDoneeID(SortedListSetInterface<Donee> donees, String inputId) {
+        SortedListSetInterface<Donee> foundDonees = new SortedDoublyLinkedListSet<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            if (donee.getDoneeId().equalsIgnoreCase(inputId)) {
+                foundDonees.add(donee);
+                // Return the Donee ID if found
+            }
+        }
+        return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
+    }
+
+    private SortedListSetInterface<Donee> findDoneeLocation(SortedListSetInterface<Donee> donees, String inputLocation) {
+        SortedListSetInterface<Donee> foundDonees = new SortedDoublyLinkedListSet<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            if (donee.getLocation().equalsIgnoreCase(inputLocation)) {
+                foundDonees.add(donee);
+            }
+        }
+
+        return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
+    }
+
+    private SortedListSetInterface<Donee> findDoneeType(SortedListSetInterface<Donee> donees, String inputType) {
+        SortedListSetInterface<Donee> foundDonees = new SortedDoublyLinkedListSet<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            if (donee.getDoneeType().equalsIgnoreCase(inputType)) {
+                foundDonees.add(donee);
+            }
+        }
+
+        return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
+    }
+
+    private boolean isInRange(String doneeID, String startID, String endID) {
+        return doneeID.compareTo(startID) >= 0 && doneeID.compareTo(endID) <= 0;
+    }
+
+    private SortedListSetInterface<Donee> findDoneeIDInRange(SortedListSetInterface<Donee> donees, String inputId1, String inputId2) {
+        SortedListSetInterface<Donee> foundDonees = new SortedDoublyLinkedListSet<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            String doneeID = donee.getDoneeId();
+            if (isInRange(doneeID, inputId1, inputId2)) {
+                foundDonees.add(donee);
+            }
+        }
+        return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
+    }
+
+    private void removeDonees(SortedListSetInterface<Donee> donees, SortedListSetInterface<Donee> foundDonees) {
+        Iterator<Donee> foundIterator = foundDonees.getIterator();
+        while (foundIterator.hasNext()) {
+            donees.remove(foundIterator.next());
+        }
+    }
+
     public void ListAllDonee(SortedListSetInterface<Donee> donees) {
         doneeUI.printText("All Donees Records");
         MessageUI.diplayEnDash();
@@ -99,25 +280,8 @@ public class DoneeMaintenance {
     }
 
     public void AddNewDonee(SortedListSetInterface<Donee> donees) {
-        String doneeType = "";
-        String name;
-        String email;
-        int choose;
-        String contact;
-        String location = "";
-        boolean validInput = false;
-
-        Scanner scanner = new Scanner(System.in);
-
         //auto generate DoneeID
-        String lastId = "DE000"; // Default ID if no donees are present
-        if (!donees.isEmpty()) {
-            Donee lastDonee = donees.getLastEntries();
-            lastId = lastDonee.getDoneeId(); // 
-        }
-        int lastNumericPart = Integer.parseInt(lastId.substring(2));
-        int nextNumericPart = lastNumericPart + 1; //
-        String doneeId = String.format("DE%03d", nextNumericPart);
+        String doneeId = generateNewDoneeId(donees);
 
         //Title
         MessageUI.diplayEnDash();
@@ -125,92 +289,22 @@ public class DoneeMaintenance {
         MessageUI.diplayEnDash();
 
         //Name
-        do {
-            name = doneeUI.getDoneeName();
-            if (name.length() > 20) {
-                MessageUI.displayExceedMessage();
-            }
-        } while (name.length() > 20);
+        String name = inputName();
 
         //Type
-        do {
-            choose = doneeUI.getDoneeType();
-            if (choose >= 1 && choose <= 3) {
-                validInput = true; // Valid input received
-            } else {
-                MessageUI.displayInvalidOptionMessage();
-            }
-        } while (!validInput);
-
-        switch (choose) {
-            case 1:
-                doneeType = "INDIVIDUAL";
-                break;
-            case 2:
-                doneeType = "ORGANIZATION";
-                break;
-            case 3:
-                doneeType = "FAMILY";
-                break;
-            default:
-                break;
-
-        }
+        String doneeType = inputType();
 
         //Emial
-        do {
-            email = doneeUI.getDoneeEmail();
-            if (!email.contains("@")) {
-                MessageUI.displayInvalidEmailMessage();
-            }
-
-        } while (!email.contains("@"));
+        String email = inputEmail();
 
         //Contact
-        do {
-            contact = doneeUI.getDoneeContact();
-
-            if (!contact.startsWith("0")) {
-                MessageUI.displayInvalidContactMessage();
-            } else if (contact.startsWith("011") && contact.length() != 11) {
-                MessageUI.displayInvalidContactMessage();
-            } else if (contact.startsWith("01") && !contact.startsWith("011") && contact.length() != 10) {
-                MessageUI.displayInvalidContactMessage();
-            } else if (!contact.matches("\\d+")) {
-                MessageUI.displayInvalidContactMessage();
-            } else {
-                break;  // Valid contact, exit the loop
-            }
-
-        } while (true);
+        String contact = inputContact();
 
         //Address
         String address = doneeUI.getDoneeAddress();
 
         //Location
-        validInput = false;
-        do {
-            choose = doneeUI.getDoneeLocation();
-            if (choose >= 1 && choose <= 3) {
-                validInput = true; // Valid input received
-            } else {
-                MessageUI.displayInvalidOptionMessage();
-            }
-        } while (!validInput);
-
-        switch (choose) {
-            case 1:
-                location = "Location A";
-                break;
-            case 2:
-                location = "Location B";
-                break;
-            case 3:
-                location = "Location C";
-                break;
-            default:
-                break;
-        }
+        String location = inputLocation();
 
         Donee newDonee = new Donee(doneeId, doneeType, name, email, contact, address, location);
         donees.add(newDonee);
@@ -219,123 +313,49 @@ public class DoneeMaintenance {
     }
 
     public void SearchDonation(SortedListSetInterface<Donee> donees) {
-        Scanner scanner = new Scanner(System.in);
-        Iterator<Donee> iterator = donees.getIterator();
-
-        boolean founded = false;
-        boolean validInput = false;
-        int choose;
+        SortedListSetInterface<Donee> foundDonee;
         int opt = 0;
-        String type = "";
         do {
             try {
-                MessageUI.diplayEnDash();
+                doneeUI.displayEnDash();
                 opt = Integer.parseInt(doneeUI.getDoneeSearchMenu());
-                MessageUI.diplayEnDash();
+                doneeUI.displayEnDash();
                 switch (opt) {
                     case 1:
                         String inputId = doneeUI.getDoneeID();
-                        founded = false;
-                        iterator = donees.getIterator();
-                        while (iterator.hasNext()) {
-                            Donee donee = iterator.next();
-                            if (donee.getDoneeId().equalsIgnoreCase(inputId)) {
-                                if (!founded) {
-                                    doneeUI.printText("Search Result\n\n");
-                                    doneeUI.printDoneeTitle();
-                                    MessageUI.diplayEnDash();
-                                    founded = true;
-                                }
-                                doneeUI.printText(donee.toString());
-                            }
-                        }
-                        if (!founded) {
+                        foundDonee = findDoneeID(donees, inputId);
+                        if (foundDonee != null) {
+                            doneeUI.printText("Search Result\n\n");
+                            doneeUI.printDoneeTitle();
+                            doneeUI.displayEnDash();
+                            doneeUI.printText(foundDonee.toString());
+                        } else {
                             doneeUI.printText("\n\nNo results found for type: " + inputId + "\n\n");
                         }
                         break;
                     case 2:
-                        do {
-                            choose = doneeUI.getDoneeType();
-                            if (choose >= 1 && choose <= 3) {
-                                validInput = true;
-                            } else {
-                                MessageUI.displayInvalidOptionMessage();
-                            }
-                        } while (!validInput);
-                        switch (choose) {
-                            case 1:
-                                type = "INDIVIDUAL";
-                                break;
-                            case 2:
-                                type = "ORGANIZATION";
-                                break;
-                            case 3:
-                                type = "FAMILY";
-                                break;
-                            default:
-                                break;
-                        }
-                        founded = false;
-                        iterator = donees.getIterator();
-                        while (iterator.hasNext()) {
-                            Donee donee = iterator.next();
-                            if (donee.getDoneeType().equalsIgnoreCase(type)) {
-                                if (!founded) {
-                                    doneeUI.printText("Search Result\n\n");
-                                    doneeUI.printDoneeTitle();
-                                    MessageUI.diplayEnDash();
-                                    founded = true;
-                                }
-                                doneeUI.printText(donee.toString());
-                            }
-                        }
-                        if (!founded) {
-                            doneeUI.printText("\n\nNo results found for type: " + type + "\n\n");
+                        String doneeType = inputType();
+                        foundDonee = findDoneeType(donees, doneeType);
+                        if (foundDonee != null) {
+                            doneeUI.printText("Search Result\n\n");
+                            doneeUI.printDoneeTitle();
+                            doneeUI.displayEnDash();
+                            doneeUI.printText(foundDonee.toString());
+                        } else {
+                            doneeUI.printText("\n\nNo results found for type: " + doneeType + "\n\n");
                         }
                         break;
                     case 3:
-                        do {
-                            choose = doneeUI.getDoneeLocation();
-                            if (choose >= 1 && choose <= 3) {
-                                validInput = true;
-                            } else {
-                                MessageUI.displayInvalidOptionMessage();
-                            }
-                        } while (!validInput);
-                        String location = "";
-                        switch (choose) {
-                            case 1:
-                                location = "Location A";
-                                break;
-                            case 2:
-                                location = "Location B";
-                                break;
-                            case 3:
-                                location = "Location C";
-                                break;
-                            default:
-                                break;
+                        String doneeLocation = inputLocation();
+                        foundDonee = findDoneeLocation(donees, doneeLocation);
+                        if (foundDonee != null) {
+                            doneeUI.printText("Search Result\n\n");
+                            doneeUI.printDoneeTitle();
+                            doneeUI.displayEnDash();
+                            doneeUI.printText(foundDonee.toString());
+                        } else {
+                            doneeUI.printText("\n\nNo results found for type: " + doneeLocation + "\n\n");
                         }
-                        founded = false;
-                        iterator = donees.getIterator();
-                        while (iterator.hasNext()) {
-                            Donee donee = iterator.next();
-                            if (donee.getLocation().equalsIgnoreCase(location)) {
-                                if (!founded) {
-                                    // Print header only if at least one match is found
-                                    doneeUI.printText("Search Result\n\n");
-                                    doneeUI.printDoneeTitle();
-                                    MessageUI.diplayEnDash();
-                                    founded = true;
-                                }
-                                doneeUI.printText(donee.toString());
-                            }
-                        }
-                        if (!founded) {
-                            doneeUI.printText("\n\nNo results found for type: " + location + "\n\n");
-                        }
-                        break;
-                    default:
                         break;
                 }
 
@@ -347,252 +367,142 @@ public class DoneeMaintenance {
     }
 
     public void RemoveDonee(SortedListSetInterface<Donee> donees) {
-        Scanner scanner = new Scanner(System.in);
-        Iterator<Donee> iterator = donees.getIterator();
-        SortedListSetInterface<Donee> foundDonees = new SortedDoublyLinkedListSet<>();
+        SortedListSetInterface<Donee> foundDonee;
         int choose;
-        String location = "";
         boolean validInput = false;
-        boolean founded = false;
         do {
-            MessageUI.diplayEnDash();
+            doneeUI.displayEnDash();
             choose = doneeUI.getDoneeDeleteMenu();
-            if (choose >= 1 && choose <= 3) {
+            if (choose >= 1 && choose <= 4) {
                 validInput = true;
             } else {
                 MessageUI.displayInvalidOptionMessage();
             }
         } while (!validInput);
-        MessageUI.diplayEnDash();
+        doneeUI.displayEnDash();
         switch (choose) {
             case 1:
                 // Remove Donee by ID
-                iterator = donees.getIterator();
                 String inputID = doneeUI.getDoneeID();
-                founded = false;
-
-                while (iterator.hasNext()) {
-                    Donee donee = iterator.next();
-                    if (donee.getDoneeId().equalsIgnoreCase(inputID)) {
-                        founded = true;
-
-                        doneeUI.printText("\nDonee found: \n");
-                        doneeUI.printDoneeTitle();
-                        MessageUI.diplayEnDash();
-                        doneeUI.printText("\n" + donee.toString());
-                        String YesNo = doneeUI.getConfirmation();
-
-                        if (YesNo.equalsIgnoreCase("y")) {
-                            donees.remove(donee);
-                            doneeUI.printText("Donee with ID : " + inputID + " has been removed successfully.");
-                        } else {
-                            doneeUI.printText("Removal cancelled.");
-                        }
-                        break;  // Exit the loop after the Donee is found and handled
+                foundDonee = findDoneeID(donees, inputID);
+                if (foundDonee != null) {
+                    doneeUI.printText("Donee(s) found:\n\n");
+                    doneeUI.printDoneeTitle();
+                    doneeUI.displayEnDash();
+                    doneeUI.printText(foundDonee.toString());
+                    String yesNo = doneeUI.comfirmOperation();
+                    if (yesNo.equalsIgnoreCase("Y")) {
+                        removeDonees(donees, foundDonee);
+                        doneeUI.printText("Donee(s) with ID: " + inputID + " have been removed successfully.");
+                    } else {
+                        doneeUI.printText("Removal cancelled.");
                     }
-
-                }//end while
-
-                if (!founded) {
-                    doneeUI.printText("\nDonee not found: " + inputID + "\n");
+                } else {
+                    doneeUI.printText("\n\nNo results found for ID: " + inputID + "\n\n");
                 }
                 break;
 
             //remove from location;
             case 2:
-                do {
-                    choose = doneeUI.getDoneeLocation();
-                    if (choose >= 1 && choose <= 3) {
-                        validInput = true;
-                    } else {
-                        MessageUI.displayInvalidOptionMessage();
-                    }
-                } while (!validInput);
-                switch (choose) {
-                    case 1:
-                        location = "Location A";
-                        break;
-                    case 2:
-                        location = "Location B";
-                        break;
-                    case 3:
-                        location = "Location C";
-                        break;
-                    default:
-                        break;
-                }
+                String doneeLocation = inputLocation();
+                foundDonee = findDoneeLocation(donees, doneeLocation);
 
-                founded = false;
-                iterator = donees.getIterator();
-                while (iterator.hasNext()) {
-                    Donee donee = iterator.next();
-                    if (donee.getLocation().equalsIgnoreCase(location)) {
-                        foundDonees.add(donee);
-                        founded = true;
-                    }
-                }
-
-                if (founded) {
-                    doneeUI.printText("\nDonees found at location: " + location + "\n");
+                if (foundDonee != null) {
+                    doneeUI.printText("Donee(s) found:\n\n");
                     doneeUI.printDoneeTitle();
-                    MessageUI.diplayEnDash();
+                    doneeUI.displayEnDash();
+                    doneeUI.printText(foundDonee.toString());
 
-                    Iterator<Donee> foundIterator = foundDonees.getIterator();
-                    while (foundIterator.hasNext()) {
-                        Donee donee = foundIterator.next();
-                        doneeUI.printText("\n" + donee.toString());
-                    }
-
-                    String YesNo = doneeUI.getConfirmation();
-                    if (YesNo.equalsIgnoreCase("y")) {
-                        foundIterator = foundDonees.getIterator();
-                        while (foundIterator.hasNext()) {
-                            Donee donee = foundIterator.next();
-                            donees.remove(donee);
-                        }
-                        doneeUI.printText("Donees at location: " + location + " have been removed successfully.");
+                    String yesNo = doneeUI.comfirmOperation();
+                    if (yesNo.equalsIgnoreCase("Y")) {
+                        removeDonees(donees, foundDonee);
+                        doneeUI.printText("Donee(s) with ID: " + doneeLocation + " have been removed successfully.");
                     } else {
                         doneeUI.printText("Removal cancelled.");
                     }
                 } else {
-                    doneeUI.printText("\nNo Donees found at location: " + location + "\n");
+                    doneeUI.printText("\n\nNo results found for : " + doneeLocation + "\n\n");
                 }
                 break;
             case 3:
                 doneeUI.printText("Enter first Donee ID and seconde Donee ID");
-                MessageUI.diplayEnDash();
+                doneeUI.displayEnDash();
                 String inputId1 = doneeUI.getDoneeID();
                 String inputId2 = doneeUI.getDoneeID();
-                founded = false;
-                iterator = donees.getIterator();
-                while (iterator.hasNext()) {
-                    Donee donee = iterator.next();
-                    String doneeID = donee.getDoneeId();
+                foundDonee = findDoneeIDInRange(donees, inputId1, inputId2);
 
-                    if (isInRange(doneeID, inputId1, inputId2)) {
-                        // Add matching Donee to the temporary collection
-                        foundDonees.add(donee);
-                        founded = true;
-                    }
-                }
-
-                if (founded) {
+                if (foundDonee != null) {
                     // Display Donee information
                     doneeUI.printText("\nDonees within range from " + inputId1 + " to " + inputId2 + ": \n");
                     doneeUI.printDoneeTitle();
-                    MessageUI.diplayEnDash();
+                    doneeUI.displayEnDash();
+                    doneeUI.printText("\n" + foundDonee.toString());
 
-                    // Iterate again to display all found Donees
-                    Iterator<Donee> foundIterator = foundDonees.getIterator();
-                    while (foundIterator.hasNext()) {
-                        Donee donee = foundIterator.next();
-                        doneeUI.printText("\n" + donee.toString());
-                    }
-
-                    String YesNo = doneeUI.getConfirmation();
-                    if (YesNo.equalsIgnoreCase("y")) {
-                        foundIterator = foundDonees.getIterator();
-                        while (foundIterator.hasNext()) {
-                            Donee donee = foundIterator.next();
-                            donees.remove(donee);
-                        }
+                    String yesNo = doneeUI.comfirmOperation();
+                    if (yesNo.equalsIgnoreCase("Y")) {
+                        removeDonees(donees, foundDonee);
+                        doneeUI.printText("Donee(s) with ID: " + inputId1 + "to" + "inputId2" + "have been removed successfully.");
                     } else {
-                        doneeUI.printText("Remove cancelled!");
+                        doneeUI.printText("Removal cancelled.");
                     }
                 } else {
-                    doneeUI.printText("\nNo Donees found in the range from " + inputId1 + " to " + inputId2 + "\n");
+                    doneeUI.printText("\n\nNo results found for : " + inputId1 + "to" + inputId2 + "\n\n");
                 }
+                break;
+            case 4:
                 break;
 
         }
     }
 
-    private boolean isInRange(String doneeID, String startID, String endID) {
-        return doneeID.compareTo(startID) >= 0 && doneeID.compareTo(endID) <= 0;
-    }
-
     public void UpdateDonee(SortedListSetInterface<Donee> donees) {
-        Scanner scanner = new Scanner(System.in);
-        Iterator<Donee> iterator = donees.getIterator();
         boolean founded = false;
         String newLocation = null;
         Donee targetDonee = null;
         String newName;
         String newContact;
+        String inputID;
 
-        while (!founded) {
-            iterator = donees.getIterator();
-            String inputID = doneeUI.getDoneeID();
-            while (iterator.hasNext()) {
-                Donee donee = iterator.next();
-                if (donee.getDoneeId().equalsIgnoreCase(inputID)) {
-                    founded = true;
-                    targetDonee = donee; // Store the found Donee for further processing
-                    break;  // Exit the inner loop once the Donee is found
-                }
-            }
-
-            if (!founded) {
+        do {
+            inputID = doneeUI.getDoneeID();
+            SortedListSetInterface<Donee> foundDonees = findDoneeID(donees, inputID);
+            if (foundDonees != null) {
+                targetDonee = foundDonees.getIterator().next(); // Assuming IDs are unique
+                founded = true;
+            } else {
                 doneeUI.printText("Donee with ID " + inputID + " not found");
             }
-        }
+        } while (!founded);
 
         if (founded) {
+            // Display update menu and perform updates based on user choice
             int choose = doneeUI.getDoneeUpdateMenu();
-            MessageUI.diplayEnDash();
+            doneeUI.displayEnDash();
+
             switch (choose) {
                 case 1:
-                    //Update Name
-                    do {
-                        newName = doneeUI.getDoneeName();
-                        if (newName.length() > 20) {
-                            MessageUI.displayExceedMessage();
-                        }
-                    } while (newName.length() > 20);
+                    // Update Name
+                    newName = inputName(); // Using private method
                     targetDonee.setName(newName);
                     doneeUI.printText("Donee name updated successfully.");
                     break;
+
                 case 2:
                     // Update Contact
-                    do {
-                        newContact = doneeUI.getDoneeContact();
-                        if (!newContact.startsWith("0")) {
-                            MessageUI.displayInvalidContactMessage();
-                        } else if (newContact.startsWith("011") && newContact.length() != 11) {
-                            MessageUI.displayInvalidContactMessage();
-                        } else if (newContact.startsWith("01") && !newContact.startsWith("011") && newContact.length() != 10) {
-                            MessageUI.displayInvalidContactMessage();
-                        } else if (!newContact.matches("\\d+")) {
-                            MessageUI.displayInvalidContactMessage();
-                        } else {
-                            break;  // Valid contact, exit the loop
-                        }
-
-                    } while (true);
+                    newContact = inputContact(); // Using private method
                     targetDonee.setContact(newContact);
                     doneeUI.printText("Donee contact updated successfully.");
                     break;
+
                 case 3:
-                    //Update Location
-                    int opt = doneeUI.getDoneeLocation();
-                    switch (opt) {
-                        case 1:
-                            newLocation = "Location A";
-                            break;
-                        case 2:
-                            newLocation = "Location B";
-                            break;
-                        case 3:
-                            newLocation = "Location C";
-                            break;
-                        default:
-                            MessageUI.displayInvalidOptionMessage();
-                            break;
-                    }
-                    if (newLocation != null) {
-                        targetDonee.setLocation(newLocation);
-                    }
+                    // Update Location
+                    newLocation = inputLocation(); // Using private method
+                    targetDonee.setLocation(newLocation);
+                    doneeUI.printText("Donee location updated successfully.");
                     break;
+                case 4:
+                    break;
+
                 default:
                     MessageUI.displayInvalidOptionMessage();
                     break;
@@ -602,7 +512,7 @@ public class DoneeMaintenance {
     }
 
     public void DoneeWithDistribute(SortedListSetInterface<Donee> donees) {
-        //hiihi
+
     }
 
     public void FilterDonee(SortedListSetInterface<Donee> donees) {
