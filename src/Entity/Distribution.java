@@ -22,11 +22,12 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
     private Donee donee;
     private Item item;
 
-    public Distribution(String distributionId, Date distributionDate, SortedListSetInterface<SelectedItem> distributedItemList, Donee donee) {
+    public Distribution(String distributionId, Date distributionDate, Donee donee) {
         this.distributionId = distributionId;
         this.distributionDate = distributionDate;
-        this.distributedItemList = new SortedDoublyLinkedListSet<>();
         this.donee = donee;
+        this.distributedItemList = new SortedDoublyLinkedListSet<>();
+        
     }
 
     public Distribution(String distributionId, Date distributionDate) {
@@ -88,6 +89,7 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
     @Override
     public String toString() {
         String outputStr = String.format("\n%-15s  %-15s  ", distributionId, distributionDate);
+        outputStr+=String.format(donee.getDoneeId()+"");
         Iterator<SelectedItem> iterator = distributedItemList.getIterator();
         SelectedItem item = iterator.next();
         outputStr += String.format(item + "");

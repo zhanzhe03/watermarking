@@ -84,18 +84,7 @@ public class DistributionUI {
         
     }
     
-   /* public void filterItemByType(SortedListSetInterface<Item> donatedItemList,String type){
-    
-          Iterator<Item> iterator = donatedItemList.getIterator();
 
-          System.out.println("Item List filter by " + type + ": ");
-    while (iterator.hasNext()) {
-        Item currentItem = iterator.next();
-        if (currentItem.getType().equalsIgnoreCase(type)) {
-            System.out.println(currentItem);
-        }
-    }
-    }*/
     
 
 
