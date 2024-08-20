@@ -35,8 +35,20 @@ public class MessageUI {
         System.out.println(ANSI_RED + "\nInvalid option." + ANSI_BLACK);
     }
     
+    public static void displayInvalidInputMessage(){
+        System.out.println(ANSI_RED + "\nPlease enter a valid input." + ANSI_BLACK);
+    }
+    
     public static void displayInvalidDateFormatMessage(){
         System.out.println(ANSI_RED + "\nPlease follow the date format provided." + ANSI_BLACK);
+    }
+    
+    public static void displayInvalidContactFormatMessage(){
+        System.out.println(ANSI_RED + "\nPlease follow the contact format provided." + ANSI_BLACK);
+    }
+    
+    public static void displayInvalidEmailFormatMessage(){
+        System.out.println(ANSI_RED + "\nPlease follow the email format provided." + ANSI_BLACK);
     }
     
     public static void displayInvalidDateMessage(){

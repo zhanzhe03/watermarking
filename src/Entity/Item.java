@@ -89,6 +89,7 @@ public class Item implements Comparable<Item> {
 
     public void setValuePerItem(double valuePerItem) {
         this.valuePerItem = valuePerItem;
+        this.totalAmount = calculateTotalAmount();
     }
 
     public double getTotalAmount() {
