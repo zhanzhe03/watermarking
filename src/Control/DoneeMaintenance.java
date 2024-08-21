@@ -31,6 +31,7 @@ import java.util.Iterator;
  */
 public class DoneeMaintenance {
 
+    //private method
     private DoneeUI doneeUI = new DoneeUI();
 
     private String generateNewDoneeId(SortedListSetInterface<Donee> donees) {
@@ -147,6 +148,7 @@ public class DoneeMaintenance {
         return location;
     }
 
+    //Public method 
     public void doneeManagement(EntityInitializer entityInitialize) {
         SortedListSetInterface<Donee> donees = entityInitialize.getDonees();
 
@@ -202,18 +204,16 @@ public class DoneeMaintenance {
         } while (opt != 9);
     }
 
-    private SortedListSetInterface<Donee> findDoneeID(SortedListSetInterface<Donee> donees, String inputId) {
-        SortedListSetInterface<Donee> foundDonees = new SortedDoublyLinkedListSet<>();
+    private Donee findDoneeID(SortedListSetInterface<Donee> donees, String inputId) {
         Iterator<Donee> iterator = donees.getIterator();
 
         while (iterator.hasNext()) {
             Donee donee = iterator.next();
             if (donee.getDoneeId().equalsIgnoreCase(inputId)) {
-                foundDonees.add(donee);
-                // Return the Donee ID if found
+                return donee;
             }
         }
-        return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
+        return null;
     }
 
     private SortedListSetInterface<Donee> findDoneeLocation(SortedListSetInterface<Donee> donees, String inputLocation) {
@@ -323,12 +323,12 @@ public class DoneeMaintenance {
                 switch (opt) {
                     case 1:
                         String inputId = doneeUI.getDoneeID();
-                        foundDonee = findDoneeID(donees, inputId);
-                        if (foundDonee != null) {
+                        Donee foundOneDonee = findDoneeID(donees, inputId);
+                        if (foundOneDonee != null) {
                             doneeUI.printText("Search Result\n\n");
                             doneeUI.printDoneeTitle();
                             doneeUI.displayEnDash();
-                            doneeUI.printText(foundDonee.toString());
+                            doneeUI.printText(foundOneDonee.toString());
                         } else {
                             doneeUI.printText("\n\nNo results found for type: " + inputId + "\n\n");
                         }
@@ -383,16 +383,16 @@ public class DoneeMaintenance {
         switch (choose) {
             case 1:
                 // Remove Donee by ID
-                String inputID = doneeUI.getDoneeID();
-                foundDonee = findDoneeID(donees, inputID);
-                if (foundDonee != null) {
+               String inputID = doneeUI.getDoneeID();
+                Donee foundOneDonee = findDoneeID(donees, inputID);
+                if (foundOneDonee != null) {
                     doneeUI.printText("Donee(s) found:\n\n");
                     doneeUI.printDoneeTitle();
                     doneeUI.displayEnDash();
-                    doneeUI.printText(foundDonee.toString());
+                    doneeUI.printText(foundOneDonee.toString());
                     String yesNo = doneeUI.comfirmOperation();
                     if (yesNo.equalsIgnoreCase("Y")) {
-                        removeDonees(donees, foundDonee);
+                        donees.remove(foundOneDonee);
                         doneeUI.printText("Donee(s) with ID: " + inputID + " have been removed successfully.");
                     } else {
                         doneeUI.printText("Removal cancelled.");
@@ -415,7 +415,7 @@ public class DoneeMaintenance {
 
                     String yesNo = doneeUI.comfirmOperation();
                     if (yesNo.equalsIgnoreCase("Y")) {
-                        removeDonees(donees, foundDonee);
+                        donees.relativeComplement(foundDonee);
                         doneeUI.printText("Donee(s) with ID: " + doneeLocation + " have been removed successfully.");
                     } else {
                         doneeUI.printText("Removal cancelled.");
@@ -440,7 +440,7 @@ public class DoneeMaintenance {
 
                     String yesNo = doneeUI.comfirmOperation();
                     if (yesNo.equalsIgnoreCase("Y")) {
-                        removeDonees(donees, foundDonee);
+                        donees.relativeComplement(foundDonee);
                         doneeUI.printText("Donee(s) with ID: " + inputId1 + "to" + "inputId2" + "have been removed successfully.");
                     } else {
                         doneeUI.printText("Removal cancelled.");
@@ -465,9 +465,9 @@ public class DoneeMaintenance {
 
         do {
             inputID = doneeUI.getDoneeID();
-            SortedListSetInterface<Donee> foundDonees = findDoneeID(donees, inputID);
+            Donee foundDonees = findDoneeID(donees, inputID);
             if (foundDonees != null) {
-                targetDonee = foundDonees.getIterator().next(); // Assuming IDs are unique
+                targetDonee = foundDonees;
                 founded = true;
             } else {
                 doneeUI.printText("Donee with ID " + inputID + " not found");
