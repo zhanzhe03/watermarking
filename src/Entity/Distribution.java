@@ -17,35 +17,32 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
 
     private String distributionId;
     private Date distributionDate;
+    private String status;
     private SortedListSetInterface<SelectedItem> distributedItemList;       //multiple Items
 
     private Donee donee;
-    private Item item;
 
     public Distribution(String distributionId, Date distributionDate, Donee donee) {
         this.distributionId = distributionId;
         this.distributionDate = distributionDate;
         this.donee = donee;
         this.distributedItemList = new SortedDoublyLinkedListSet<>();
-        
+        this.status = "Pending";
+
     }
 
     public Distribution(String distributionId, Date distributionDate) {
         this.distributionId = distributionId;
         this.distributionDate = distributionDate;
         this.distributedItemList = new SortedDoublyLinkedListSet<>();
-
+        this.status = "Pending";
     }
-
 
     public void assignItems(SelectedItem selecteditem) {
         distributedItemList.add(selecteditem);
     }
 
     public void addSelectedItem(SelectedItem selectedItem) {
-    //    if (selectedItem.getSelectedQuantity() > item.getQuantity()) {
-     //       throw new IllegalArgumentException("Selected quantity exceeds available quantity.");
-       // }
         distributedItemList.add(selectedItem);
     }
 
@@ -62,7 +59,7 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
     }
 
     public void setDistributionDate(Date date) {
-        this.distributionDate = distributionDate;
+        this.distributionDate = date;
     }
 
     public SortedListSetInterface<SelectedItem> getDistributedItemList() {
@@ -81,6 +78,14 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         this.donee = donee;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public int compareTo(Distribution other) {
         return this.distributionId.compareTo(other.distributionId);
@@ -88,16 +93,17 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
 
     @Override
     public String toString() {
-        String outputStr = String.format("\n%-15s  %-15s  ", distributionId, distributionDate);
-        outputStr+=String.format(donee.getDoneeId()+"");
+        String outputStr = String.format("\n%-20s  %-15s  %-15s  %-15s  ",distributionId, distributionDate, donee.getDoneeId(), donee.getLocation());
+        // outputStr+=String.format(donee.getDoneeId()+"");
         Iterator<SelectedItem> iterator = distributedItemList.getIterator();
         SelectedItem item = iterator.next();
         outputStr += String.format(item + "");
         while (iterator.hasNext()) {
             item = iterator.next();
-            outputStr += String.format("\n%-15s  %-15s  ", "", "");
+            outputStr += String.format("\n%-20s  %-15s  %-15s  %-15s  ", "", "", "", "");
             outputStr += String.format(item + "");
         }
+        outputStr += String.format("%-15s  ", status);
 
         return outputStr;
     }

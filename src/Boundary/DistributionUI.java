@@ -39,6 +39,23 @@ public class DistributionUI {
         
         return opt;
     }
+    
+    private  void printDistributionTitleDash() {
+        for (int i = 0; i < 125; i++) {
+            System.out.print("-");
+        }
+    }
+
+    private  void printDistributionTitle() {
+        System.out.printf("\n%-20s  %-15s  %-15s  %-15s  %-12s  %-14s  %-15s  %-15s\n", "Distribution ID", "Assigned Date", "Donee", "Destination", "Item", "Quantity","Amount(RM)", "Status");
+    }
+
+    public  void printDistributionTitleHeader() {
+        printDistributionTitleDash();
+        printDistributionTitle();
+        printDistributionTitleDash();
+    }
+
 
     public LocalDate getLocalDate() {
         return LocalDate.now();
@@ -66,6 +83,7 @@ public class DistributionUI {
     }
 
     public void listAllDistributions(SortedListSetInterface<Distribution> distributions) {
+        printDistributionTitleHeader();
         System.out.print(distributions);
     }
     

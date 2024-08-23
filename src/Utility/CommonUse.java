@@ -27,13 +27,13 @@ public class CommonUse {
         } while (iterator.hasNext());
         return null;
     }
-    
-        public static Donee findDonee(String ID, SortedListSetInterface<Donee> donees) {
+
+    public static Donee findDonee(String ID, SortedListSetInterface<Donee> donees) {
         Iterator<Donee> iterator = donees.getIterator();
         do {
             Donee donee = iterator.next();
-           if(donee.getDoneeId().equals(ID)){
-               return donee;
+            if (donee.getDoneeId().equalsIgnoreCase(ID)) {
+                return donee;
             }
         } while (iterator.hasNext());
         return null;
@@ -59,5 +59,21 @@ public class CommonUse {
             }
         } while (iterator.hasNext());
         return null;
+    }
+
+    private static void printItemEnDash() {
+        for (int i = 0; i < 125; i++) {
+            System.out.print("-");
+        }
+    }
+
+    private static void printItemTitle() {
+        System.out.printf("\n%-10s  %-24s  %-19s  %-11s  %-17s  %-15s  %-14s\n", "Item ID", "Type", "Description", "Quantity", "Value Per Item", "Total Amount", "Expiry Date");
+    }
+
+    public static void printItemHeader() {
+        printItemEnDash();
+        printItemTitle();
+        printItemEnDash();
     }
 }

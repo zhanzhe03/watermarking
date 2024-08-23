@@ -16,6 +16,7 @@ public class Date {
         this.year = year;
     }
 
+  
     public int getDay() {
         return day;
     }
@@ -65,6 +66,20 @@ public class Date {
         }
         return false;
     }
+    
+      // This method calculates the difference in days between this date and another date
+    public int daysBetween(Date otherDate) {
+        // Convert both dates to "days since year 0" and subtract them
+        int thisTotalDays = this.toDays();
+        int otherTotalDays = otherDate.toDays();
+        return thisTotalDays - otherTotalDays;
+    }
+
+    // Converts the date to the number of days since year 0 (ignoring leap years and other complications)
+    private int toDays() {
+        return this.year * 365 + this.month * 30 + this.day;
+    }
+    
 
     @Override
     public String toString() {

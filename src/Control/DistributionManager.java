@@ -20,9 +20,7 @@ public class DistributionManager {
 
     private DistributionUI distributionUI = new DistributionUI();
     private DonationUI donationUI = new DonationUI();
-    
-   
-    
+
     private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
     private int localDay = distributionUI.getLocalDate().getDayOfMonth();
     private int localMonth = distributionUI.getLocalDate().getMonthValue();
@@ -33,6 +31,8 @@ public class DistributionManager {
         SortedListSetInterface<Distribution> distributions = entityInitialize.getDistributions();
         SortedListSetInterface<Item> donatedItemList = entityInitialize.getItems();
         SortedListSetInterface<Donee> donees = entityInitialize.getDonees();
+
+        updateDistributionStatus(distributions);
 
         int opt = 0;
         do {
@@ -46,11 +46,11 @@ public class DistributionManager {
                         break;
                     case 2:
                         //ClearScreen.clearJavaConsoleScreen();
-                        AddNewDistribution(donatedItemList, distributions);
+                        AddNewDistribution(donatedItemList, distributions, donees);
                         break;
                     case 3:
                         // ClearScreen.clearJavaConsoleScreen();
-                        UpdateDonationDistribution(donatedItemList, distributions,donees);
+                        UpdateDonationDistribution(donatedItemList, distributions, donees);
                         break;
                     case 4:
                         //ClearScreen.clearJavaConsoleScreen();
@@ -77,72 +77,108 @@ public class DistributionManager {
         } while (opt != 9);
     }
 
+    private void updateDistributionStatus(SortedListSetInterface<Distribution> distributions) {
+        Date currentDate = new Date(localDay, localMonth, localYear);
+        Iterator<Distribution> iterator = distributions.getIterator();
+        while (iterator.hasNext()) {
+            Distribution currentRecord = iterator.next();
+            Date distributedDate = currentRecord.getDistributionDate();
+            int daysBetween = currentDate.daysBetween(distributedDate);
+            if (daysBetween >= 2) {
+                // Update status
+                currentRecord.setStatus("Distributed"); // Assume this method exists
+            }
+        }
+
+    }
+
     public void ListAllDistributions(SortedListSetInterface<Distribution> distributions) {
         distributionUI.listAllDistributions(distributions);
     }
 
 //**** Adding purpose  //done ask whether add other items into same distribution
-    //ask add another distribution?
-    public void AddNewDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions) {
-
-        // Generate new distribution info
-        Date distributedDate = new Date(localDay, localMonth, localYear);
-        int lastDistributionId = Integer.parseInt(distributions.getLastEntries().getDistributionId().substring(4)) + 1;
-        String newDistId = "DIST" + String.format("%03d", lastDistributionId);
-
+    //done ask add another distribution?
+    public void AddNewDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees) {
         String input;
         boolean isContinue = false;
-        boolean foundtype;
-
-        Distribution newDistribution = new Distribution(newDistId, distributedDate);
+        boolean foundType;
 
         do {
-            try {
-                donationUI.printItemEnDash();
-                donationUI.printItemTitle();
-                donationUI.printItemEnDash();
-                distributionUI.displayMessage("\n");
-                distributionUI.PrintDonatedItemList(donatedItemList);   // Display the list of donated items
-                input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ( 'Q' quit ; 'F' filter ) > ");
+            // Generate new distribution info
+            Date distributedDate = new Date(localDay, localMonth, localYear);
+            int lastDistributionId = Integer.parseInt(distributions.getLastEntries().getDistributionId().substring(4)) + 1;
+            String newDistId = "DIST" + String.format("%03d", lastDistributionId);
 
-                if (input.equalsIgnoreCase("Q")) {  // Quit the loop
-                    break;
+            Donee selectedDonee = null;
+            do {
+                try {
+                    distributionUI.displayMessage("Available Donees: \n" + donees); // Display the list of donees
+                    input = distributionUI.getInputString("Please enter the Donee ID to distribute to ('Q' quit) > ");
+
+                    if (input.equalsIgnoreCase("Q")) {  // Quit the loop
+                        return;
+                    }
+
+                    selectedDonee = CommonUse.findDonee(input, donees); // Check if the donee exists            
+                    if (selectedDonee == null) {
+                        distributionUI.displayMessage("Donee not found.");
+                    } else {
+                        break;
+                    } // Donee found, exit the loop
+                } catch (Exception e) {
+                    distributionUI.displayMessage("An error occurred: " + e.getMessage());
                 }
+            } while (selectedDonee == null); // Continue until a valid donee is selected
 
-                if (input.equalsIgnoreCase("F")) {      //filter item
-                    do {
-                        ClearScreen.clearJavaConsoleScreen();
-                        donationUI.printItemEnDash();
-                        donationUI.printItemTitle();
-                        donationUI.printItemEnDash();
-                        distributionUI.displayMessage("\n");
-                        distributionUI.PrintDonatedItemList(donatedItemList);   // Display the list of donated items
-                        String inputType = distributionUI.getInputString("Please enter the type you would like to show > ");
-                        ClearScreen.clearJavaConsoleScreen();
-                        foundtype = filterItemByType(donatedItemList, inputType);
-                    } while (!foundtype);
-                    input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ( 'Q' quit ; 'F' filter ) > ");
+            // Create the new distribution with the selected donee
+            Distribution newDistribution = new Distribution(newDistId, distributedDate, selectedDonee);
+
+            do {
+                try {
+                    CommonUse.printItemHeader();
+                    distributionUI.displayMessage("\n");
+                    distributionUI.PrintDonatedItemList(donatedItemList);
+                    input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit; 'F' filter) > ");
 
                     if (input.equalsIgnoreCase("Q")) {  // Quit the loop
                         break;
                     }
-                }
 
-                Item inputItem = checkItemExist(donatedItemList, input); // Check if the item exists
+                    if (input.equalsIgnoreCase("F")) { // Filter items
+                        do {
+                            ClearScreen.clearJavaConsoleScreen();
+                            CommonUse.printItemHeader();
+                            distributionUI.displayMessage("\n");
+                            distributionUI.PrintDonatedItemList(donatedItemList); // Display the list of donated items
+                            String inputType = distributionUI.getInputString("Please enter the type you would like to show > ");
+                            ClearScreen.clearJavaConsoleScreen();
+                            foundType = filterItemByType(donatedItemList, inputType);
+                        } while (!foundType);
 
-                if (inputItem != null) { // If item is found
-                    if (inputItem.getType().equalsIgnoreCase("Monetary")) {
-                        isContinue = handleMonetaryItem(inputItem, newDistribution, distributions);
-                    } else {
-                        isContinue = handleNonMonetaryItem(inputItem, newDistribution, distributions);
+                        input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit; 'F' filter) > ");
+                        if (input.equalsIgnoreCase("Q")) { // Quit the loop
+                            break;
+                        }
                     }
-                } else {
-                    distributionUI.displayMessage("Item not found.");
+
+                    Item inputItem = checkItemExist(donatedItemList, input); // Check if the item exists              
+                    if (inputItem != null) { // If item is found
+                        if (inputItem.getType().equalsIgnoreCase("Monetary")) {
+                            isContinue = handleMonetaryItem(inputItem, newDistribution, distributions);
+                        } else {
+                            isContinue = handleNonMonetaryItem(inputItem, newDistribution, distributions);
+                        }
+                    } else {
+                        distributionUI.displayMessage("Item not found.");
+                    }
+                } catch (Exception e) {
+                    distributionUI.displayMessage("An error occurred: " + e.getMessage());
                 }
-            } catch (Exception e) {
-                distributionUI.displayMessage("An error occurred: " + e.getMessage());
-            }
-        } while (isContinue); // Continue until the user decides to quit
+            } while (isContinue); // Continue until the user decides to quit
+
+            // Ask if the user wants to add another distribution for another donee
+            input = distributionUI.getInputString("\nWould you like to add another distribution for a different donee? ('Y' to continue; 'N' to quit) > ");
+        } while (input.equalsIgnoreCase("Y"));
     }
 
     private Item checkItemExist(SortedListSetInterface<Item> donatedItemList, String input) {
@@ -172,7 +208,7 @@ public class DistributionManager {
                     String keepAdding = distributionUI.getInputString("Do you want to add another item into this distribution? (y/n) > ");
                     if (keepAdding.equalsIgnoreCase("N")) {
                         distributions.add(newDistribution); // Add the distribution to the list
-                        distributionUI.displayMessage("Distribution record is added.");
+                        distributionUI.displayMessage("\nDistribution record is added.");
                         isContinue = false; // Stop adding items
                     } else {
                         isContinue = true; // Continue adding items
@@ -204,7 +240,7 @@ public class DistributionManager {
                     String keepAdding = distributionUI.getInputString("Do you want to add another item into this distribution? (y/n) > ");
                     if (keepAdding.equalsIgnoreCase("N")) {
                         distributions.add(newDistribution); // Add the distribution to the list
-                        distributionUI.displayMessage("Distribution record is added.");
+                        distributionUI.displayMessage("\nDistribution record is added.");
 
                         isContinue = false; // Stop adding items
                     } else {
@@ -238,18 +274,23 @@ public class DistributionManager {
         return foundtype;
     }
 
-    //update add/dltitem
-    //update donee
-    //status either pending or distributed
-    //record cant be changed after 2 days from distributed date
-    public void UpdateDonationDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions,SortedListSetInterface<Donee> donees) {
+    //update add/dltitem  done
+    //update donee done
+    //status either pending or distributed done
+    //record cant be changed after 2 days from distributed date done
+    public void UpdateDonationDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees) {
         // List all distributions and get the distribution ID to update
         ListAllDistributions(distributions);
-        String updateDistID = distributionUI.getInputString("Please enter the distribution ID that you would like to update > ");
+        String updateDistID = distributionUI.getInputString("\nPlease enter the distribution ID that you would like to update > ");
         Distribution updateDist = checkDistributionExist(distributions, updateDistID);
 
         if (updateDist != null) {  // Check if the record exists
             boolean continueLoop = true;
+
+            if (updateDist.getStatus().equalsIgnoreCase("Distributed")) {
+                distributionUI.displayMessage("\nThe distribution record with ID < " + updateDistID + " > is already distributed and cannot be updated.");
+                return;
+            }
 
             while (continueLoop) {
                 distributionUI.displayMessage("\nWhat would you like to update? ");
@@ -263,7 +304,7 @@ public class DistributionManager {
                         break;
 
                     case "2":
-                        updateDoneeDetails(updateDist,donees);
+                        updateDoneeDetails(updateDist, donees);
                         break;
 
                     case "3":
@@ -277,7 +318,7 @@ public class DistributionManager {
                 }
             }
         } else {
-            distributionUI.displayMessage("No record with ID < " + updateDistID + " > exists.");
+            distributionUI.displayMessage("\nNo record with ID < " + updateDistID + " > exists.");
         }
     }
 
@@ -430,96 +471,128 @@ public class DistributionManager {
         return null;
     }
 
-private void updateDoneeDetails(Distribution updateDist, SortedListSetInterface<Donee> donees) {
-    distributionUI.displayMessage("Update Donee Details:\n");
-    distributionUI.displayMessage("Distribution Details: " + updateDist);
-    distributionUI.displayMessage("Current Donee Details: " + updateDist.getDonee());
+    private void updateDoneeDetails(Distribution updateDist, SortedListSetInterface<Donee> donees) {
+        distributionUI.displayMessage("Update Donee Details:\n");
+        distributionUI.displayMessage("Distribution Details: " + updateDist);
+        distributionUI.displayMessage("Current Donee Details: " + updateDist.getDonee());
 
-    String yesNo;
-    Donee foundDonee = null;
+        String yesNo;
+        Donee foundDonee = null;
 
-    do {
-        try {
-            yesNo = distributionUI.getInputString("\nDo you want to change the donee for this distribution <" + updateDist.getDistributionId() + ">? (Y/N) > ");
+        do {
+            try {
+                yesNo = distributionUI.getInputString("\nDo you want to change the donee for this distribution <" + updateDist.getDistributionId() + ">? (Y/N) > ");
 
-            if (yesNo.equalsIgnoreCase("Y")) {
-                String doneeID = distributionUI.getInputString("\nPlease enter the donee ID that you would like to change to: ");
-                foundDonee = CommonUse.findDonee(doneeID, donees);
+                if (yesNo.equalsIgnoreCase("Y")) {
+                    String doneeID = distributionUI.getInputString("\nPlease enter the donee ID that you would like to change to: ");
+                    foundDonee = CommonUse.findDonee(doneeID, donees);
 
-                if (foundDonee != null) {
-                    distributionUI.displayMessage("\nSelected Donee Details: " + foundDonee);
-                    String yn = distributionUI.getInputString("Are you sure you want to update the donee for Distribution " 
-                            + updateDist.getDistributionId() + " from " + updateDist.getDonee().getDoneeId() 
-                            + " to " + foundDonee.getDoneeId() + "? (Y/N) > ");
+                    if (foundDonee != null) {
+                        distributionUI.displayMessage("\nSelected Donee Details: " + foundDonee);
+                        String yn = distributionUI.getInputString("Are you sure you want to update the donee for Distribution "
+                                + updateDist.getDistributionId() + " from " + updateDist.getDonee().getDoneeId()
+                                + " to " + foundDonee.getDoneeId() + "? (Y/N) > ");
 
-                    if (yn.equalsIgnoreCase("Y")) {
-                        updateDist.setDonee(foundDonee);
-                        distributionUI.displayMessage("\nDonee has been updated successfully.");
-                    } else if (yn.equalsIgnoreCase("N")) {
-                        distributionUI.displayMessage("\nDonee update canceled.");
+                        if (yn.equalsIgnoreCase("Y")) {
+                            updateDist.setDonee(foundDonee);
+                            distributionUI.displayMessage("\nDonee has been updated successfully.");
+                        } else if (yn.equalsIgnoreCase("N")) {
+                            distributionUI.displayMessage("\nDonee update canceled.");
+                        } else {
+                            throw new IllegalArgumentException("\nInvalid Yes/No option.");
+                        }
                     } else {
-                        throw new IllegalArgumentException("\nInvalid Yes/No option.");
+                        distributionUI.displayMessage("\nDonee ID not found. Please try again.");
                     }
+                } else if (yesNo.equalsIgnoreCase("N")) {
+                    distributionUI.displayMessage("\nNo changes made to the Donee.");
+                    break;
                 } else {
-                    distributionUI.displayMessage("\nDonee ID not found. Please try again.");
+                    throw new IllegalArgumentException("\nInvalid Yes/No option.");
                 }
-            } else if (yesNo.equalsIgnoreCase("N")) {
-                distributionUI.displayMessage("\nNo changes made to the Donee.");
-                break;
-            } else {
-                throw new IllegalArgumentException("\nInvalid Yes/No option.");
+            } catch (IllegalArgumentException e) {
+                MessageUI.displayInvalidOptionMessage();
             }
-        } catch (IllegalArgumentException e) {
-            MessageUI.displayInvalidOptionMessage();
-        }
 
-    } while (true);
-}
- 
+        } while (true);
+    }
+
     //**** Update purpose
     //**** Search purpose
     public void SearchDonationDistribution(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-        String input = distributionUI.getInputString("Please enter the keyword to search > ");
-        String lowerinput = input.toLowerCase();
-        boolean found = false;
-        int foundItem = 0;
+    String input = distributionUI.getInputString("Please enter the keyword to search > ");
+    String lowerInput = input.toLowerCase();
+    boolean found = false;
+    int foundItem = 0;
+    
+    // List to store matching distributions with the same location
+    SortedListSetInterface<Distribution> sameLocationDistributions = new SortedDoublyLinkedListSet<>();
+    
 
-        Iterator<Distribution> distributionIterator = distributions.getIterator();
-        distributionUI.displayMessage("Result(s) with " + input + " :");
+    Iterator<Distribution> distributionIterator = distributions.getIterator();
+    distributionUI.displayMessage("\nResult(s) with " + input + " :");
 
-        while (distributionIterator.hasNext()) {
-            Distribution currentDistribution = distributionIterator.next();
-            // Check if the distribution ID contains the keyword
-            if (currentDistribution.getDistributionId().toLowerCase().contains(lowerinput)) {
-                distributionUI.printDistributionRecord(currentDistribution);
-                found = true;
-                foundItem++;
-            } else if (currentDistribution.getDistributionDate().toString().contains(lowerinput)) {
-                distributionUI.printDistributionRecord(currentDistribution);
-                found = true;
-                foundItem++;
-            }
-            Iterator<SelectedItem> selectedItemIterator = currentDistribution.getDistributedItemList().getIterator();
-            while (selectedItemIterator.hasNext()) {
-                SelectedItem selectedItem = selectedItemIterator.next();
-                Item correspondingItem = checkItemExist(donatedItemList, selectedItem.getItemId());
-                // Check if the item ID or name contains the keyword (case-insensitive)
-                if (correspondingItem != null
-                        && (correspondingItem.getItemId().toLowerCase().contains(lowerinput)
-                        || correspondingItem.getDesc().toLowerCase().contains(lowerinput)
-                        || correspondingItem.getType().toLowerCase().contains(lowerinput))) {
-                    distributionUI.displayMessage(currentDistribution.getDistributionId() + "\n" + selectedItem);
-                    found = true;
-                    foundItem++;
-                }
+    while (distributionIterator.hasNext()) {
+        Distribution currentDistribution = distributionIterator.next();
+        boolean isMatching = false;
+
+        // Check if the distribution ID, date, donee ID, or status contains the keyword
+        if (currentDistribution.getDistributionId().toLowerCase().contains(lowerInput)
+                || currentDistribution.getDistributionDate().toString().contains(lowerInput)
+                || currentDistribution.getDonee().getDoneeId().toLowerCase().contains(lowerInput)
+                || currentDistribution.getStatus().equalsIgnoreCase(lowerInput)) {
+            isMatching = true;
+        }
+
+        // Check if donee location matches the keyword
+        if (currentDistribution.getDonee().getLocation().equalsIgnoreCase(lowerInput)) {
+            isMatching = true;
+            sameLocationDistributions.add(currentDistribution);
+        }
+
+        // Check if any item in the distribution matches the keyword
+        Iterator<SelectedItem> selectedItemIterator = currentDistribution.getDistributedItemList().getIterator();
+        while (selectedItemIterator.hasNext()) {
+            SelectedItem selectedItem = selectedItemIterator.next();
+            Item correspondingItem = checkItemExist(donatedItemList, selectedItem.getItemId());
+            if (correspondingItem != null
+                    && (correspondingItem.getItemId().toLowerCase().contains(lowerInput)
+                    || correspondingItem.getDesc().toLowerCase().contains(lowerInput)
+                    || correspondingItem.getType().toLowerCase().contains(lowerInput))) {
+                isMatching = true;
             }
         }
-        if (!found) {
-            distributionUI.displayMessage("No matching distributions or items found for the keyword: " + input);
-        } else {
-            distributionUI.displayMessage(foundItem + " item(s) found.");
+
+        if (isMatching) {
+            distributionUI.printDistributionTitleHeader();
+            distributionUI.printDistributionRecord(currentDistribution);
+            found = true;
+            foundItem++;
         }
     }
+
+    if (!found) {
+        distributionUI.displayMessage("\nNo matching distributions or items found for the keyword: " + input);
+    } else {
+        distributionUI.displayMessage("\n");
+        distributionUI.displayMessage(foundItem + " item(s) found.");
+        
+          if (sameLocationDistributions.getNumberOfEntries()> 1) {
+            String mergeResponse = distributionUI.getInputString("\nDo you want to merge distributions with the same location? (yes/no) > ").toLowerCase();
+            if (mergeResponse.equals("yes")) {
+                mergeDistributions(sameLocationDistributions,distributions);
+            }
+        }
+
+    }
+}
+    
+    private void mergeDistributions(SortedListSetInterface<Distribution> sameLocationDistributions,SortedListSetInterface<Distribution> distributions) {
+    // Implement the merging logic here
+    // For example, combine items and update the status
+
+    }
+
     //**** Search purpose
 
     //**** Remove purpose
