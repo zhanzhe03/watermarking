@@ -50,11 +50,14 @@ public class EntityInitializer {
         Donee donee4 = new Donee("DE004", "INDIVIDUAL", "KIKI GUO", "kiki@gmail.com", "012503251", "No20 Taman Gembira", "Location A");
         Donee donee5 = new Donee("DE005", "INDIVIDUAL", "DARREN LIM", "darren@gmail.com", "0123030520", "No30 Taman Gembira", "Location A");
 
-        Request request1 = new Request(new Date(20, 5, 2024), "Food and Beverage");
-        Request request2 = new Request(new Date(20, 2, 2024), "Clothing and Apparel");
-        Request request3 = new Request(new Date(21, 6, 2021), "Household Items");
-        Request request4 = new Request(new Date(20, 5, 2024), "Food and Beverage");
-        Request request5 = new Request(new Date(16, 2, 2024), "Clothing and Apparel");
+        Request request1 = new Request(new Date(10, 2, 2023), "Food and Beverage");
+        Request request2 = new Request(new Date(11, 3, 2022), "Clothing and Apparel");
+        Request request3 = new Request(new Date(12, 3, 2021), "Household Items");
+        Request request4 = new Request(new Date(15, 4, 2024), "Food and Beverage");
+        Request request5 = new Request(new Date(20, 7, 2024), "Medical");
+        Request request6 = new Request(new Date(8, 5, 2023), "Food and Beverage");
+        Request request7 = new Request(new Date(5, 5, 2022), "Monetary");
+        Request request8 = new Request(new Date(2, 6, 2021), "Educational Materials");
 
         Item item1 = new Item("I001", "Monetary", "Cash", 200);
         Item item2 = new Item("I002", "Household Items", "Bed", 2, 120);
@@ -165,11 +168,14 @@ public class EntityInitializer {
         donations.add(donation6);
 
         donee1.addRequest(request1);
+        donee1.addRequest(request2);
         donee2.addRequest(request2);
-        donee1.addRequest(request1);
-        donee2.addRequest(request2);
-        donee1.addRequest(request1);
-        donee2.addRequest(request2);
+        donee2.addRequest(request4);
+        donee2.addRequest(request7);
+        donee3.addRequest(request3);
+        donee4.addRequest(request4);
+        donee5.addRequest(request5);
+        
 
         donees.add(donee1);
         donees.add(donee2);

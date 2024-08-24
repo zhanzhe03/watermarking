@@ -93,10 +93,24 @@ public class DoneeUI {
                 + "\n 1. Donee Name"
                 + "\n 2. Donee Contact"
                 + "\n 3. Donee Location"
-                + "\n 4. BACK to Donee MENU");
+                + "\n 4. Donee Request"
+                + "\n 5. BACK to Donee MENU");
         System.out.print("\nopt > ");
         int opt = scanner.nextInt();
         scanner.nextLine();
+        return opt;
+    }
+
+    public String getSortMenu() {
+        System.out.println(""
+                + "\nDONEE SORT MANAGEMENT"
+                + "\n 1. Sorted by Donee ID with ASC"
+                + "\n 2. Sorted by Donee ID with DACS"
+                + "\n 3. Sorted by Donee Request Date with ASC"
+                + "\n 4. Sorted by Donee Request Date with DACS"
+                + "\n 5. Back to Donee MENU");
+        System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
         return opt;
     }
 
@@ -111,7 +125,7 @@ public class DoneeUI {
     public void printAllDonees(SortedListSetInterface<Donee> donees) {
         System.out.println("\n" + donees);
     }
-    
+
     public void printRequest(SortedListSetInterface<Request> request) {
         System.out.print(request);
     }
@@ -161,8 +175,8 @@ public class DoneeUI {
 
         System.out.print("Enter year (e.g., 2024): ");
         year = Integer.parseInt(scanner.nextLine());
-        
-        return new Date(day,month,year);
+
+        return new Date(day, month, year);
     }
 
     public String comfirmOperation() {

@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.Iterator;
 import Entity.Date;
 import Entity.Request;
+import java.util.Stack;
 
 /**
  *
@@ -321,25 +322,144 @@ public class DoneeMaintenance {
         return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
     }
 
-    private void printRequests(Donee donee) {
-        SortedListSetInterface<Request> requests = donee.getRequests();
-        if (requests != null && requests.getNumberOfEntries() > 0) {
-            Iterator<Request> requestIterator = requests.getIterator();
-            while (requestIterator.hasNext()) {
-                Request request = requestIterator.next();
-                doneeUI.printText(request.toString());  // Ensure Request class has a proper toString method
-            }
+    private void sortDoneesByIdDesc(SortedListSetInterface<Donee> donees) {
+        Stack<Donee> myStack = new Stack<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        // Push all Donee objects onto the stack
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            myStack.push(donee);
+        }
+
+        // Pop Donees from the stack (in LIFO order) and print them
+        while (!myStack.isEmpty()) {
+            Donee donee = myStack.pop();
+            doneeUI.printText(donee.toString());
+        }
+    }
+
+    private void sortDoneesByIdAsc(SortedListSetInterface<Donee> donees) {
+        Stack<Donee> myStack = new Stack<>();
+        Stack<Donee> reversedStack = new Stack<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        // Push all Donee objects onto the stack
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            myStack.push(donee);
+        }
+
+        // Reverse the stack by popping from myStack and pushing onto reversedStack
+        while (!myStack.isEmpty()) {
+            reversedStack.push(myStack.pop());
+        }
+
+        // Pop Donees from the reversed stack (now in descending order) and print them
+        while (!reversedStack.isEmpty()) {
+            Donee donee = reversedStack.pop();
+            doneeUI.printText(donee.toString());
+        }
+    }
+
+    private void sortDoneesByRequestDateAsc(SortedListSetInterface<Donee> donees) {
+        Stack<Donee> myStack = new Stack<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        // Push all Donee objects onto the stack
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            insertInOrder(myStack, donee, true);  // true for ascending
+        }
+
+        // Pop Donees from the stack and print them
+        while (!myStack.isEmpty()) {
+            doneeUI.printText(myStack.pop().toString());
+        }
+    }
+
+    private void sortDoneesByRequestDateDesc(SortedListSetInterface<Donee> donees) {
+        Stack<Donee> myStack = new Stack<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        // Push all Donee objects onto the stack
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            insertInOrder(myStack, donee, false);  // false for descending
+        }
+
+        // Pop Donees from the stack and print them
+        while (!myStack.isEmpty()) {
+            doneeUI.printText(myStack.pop().toString());
+        }
+    }
+
+    private void insertInOrder(Stack<Donee> stack, Donee donee, boolean ascending) {
+        if (stack.isEmpty()) {
+            stack.push(donee);
+            return;
+        }
+
+        Donee top = stack.pop();
+        Date topDate = top.getRequests().getIterator().next().getRequestDate();
+        Date doneeDate = donee.getRequests().getIterator().next().getRequestDate();
+
+        if (ascending ? doneeDate.beforeDate(topDate) : doneeDate.afterDate(topDate)) {
+            stack.push(top);
+            stack.push(donee);
         } else {
-            doneeUI.printText("-");
+            insertInOrder(stack, donee, ascending);
+            stack.push(top);
         }
     }
 
     public void ListAllDonee(SortedListSetInterface<Donee> donees) {
+        SortedListSetInterface<Donee> sortedDonees;
+        int sortOption = 0;
+
+        // Loop until a valid option is entered
+        while (true) {
+            try {
+                sortOption = Integer.parseInt(doneeUI.getSortMenu());
+
+                // Check if the input is within the valid range
+                if (sortOption >= 1 && sortOption <= 5) {
+                    break; // Valid input, exit loop
+                } else {
+                    MessageUI.displayInvalidOptionMessage();
+                }
+
+            } catch (NumberFormatException e) {
+                MessageUI.displayInvalidInputMessage();
+            }
+        }
+
+        if (sortOption == 5) {
+            return;
+        }
+
         doneeUI.printText("All Donees Records");
         doneeUI.displayEnDash();
         doneeUI.printDoneeTitle();
         doneeUI.displayEnDash();
-        doneeUI.printText(donees.toString()); 
+
+        switch (sortOption) {
+            case 1:
+                sortDoneesByIdAsc(donees);
+                break;
+            case 2:
+                sortDoneesByIdDesc(donees);
+                break;
+            case 3:
+                sortDoneesByRequestDateAsc(donees);
+                break;
+            case 4:
+                sortDoneesByRequestDateDesc(donees);
+                break;
+            default:
+                break;
+        }
+
         doneeUI.displayEnDash();
         doneeUI.printNumberOfEntries(donees);
     }
@@ -566,8 +686,14 @@ public class DoneeMaintenance {
                     doneeUI.printText("Donee location updated successfully.");
                     break;
                 case 4:
+                    String requestItems = inputCategory();
+                    Date requestDate = getRequestDate();
+                    Request newRequest = new Request(requestDate, requestItems);
+                    targetDonee.addRequest(newRequest);
+                    doneeUI.printText("Donee request updated succesfully");
                     break;
-
+                case 5:
+                    break;
                 default:
                     MessageUI.displayInvalidOptionMessage();
                     break;
