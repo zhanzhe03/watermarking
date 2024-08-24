@@ -6,6 +6,7 @@ package Control;
 
 import ADT.SortedDoublyLinkedListSet;
 import ADT.SortedListSetInterface;
+import Boundary.DonationUI;
 import Boundary.DoneeUI;
 import DAO.EntityInitializer;
 import Entity.Donation;
@@ -13,8 +14,10 @@ import Entity.Donee;
 import Entity.Donor;
 import Utility.ClearScreen;
 import Utility.MessageUI;
-import java.util.Scanner;
+import java.time.LocalDate;
 import java.util.Iterator;
+import Entity.Date;
+import Entity.Request;
 
 /**
  *
@@ -33,13 +36,14 @@ public class DoneeMaintenance {
 
     //private method
     private DoneeUI doneeUI = new DoneeUI();
+    private DonationUI donationUI = new DonationUI();
 
     private String generateNewDoneeId(SortedListSetInterface<Donee> donees) {
         String lastId = donees.isEmpty() ? "DE000" : donees.getLastEntries().getDoneeId();
         int nextNumericPart = Integer.parseInt(lastId.substring(2)) + 1;
         return String.format("DE%03d", nextNumericPart);
     }
-   
+
     private String inputName() {
         String name;
         do {
@@ -146,6 +150,61 @@ public class DoneeMaintenance {
         }
 
         return location;
+    }
+
+    private String inputCategory() {
+        String categoryType = "";
+        boolean validInput = false;
+        int category = 0;
+
+        while (!validInput) {
+            try {
+                category = Integer.parseInt(donationUI.getItemTypeMenu());
+
+                if (category >= 1 && category <= 7) {
+                    validInput = true;  // Valid input received
+                } else {
+                    MessageUI.displayInvalidOptionMessage();
+                }
+            } catch (NumberFormatException e) {
+                MessageUI.displayInvalidIntegerMessage();
+            }
+        }
+
+        switch (category) {
+            case 1:
+                categoryType = "Monetary";
+                break;
+            case 2:
+                categoryType = "Clothing and Apparel";
+                break;
+            case 3:
+                categoryType = "Food and Beverage";
+                break;
+            case 4:
+                categoryType = "Household Items";
+                break;
+            case 5:
+                categoryType = "Educational Materials";
+                break;
+            case 6:
+                categoryType = "Electronic";
+                break;
+            case 7:
+                categoryType = "Medical";
+                break;
+            default:
+                break;
+        }
+        return categoryType;
+    }
+
+    private Date getRequestDate() {
+        LocalDate localDate = LocalDate.now();
+        int day = localDate.getDayOfMonth();
+        int month = localDate.getMonthValue();
+        int year = localDate.getYear();
+        return new Date(day, month, year);
     }
 
     //Public method 
@@ -262,20 +321,26 @@ public class DoneeMaintenance {
         return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
     }
 
-    private void removeDonees(SortedListSetInterface<Donee> donees, SortedListSetInterface<Donee> foundDonees) {
-        Iterator<Donee> foundIterator = foundDonees.getIterator();
-        while (foundIterator.hasNext()) {
-            donees.remove(foundIterator.next());
+    private void printRequests(Donee donee) {
+        SortedListSetInterface<Request> requests = donee.getRequests();
+        if (requests != null && requests.getNumberOfEntries() > 0) {
+            Iterator<Request> requestIterator = requests.getIterator();
+            while (requestIterator.hasNext()) {
+                Request request = requestIterator.next();
+                doneeUI.printText(request.toString());  // Ensure Request class has a proper toString method
+            }
+        } else {
+            doneeUI.printText("-");
         }
     }
 
     public void ListAllDonee(SortedListSetInterface<Donee> donees) {
         doneeUI.printText("All Donees Records");
-        MessageUI.diplayEnDash();
+        doneeUI.displayEnDash();
         doneeUI.printDoneeTitle();
-        MessageUI.diplayEnDash();
-        doneeUI.printAllDonees(donees);
-        MessageUI.diplayEnDash();
+        doneeUI.displayEnDash();
+        doneeUI.printText(donees.toString()); 
+        doneeUI.displayEnDash();
         doneeUI.printNumberOfEntries(donees);
     }
 
@@ -284,9 +349,9 @@ public class DoneeMaintenance {
         String doneeId = generateNewDoneeId(donees);
 
         //Title
-        MessageUI.diplayEnDash();
+        doneeUI.displayEnDash();
         doneeUI.printText("Add New Donee");
-        MessageUI.diplayEnDash();
+        doneeUI.displayEnDash();
 
         //Name
         String name = inputName();
@@ -383,7 +448,7 @@ public class DoneeMaintenance {
         switch (choose) {
             case 1:
                 // Remove Donee by ID
-               String inputID = doneeUI.getDoneeID();
+                String inputID = doneeUI.getDoneeID();
                 Donee foundOneDonee = findDoneeID(donees, inputID);
                 if (foundOneDonee != null) {
                     doneeUI.printText("Donee(s) found:\n\n");

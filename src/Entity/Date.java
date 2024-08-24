@@ -112,4 +112,14 @@ public class Date {
         int hash = 7;
         return hash;
     }
+    
+    public int compareTo(Date other) {
+        if (this.year != other.year) {
+            return Integer.compare(this.year, other.year);
+        }
+        if (this.month != other.month) {
+            return Integer.compare(this.month, other.month);
+        }
+        return Integer.compare(this.day, other.day);
+    }
 }

@@ -50,6 +50,12 @@ public class EntityInitializer {
         Donee donee4 = new Donee("DE004", "INDIVIDUAL", "KIKI GUO", "kiki@gmail.com", "012503251", "No20 Taman Gembira", "Location A");
         Donee donee5 = new Donee("DE005", "INDIVIDUAL", "DARREN LIM", "darren@gmail.com", "0123030520", "No30 Taman Gembira", "Location A");
 
+        Request request1 = new Request(new Date(20, 5, 2024), "Food and Beverage");
+        Request request2 = new Request(new Date(20, 2, 2024), "Clothing and Apparel");
+        Request request3 = new Request(new Date(21, 6, 2021), "Household Items");
+        Request request4 = new Request(new Date(20, 5, 2024), "Food and Beverage");
+        Request request5 = new Request(new Date(16, 2, 2024), "Clothing and Apparel");
+
         Item item1 = new Item("I001", "Monetary", "Cash", 200);
         Item item2 = new Item("I002", "Household Items", "Bed", 2, 120);
         Item item3 = new Item("I003", "Electronic", "Accessories", 2, 20);
@@ -96,9 +102,9 @@ public class EntityInitializer {
         donation6.assignItems(item18);
 
         Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 1001));
-        Distribution distribution2 = new Distribution("DIST002", new Date(1, 8, 2024),donee2);
-        Distribution distribution3 = new Distribution("DIST003", new Date(11, 8, 2024),donee3);
-        Distribution distribution4 = new Distribution("DIST004", new Date(22, 8, 2024),donee4);
+        Distribution distribution2 = new Distribution("DIST002", new Date(1, 8, 2024), donee2);
+        Distribution distribution3 = new Distribution("DIST003", new Date(11, 8, 2024), donee3);
+        Distribution distribution4 = new Distribution("DIST004", new Date(22, 8, 2024), donee4);
 
         // Create a selected item
         SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
@@ -109,16 +115,16 @@ public class EntityInitializer {
         SelectedItem selectedItem6 = new SelectedItem("I006", 2);
 
         // Add selected item to the distribution
-      distribution1.setDonee(donee1);
+        distribution1.setDonee(donee1);
         distribution1.addSelectedItem(selectedItem1);
         distribution1.addSelectedItem(selectedItem2);
-        
-       distribution2.setDonee(donee2);
+
+        distribution2.setDonee(donee2);
         distribution2.addSelectedItem(selectedItem3);
-        
-       distribution3.setDonee(donee3);
+
+        distribution3.setDonee(donee3);
         distribution3.addSelectedItem(selectedItem4);
-        
+
         distribution4.setDonee(donee4);
         distribution4.addSelectedItem(selectedItem5);
         distribution4.addSelectedItem(selectedItem6);
@@ -127,7 +133,6 @@ public class EntityInitializer {
         distributions.add(distribution2);
         distributions.add(distribution3);
         distributions.add(distribution4);
-
 
         donors.add(donor1);
         donors.add(donor2);
@@ -158,6 +163,13 @@ public class EntityInitializer {
         donations.add(donation4);
         donations.add(donation5);
         donations.add(donation6);
+
+        donee1.addRequest(request1);
+        donee2.addRequest(request2);
+        donee1.addRequest(request1);
+        donee2.addRequest(request2);
+        donee1.addRequest(request1);
+        donee2.addRequest(request2);
 
         donees.add(donee1);
         donees.add(donee2);

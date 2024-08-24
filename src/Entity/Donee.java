@@ -22,6 +22,14 @@ public class Donee implements Comparable<Donee> {
     private String contact;
     private String address;
     private String location;
+    private SortedListSetInterface<Request> requests;
+
+    public void addRequest(Request request) {
+        if (requests == null) {
+            requests = new SortedDoublyLinkedListSet<>();
+        }
+        requests.add(request);
+    }
 
     public String getLocation() {
         return location;
@@ -87,10 +95,15 @@ public class Donee implements Comparable<Donee> {
         this.contact = contact;
         this.address = address;
         this.location = location;
+        this.requests = new SortedDoublyLinkedListSet<>();
     }
-    
-    public Donee () {
-      
+
+    public Donee() {
+        this.requests = new SortedDoublyLinkedListSet<>();
+    }
+
+    public SortedListSetInterface<Request> getRequests() {
+        return requests;
     }
 
     @Override
@@ -130,9 +143,21 @@ public class Donee implements Comparable<Donee> {
 
     @Override
     public String toString() {
-        // Format the basic information of the donee
-        String outputStr = String.format("%-20s %-20s %-20s %-25s %-20s %-35s %-20s",
-                doneeId, doneeType, name, email, contact, address, location);
+        // Base Donee information
+        String outputStr = String.format(
+                "\n%-15s %-20s %-20s %-25s %-20s %-30s %-15s",
+                doneeId, doneeType, name, email, contact, address, location
+        );
+        if (requests != null && requests.getNumberOfEntries() > 0) {
+            Iterator<Request> iterator = requests.getIterator();
+            while (iterator.hasNext()) {
+                Request request = iterator.next();
+                outputStr += String.format("%-20s %-20s", request.getRequestDate(), request.getRequestItems());
+                outputStr += String.format("\n%-15s %-20s %-20s %-25s %-20s %-30s %-15s","","","","","","","");
+            }
+        } else {
+            outputStr += String.format("%5s %25s", "-", "-");
+        }
 
         return outputStr;
     }
