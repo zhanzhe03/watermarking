@@ -67,6 +67,83 @@ public class Date {
         return false;
     }
     
+    //check within pass week
+    public boolean withinPassWeek(Date otherDate) {
+        int numberOfDays = 8;
+        if (this.year + 1 == otherDate.year) {
+            if (this.month == 12 && otherDate.month == 1) {
+                numberOfDays = (31 - this.day) + otherDate.day;
+            }
+        } else if (this.year == otherDate.year) {
+            numberOfDays = otherDate.convertToDays() - this.convertToDays();
+        }
+
+        return numberOfDays <= 7;
+    }
+
+    //check within pass month
+    public boolean withinPassMonth(Date otherDate) {
+        int numberOfDays = 32;
+        if (this.year + 1 == otherDate.year) {
+            if (this.month == 12 && otherDate.month == 1) {
+                numberOfDays = (31 - this.day) + otherDate.day;
+            }
+        } else if (this.year == otherDate.year) {
+            numberOfDays = otherDate.convertToDays() - this.convertToDays();
+        }
+
+        return numberOfDays <= 31;
+    }
+
+    //check within next 15 days
+    public boolean next15Days(Date otherDate) {
+        int numberOfDays = 16;
+        if (this.afterDate(otherDate)) {
+            if (this.year - 1 == otherDate.year) {
+                if (this.month == 1 && otherDate.month == 12) {
+                    numberOfDays = (31 - otherDate.day) + this.day;
+                }
+            } else if (this.year == otherDate.year) {
+                numberOfDays = this.convertToDays() - otherDate.convertToDays();
+            }
+        }
+        return numberOfDays <= 15;
+    }
+
+    //only for current year
+    private int convertToDays() {
+        int daysInMonth = 0;
+        switch (this.month) {
+            case 12:
+                daysInMonth += 30;
+            case 11:
+                daysInMonth += 31;
+            case 10:
+                daysInMonth += 30;
+            case 9:
+                daysInMonth += 31;
+            case 8:
+                daysInMonth += 31;
+            case 7:
+                daysInMonth += 30;
+            case 6:
+                daysInMonth += 31;
+            case 5:
+                daysInMonth += 30;
+            case 4:
+                daysInMonth += 31;
+            case 3:
+                daysInMonth += 28;
+            case 2:
+                daysInMonth += 31;
+            case 1:
+                daysInMonth += 0;
+        }
+        daysInMonth += this.day;
+
+        return (this.year % 4 == 0 && this.month > 2) ? daysInMonth + 1 : daysInMonth;
+    }
+    
       // This method calculates the difference in days between this date and another date
     public int daysBetween(Date otherDate) {
         // Convert both dates to "days since year 0" and subtract them

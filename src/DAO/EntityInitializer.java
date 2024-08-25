@@ -62,7 +62,7 @@ public class EntityInitializer {
         Item item1 = new Item("I001", "Monetary", "Cash", 200);
         Item item2 = new Item("I002", "Household Items", "Bed", 2, 120);
         Item item3 = new Item("I003", "Electronic", "Accessories", 2, 20);
-        Item item4 = new Item("I004", "Food and Beverage", "Water Bottle", 20, 1.20, new Date(20, 4, 2025));
+        Item item4 = new Item("I004", "Food and Beverage", "Water Bottle", 20, 1.20, new Date(10, 8, 2024));
         Item item5 = new Item("I005", "Clothing and Apparel", "Clothes", 5, 30);
         Item item6 = new Item("I006", "Clothing and Apparel", "Gloves", 20, 15);
         Item item7 = new Item("I007", "Monetary", "Online Transfers", 750);
@@ -71,19 +71,19 @@ public class EntityInitializer {
         Item item10 = new Item("I010", "Monetary", "QR Code Payment", 120);
         Item item11 = new Item("I011", "Medical", "Wheelchair", 1, 180);
         Item item12 = new Item("I012", "Clothing and Apparel", "Shoes", 10, 50);
-        Item item13 = new Item("I013", "Food and Beverage", "White Rice", 30, 1.00, new Date(20, 9, 2024));
-        Item item14 = new Item("I014", "Food and Beverage", "Packaged Snacks", 4, 9, new Date(31, 12, 2024));
+        Item item13 = new Item("I013", "Food and Beverage", "White Rice", 30, 1.00, new Date(1, 9, 2024));
+        Item item14 = new Item("I014", "Food and Beverage", "Packaged Snacks", 4, 9, new Date(12, 10, 2024));
         Item item15 = new Item("I015", "Household Items", "Table", 4, 30);
         Item item16 = new Item("I016", "Educational Materials", "Textbook", 10, 5);
         Item item17 = new Item("I017", "Electronic", "Mobile Phone", 1, 800);
         Item item18 = new Item("I018", "Medical", "First and Kit", 3, 50);
 
-        Donation donation1 = new Donation("D001", new Date(1, 8, 2024), donor1);
-        Donation donation2 = new Donation("D002", new Date(1, 8, 2024), donor2);
+        Donation donation1 = new Donation("D001", new Date(22, 7, 2024), donor1);
+        Donation donation2 = new Donation("D002", new Date(28, 7, 2024), donor2);
         Donation donation3 = new Donation("D003", new Date(3, 8, 2024), donor3);
-        Donation donation4 = new Donation("D004", new Date(7, 8, 2024), donor2);
-        Donation donation5 = new Donation("D005", new Date(7, 8, 2024), donor3);
-        Donation donation6 = new Donation("D006", new Date(10, 8, 2024), donor2);
+        Donation donation4 = new Donation("D004", new Date(10, 8, 2024), donor2);
+        Donation donation5 = new Donation("D005", new Date(19, 8, 2024), donor3);
+        Donation donation6 = new Donation("D006", new Date(23, 8, 2024), donor2);
 
         donation1.assignItems(item1);
         donation1.assignItems(item2);

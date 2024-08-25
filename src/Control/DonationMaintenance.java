@@ -4,16 +4,23 @@
  */
 package Control;
 
-import Boundary.*;
-import Utility.*;
-import ADT.*;
-import Entity.*;
-import java.util.Iterator;
+import ADT.SortedListSetInterface;
+import ADT.SortedDoublyLinkedListSet;
+import Boundary.DonationUI;
 import DAO.EntityInitializer;
+import Entity.Date;
+import Entity.Donation;
+import Entity.Donor;
+import Entity.Item;
+import Utility.MessageUI;
+import Utility.ClearScreen;
+import Utility.StockUI;
 import java.time.LocalDate;
-import java.util.Stack;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import java.util.Stack; //TO BE IMPLEMENTED
 
 /**
  *
@@ -21,12 +28,13 @@ import java.util.regex.Pattern;
  */
 public class DonationMaintenance {
 
-    private DonationUI donationUI = new DonationUI();
+    private final DonationUI donationUI = new DonationUI();
 
     public void donationManagement(EntityInitializer entityInitialize) {
         SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
         SortedListSetInterface<Donor> donors = entityInitialize.getDonors();
         SortedListSetInterface<Item> items = entityInitialize.getItems();
+
         int opt;
         do {
             opt = validateMenuNumberFormatInput(donationUI.getDonationMenu());
@@ -54,9 +62,11 @@ public class DonationMaintenance {
                     break;
                 case 6:
                     ClearScreen.clearJavaConsoleScreen();
-                    FilterDonation(donations, items);
+                    FilterDonation(donations, items, donors);
                     break;
                 case 7:
+                    ClearScreen.clearJavaConsoleScreen();
+                    TrackItemInDifferentType(items);
                     break;
                 case 9:
                     break;
@@ -67,7 +77,7 @@ public class DonationMaintenance {
         } while (opt != 9);
     }
 
-//validation
+    //validation
     private int validateMenuNumberFormatInput(String input) {
         int num;
         try {
@@ -128,7 +138,7 @@ public class DonationMaintenance {
     }
 
     private boolean validateContactNumberFormat(String contact) {
-        String regex = "^{10,15}&";
+        String regex = "^\\d{3}-\\d{7,8}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(contact);
         return matcher.matches();
@@ -253,12 +263,13 @@ public class DonationMaintenance {
 
     private String getValidContactNumber() {
         String contact;
-        boolean isValid = true;
+        boolean isValid = false;
         do {
             contact = donationUI.getInputString("Contact Number (012-34567890): ");
-            if (!validateContactNumberFormat(contact)) {
+            if (validateContactNumberFormat(contact)) {
+                isValid = true;
+            } else {
                 MessageUI.displayInvalidContactFormatMessage();
-                isValid = false;
             }
         } while (!isValid);
         return contact;
@@ -266,25 +277,27 @@ public class DonationMaintenance {
 
     private String getValidEmail() {
         String email;
-        boolean isValid = true;
+        boolean isValid = false;
         do {
             email = donationUI.getInputString("Email (abc@example.com): ");
-            if (!validateEmailFormat(email)) {
+            if (validateEmailFormat(email)) {
+                isValid = true;
+            } else {
                 MessageUI.displayInvalidEmailFormatMessage();
-                isValid = false;
             }
         } while (!isValid);
         return email;
     }
 
-    private String generateNextDonationId(SortedListSetInterface<Donation> donations) {
-        int nextDonationId = Integer.parseInt(donations.getLastEntries().getDonationId().substring(1)) + 1;
-        return "D" + String.format("%03d", nextDonationId);
-    }
+    public double getTotalValue(SortedListSetInterface<Item> items) {
+        double amount = 0;
 
-    private String generateNextItemId(SortedListSetInterface<Item> items, int n) {
-        int nextItemId = Integer.parseInt(items.getLastEntries().getItemId().substring(1)) + n;
-        return "I" + String.format("%03d", nextItemId);
+        Iterator<Item> iterator = items.getIterator();
+        do {
+            Item item = iterator.next();
+            amount += item.getTotalAmount();
+        } while (iterator.hasNext());
+        return amount;
     }
 
     //list method
@@ -353,6 +366,16 @@ public class DonationMaintenance {
     }
 
     //return method
+    private String generateNextDonationId(SortedListSetInterface<Donation> donations) {
+        int nextDonationId = Integer.parseInt(donations.getLastEntries().getDonationId().substring(1)) + 1;
+        return "D" + String.format("%03d", nextDonationId);
+    }
+
+    private String generateNextItemId(SortedListSetInterface<Item> items, int n) {
+        int nextItemId = Integer.parseInt(items.getLastEntries().getItemId().substring(1)) + n;
+        return "I" + String.format("%03d", nextItemId);
+    }
+
     private Item createMonetoryItem(String itemId, String type) {
         int opt;
         String methodName = null;
@@ -621,9 +644,9 @@ public class DonationMaintenance {
 
     //3. search
     public void SearchDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
-        donationUI.printTitle("Searh a donation details (can amend or remove)");
+        donationUI.printTitle("Searh a specific donation details (can amend or remove)");
         String id = donationUI.getInputString(""
-                + "Enter Donation ID or related Item ID "
+                + "Enter Donation ID or related Item ID"
                 + "\n(Donation ID = D001, Item Id = I001): ");
         Donation currentDonation = findDonation(id, donations);
         Item currentItem = findItem(id, items);
@@ -785,6 +808,7 @@ public class DonationMaintenance {
 
     //5. remove
     public void RemoveDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
+        donationUI.printTitle("Remove donation and item in different method");
         int opt;
         do {
             opt = validateMenuNumberFormatInput(donationUI.getRemoveDonationMenu());
@@ -801,6 +825,10 @@ public class DonationMaintenance {
                 case 3:
                     ClearScreen.clearJavaConsoleScreen();
                     removedAllByDateRange(donations, items);
+                    break;
+                case 4:
+                    ClearScreen.clearJavaConsoleScreen();
+                    removedExpiredItem(donations, items);
                     break;
                 case 9:
                     break;
@@ -864,25 +892,229 @@ public class DonationMaintenance {
 
     public void removedAllByDateRange(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
         donationUI.printTitle("Remove all donations within a specific donation date range");
-        Date dateAfter = getValidDonationDate("Donation After Date (dd-mm-yyyy): ");
-        Date dateBefore = getValidDonationDate("Donation Before Date (dd-mm-yyyy): ");
         SortedListSetInterface<Donation> donationRemovedList = new SortedDoublyLinkedListSet<>();
         SortedListSetInterface<Item> itemRemovedList = new SortedDoublyLinkedListSet<>();
+        filterByRangeOfDate(donations, donationRemovedList, itemRemovedList);
+
+        String text = "\nNo donations were received within this range of date";
+        handleConfirmRemoveProcess(donations, items, donationRemovedList, itemRemovedList, text);
+    }
+
+    public void removedExpiredItem(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
+        donationUI.printTitle("All Expired Item Record");
+        SortedListSetInterface<Item> expiredItems = new SortedDoublyLinkedListSet<>();
+        filterByExpiredItem(items, expiredItems);
+        if (!expiredItems.isEmpty()) {
+            if (validateYesNoOption("\nRemoved All Expired Items Confirmation (Y = yes, N = No)? ") == 'Y') {
+                Iterator<Donation> iterator = donations.getIterator();
+                do {
+                    Donation donation = iterator.next();
+                    donation.getDonatedItemList().relativeComplement(expiredItems);
+                } while (iterator.hasNext());
+                items.relativeComplement(expiredItems);
+                MessageUI.displaySuccessfulMessage();
+            } else {
+                MessageUI.displayUnsuccessfulMessage();
+            }
+        }
+    }
+
+    //6. filter
+    public void FilterDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donor> donors) {
+        donationUI.printTitle("Filter donation and item based on specific criteria");
+        int opt;
+        do {
+            opt = validateMenuNumberFormatInput(donationUI.getFilterDonationMenu());
+
+            switch (opt) {
+                case 1:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("Donation Made By this donor");
+                    String contactNumber = getValidContactNumber();
+                    Donor donor = findDonor(contactNumber, donors);
+                    if (donor != null) {
+                        filterByDonor(donor, donations);
+                    } else {
+                        donationUI.printText("\nThis contact number " + contactNumber + " Not Found !");
+                    }
+                    break;
+                case 2:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("Donation Record within the past week (Local Date: " + getCurrentDate() + ")");
+                    filterByRecentDonation(opt, donations);
+                    break;
+                case 3:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("Donation Record within the past month (Local Date: " + getCurrentDate() + ")");
+                    filterByRecentDonation(opt, donations);
+                    break;
+                case 4:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("Donation Record within a range of date");
+                    filterByRecentDonation(opt, donations);
+                    break;
+                case 5:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("Expiry Items (Local Date: " + getCurrentDate() + ")");
+                    SortedListSetInterface<Item> expiredItems = new SortedDoublyLinkedListSet<>();
+                    filterByExpiredItem(items, expiredItems);
+                    break;
+                case 6:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("Upcoming Expiry Items within next 15 days  (Local Date: " + getCurrentDate() + ")");
+                    filterByUpcomingExpiryItem(items);
+                    break;
+                case 9:
+                    break;
+                default:
+                    MessageUI.displayInvalidOptionMessage();
+                    break;
+            }
+        } while (opt != 9);
+    }
+
+    public void filterByDonor(Donor donor, SortedListSetInterface<Donation> donations) {
+        SortedListSetInterface<Donation> donationForOneDonor = new SortedDoublyLinkedListSet<>();
+        SortedListSetInterface<Item> itemForOneDonor = new SortedDoublyLinkedListSet<>();
+        Iterator<Donation> iterator = donations.getIterator();
+        do {
+            Donation donation = iterator.next();
+            if (donation.getDonor().equals(donor)) {
+                donationForOneDonor.add(donation);
+                itemForOneDonor.merge(donation.getDonatedItemList());
+            }
+        } while (iterator.hasNext());
+
+        if (!donationForOneDonor.isEmpty()) {
+            listAllDonationInACS(donationForOneDonor);
+            donationUI.printText("Total Value: RM" + getTotalValue(itemForOneDonor) + "\n");
+        } else {
+            donationUI.printText("\nNo donation record for this donor !!\n");
+        }
+    }
+
+    public void filterByRecentDonation(int opt, SortedListSetInterface<Donation> donations) {
+        SortedListSetInterface<Donation> filterDonation = new SortedDoublyLinkedListSet<>();
+        SortedListSetInterface<Item> itemListed = new SortedDoublyLinkedListSet<>();
+        Iterator<Donation> iterator = donations.getIterator();
+        switch (opt) {
+            case 1:
+                do {
+                    Donation donation = iterator.next();
+                    if (donation.getDonationDate().withinPassWeek(getCurrentDate())) {
+                        filterDonation.add(donation);
+                        itemListed.merge(donation.getDonatedItemList());
+                    }
+                } while (iterator.hasNext());
+                break;
+            case 2:
+                do {
+                    Donation donation = iterator.next();
+                    if (donation.getDonationDate().withinPassMonth(getCurrentDate())) {
+                        filterDonation.add(donation);
+                        itemListed.merge(donation.getDonatedItemList());
+                    }
+                } while (iterator.hasNext());
+                break;
+            default:
+                filterByRangeOfDate(donations, filterDonation, itemListed);
+                break;
+        }
+        if (!filterDonation.isEmpty()) {
+            listAllDonationInACS(filterDonation);
+            donationUI.printText("Total Value: RM" + getTotalValue(itemListed) + "\n");
+        } else {
+            donationUI.printText("\nNo donation record found!!\n");
+        }
+    }
+
+    public void filterByRangeOfDate(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donation> filterDonation, SortedListSetInterface<Item> itemListed) {
+        Date dateAfter = getValidDonationDate("Donation After Date (dd-mm-yyyy): ");
+        Date dateBefore = getValidDonationDate("Donation Before Date (dd-mm-yyyy): ");
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
             if (donation.getDonationDate().afterDate(dateAfter) && donation.getDonationDate().beforeDate(dateBefore)) {
-                donationRemovedList.add(donation);
-                itemRemovedList.merge(donation.getDonatedItemList());
+                filterDonation.add(donation);
+                itemListed.merge(donation.getDonatedItemList());
             }
         } while (iterator.hasNext());
-
-        String text = "\nNo donations were received within date " + dateAfter + " until " + dateBefore;
-        handleConfirmRemoveProcess(donations, items, donationRemovedList, itemRemovedList, text);
     }
 
-    //6. filter
-    public void FilterDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
-
+    public void filterByExpiredItem(SortedListSetInterface<Item> items, SortedListSetInterface<Item> expiredItems) {
+        Iterator<Item> iterator = items.getIterator();
+        do {
+            Item item = iterator.next();
+            if (item.getType().equalsIgnoreCase("Food and Beverage") && item.getExpiryDate().beforeDate(getCurrentDate())) {
+                expiredItems.add(item);
+            }
+        } while (iterator.hasNext());
+        if (!expiredItems.isEmpty()) {
+            listAllItemInACS(expiredItems);
+        } else {
+            donationUI.printText("\nNo expired item found !!\n");
+        }
     }
+
+    public void filterByUpcomingExpiryItem(SortedListSetInterface<Item> items) {
+        SortedListSetInterface<Item> expiredItem = new SortedDoublyLinkedListSet<>();
+        Iterator<Item> iterator = items.getIterator();
+        do {
+            Item item = iterator.next();
+            if (item.getType().equalsIgnoreCase("Food and Beverage") && item.getExpiryDate().next15Days(getCurrentDate())) {
+                expiredItem.add(item);
+            }
+        } while (iterator.hasNext());
+        if (!expiredItem.isEmpty()) {
+            listAllItemInACS(expiredItem);
+        } else {
+            donationUI.printText("\nNo upcoming expiry item found !!\n");
+        }
+    }
+
+    //7. track item in different type
+    public void TrackItemInDifferentType(SortedListSetInterface<Item> items) {
+        donationUI.printTitle("Track Donated Items In Different Type");
+        int opt;
+        do {
+            opt = validateMenuNumberFormatInput(donationUI.getItemTypeMenu());
+            String typeOpt = StockUI.getItemType(opt);
+
+            SortedListSetInterface<Item> itemInType = new SortedDoublyLinkedListSet<>();
+            Iterator<Item> iterator = items.getIterator();
+            do {
+                Item item = iterator.next();
+                if (item.getType().equalsIgnoreCase(typeOpt)) {
+                    itemInType.add(item);
+                }
+            } while (iterator.hasNext());
+
+            if (!itemInType.isEmpty()) {
+                ClearScreen.clearJavaConsoleScreen();
+                donationUI.printText("\n\nAll Donated Item In Type (" + typeOpt + ")");
+                listAllItemInACS(itemInType);
+                int min = StockUI.minimunInventory(typeOpt);
+                if (typeOpt.equalsIgnoreCase("Monetary")) {
+                    double ttlAmount = StockUI.getTotalAmount(typeOpt, items);
+                    donationUI.printText("Total Number of Amount: RM" + ttlAmount);
+                    donationUI.printText("Open distribution minimum : " + min);
+                    if (ttlAmount < min) {
+                        MessageUI.displayNotEnoughStockMessage(typeOpt);
+                    } else {
+                        MessageUI.displayEnoughStockMessage(typeOpt);
+                    }
+                } else {
+                    int ttlQty = StockUI.getTotalInventory(typeOpt, items);
+                    donationUI.printText("Total Number of quantity: " + ttlQty);
+                    donationUI.printText("Open distribution minimum : " + min);
+                    if (ttlQty < min) {
+                        MessageUI.displayNotEnoughStockMessage(typeOpt);
+                    } else {
+                        MessageUI.displayEnoughStockMessage(typeOpt);
+                    }
+                }
+            }
+        } while (opt != 9);
+    }
+
 }
