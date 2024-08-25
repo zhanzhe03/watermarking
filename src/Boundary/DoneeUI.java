@@ -123,7 +123,7 @@ public class DoneeUI {
     }
 
     public void printAllDonees(SortedListSetInterface<Donee> donees) {
-        System.out.println("\n" + donees);
+        System.out.println(donees);
     }
 
     public void printRequest(SortedListSetInterface<Request> request) {
@@ -179,8 +179,15 @@ public class DoneeUI {
         return new Date(day, month, year);
     }
 
-    public String comfirmOperation() {
-        System.out.println("Confirm to perform operation ? (Y = Yes)");
+    public String confirmOperation() {
+        System.out.println("Confirm to perform this operation ? (Y = Yes)");
+        System.out.print("Opt >");
+        String yesNo = scanner.nextLine();
+        return yesNo;
+    }
+    
+    public String continueOperation() {
+        System.out.println("Continue to perform this operation ? (Y = Yes)");
         System.out.print("Opt >");
         String yesNo = scanner.nextLine();
         return yesNo;
