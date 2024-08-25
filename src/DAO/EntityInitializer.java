@@ -50,10 +50,19 @@ public class EntityInitializer {
         Donee donee4 = new Donee("DE004", "INDIVIDUAL", "KIKI GUO", "kiki@gmail.com", "012503251", "No20 Taman Gembira", "Location A");
         Donee donee5 = new Donee("DE005", "INDIVIDUAL", "DARREN LIM", "darren@gmail.com", "0123030520", "No30 Taman Gembira", "Location A");
 
+        Request request1 = new Request(new Date(10, 2, 2023), "Food and Beverage");
+        Request request2 = new Request(new Date(11, 3, 2022), "Clothing and Apparel");
+        Request request3 = new Request(new Date(12, 3, 2021), "Household Items");
+        Request request4 = new Request(new Date(15, 4, 2024), "Food and Beverage");
+        Request request5 = new Request(new Date(20, 7, 2024), "Medical");
+        Request request6 = new Request(new Date(8, 5, 2023), "Food and Beverage");
+        Request request7 = new Request(new Date(5, 5, 2022), "Monetary");
+        Request request8 = new Request(new Date(2, 6, 2021), "Educational Materials");
+
         Item item1 = new Item("I001", "Monetary", "Cash", 200);
         Item item2 = new Item("I002", "Household Items", "Bed", 2, 120);
         Item item3 = new Item("I003", "Electronic", "Accessories", 2, 20);
-        Item item4 = new Item("I004", "Food and Beverage", "Water Bottle", 20, 1.20, new Date(20, 4, 2025));
+        Item item4 = new Item("I004", "Food and Beverage", "Water Bottle", 20, 1.20, new Date(10, 8, 2024));
         Item item5 = new Item("I005", "Clothing and Apparel", "Clothes", 5, 30);
         Item item6 = new Item("I006", "Clothing and Apparel", "Gloves", 20, 15);
         Item item7 = new Item("I007", "Monetary", "Online Transfers", 750);
@@ -62,19 +71,19 @@ public class EntityInitializer {
         Item item10 = new Item("I010", "Monetary", "QR Code Payment", 120);
         Item item11 = new Item("I011", "Medical", "Wheelchair", 1, 180);
         Item item12 = new Item("I012", "Clothing and Apparel", "Shoes", 10, 50);
-        Item item13 = new Item("I013", "Food and Beverage", "White Rice", 30, 1.00, new Date(20, 9, 2024));
-        Item item14 = new Item("I014", "Food and Beverage", "Packaged Snacks", 4, 9, new Date(31, 12, 2024));
+        Item item13 = new Item("I013", "Food and Beverage", "White Rice", 30, 1.00, new Date(1, 9, 2024));
+        Item item14 = new Item("I014", "Food and Beverage", "Packaged Snacks", 4, 9, new Date(12, 10, 2024));
         Item item15 = new Item("I015", "Household Items", "Table", 4, 30);
         Item item16 = new Item("I016", "Educational Materials", "Textbook", 10, 5);
         Item item17 = new Item("I017", "Electronic", "Mobile Phone", 1, 800);
         Item item18 = new Item("I018", "Medical", "First and Kit", 3, 50);
 
-        Donation donation1 = new Donation("D001", new Date(1, 8, 2024), donor1);
-        Donation donation2 = new Donation("D002", new Date(1, 8, 2024), donor2);
+        Donation donation1 = new Donation("D001", new Date(22, 7, 2024), donor1);
+        Donation donation2 = new Donation("D002", new Date(28, 7, 2024), donor2);
         Donation donation3 = new Donation("D003", new Date(3, 8, 2024), donor3);
-        Donation donation4 = new Donation("D004", new Date(7, 8, 2024), donor2);
-        Donation donation5 = new Donation("D005", new Date(7, 8, 2024), donor3);
-        Donation donation6 = new Donation("D006", new Date(10, 8, 2024), donor2);
+        Donation donation4 = new Donation("D004", new Date(10, 8, 2024), donor2);
+        Donation donation5 = new Donation("D005", new Date(19, 8, 2024), donor3);
+        Donation donation6 = new Donation("D006", new Date(23, 8, 2024), donor2);
 
         donation1.assignItems(item1);
         donation1.assignItems(item2);
@@ -96,9 +105,11 @@ public class EntityInitializer {
         donation6.assignItems(item18);
 
         Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 1001));
+
         Distribution distribution2 = new Distribution("DIST002", new Date(1, 8, 2024),donee2);
         Distribution distribution3 = new Distribution("DIST003", new Date(11, 8, 2024),donee3);
-        Distribution distribution4 = new Distribution("DIST004", new Date(23, 8, 2024),donee4);
+        Distribution distribution4 = new Distribution("DIST004", new Date(22, 8, 2024),donee4);
+
 
         // Create a selected item
         SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
@@ -109,16 +120,16 @@ public class EntityInitializer {
         SelectedItem selectedItem6 = new SelectedItem("I006", 2);
 
         // Add selected item to the distribution
-      distribution1.setDonee(donee1);
+        distribution1.setDonee(donee1);
         distribution1.addSelectedItem(selectedItem1);
         distribution1.addSelectedItem(selectedItem2);
-        
-       distribution2.setDonee(donee2);
+
+        distribution2.setDonee(donee2);
         distribution2.addSelectedItem(selectedItem3);
-        
-       distribution3.setDonee(donee3);
+
+        distribution3.setDonee(donee3);
         distribution3.addSelectedItem(selectedItem4);
-        
+
         distribution4.setDonee(donee4);
         distribution4.addSelectedItem(selectedItem5);
         distribution4.addSelectedItem(selectedItem6);
@@ -127,7 +138,6 @@ public class EntityInitializer {
         distributions.add(distribution2);
         distributions.add(distribution3);
         distributions.add(distribution4);
-
 
         donors.add(donor1);
         donors.add(donor2);
@@ -158,6 +168,16 @@ public class EntityInitializer {
         donations.add(donation4);
         donations.add(donation5);
         donations.add(donation6);
+
+        donee1.addRequest(request1);
+        donee1.addRequest(request2);
+        donee2.addRequest(request2);
+        donee2.addRequest(request4);
+        donee2.addRequest(request7);
+        donee3.addRequest(request3);
+        donee4.addRequest(request4);
+        donee5.addRequest(request5);
+        
 
         donees.add(donee1);
         donees.add(donee2);

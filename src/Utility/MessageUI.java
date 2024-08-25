@@ -19,6 +19,14 @@ public class MessageUI {
             System.out.print("-");
     }
     
+    public static void displayNotEnoughStockMessage(String typeOpt){
+        System.out.println(ANSI_RED + "\nPlease find more type (" + typeOpt + ") of donations to open distribution !!" + ANSI_BLACK);
+    }
+    
+    public static void displayEnoughStockMessage(String typeOpt){
+        System.out.println(ANSI_GREEN + "\nThis type (" + typeOpt + ") of item is currently sufficient for distribution !!" + ANSI_BLACK);
+    }
+    
     public static void displaySuccessfulMessage(){
         System.out.println(ANSI_GREEN + "\nOperation Successful." + ANSI_BLACK);
     }

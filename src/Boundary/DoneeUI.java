@@ -5,9 +5,11 @@
 package Boundary;
 
 import ADT.SortedListSetInterface;
+import Entity.Date;
 import java.time.LocalDate;
 import java.util.Scanner;
 import Entity.Donee;
+import Entity.Request;
 
 /**
  *
@@ -16,10 +18,11 @@ import Entity.Donee;
 public class DoneeUI {
 
     Scanner scanner = new Scanner(System.in);
-    
-    public void displayEnDash(){
-        for (int i = 0; i < 160; i++) 
+
+    public void displayEnDash() {
+        for (int i = 0; i < 220; i++) {
             System.out.print("-");
+        }
     }
 
     public String getDoneeMenu() {
@@ -83,26 +86,32 @@ public class DoneeUI {
         scanner.nextLine();
         return opt;
     }
-    
+
     public int getDoneeUpdateMenu() {
         System.out.println(""
                 + "\nDONEE UPDATE MANAGEMENT"
                 + "\n 1. Donee Name"
                 + "\n 2. Donee Contact"
                 + "\n 3. Donee Location"
-                + "\n 4. BACK to Donee MENU");
+                + "\n 4. Donee Request"
+                + "\n 5. BACK to Donee MENU");
         System.out.print("\nopt > ");
         int opt = scanner.nextInt();
         scanner.nextLine();
         return opt;
     }
-    
-    public String getConfirmation() {
-        System.out.print("Confirm to perform this operation ? (Y = Yes)");
+
+    public String getSortMenu() {
+        System.out.println(""
+                + "\nDONEE SORT MANAGEMENT"
+                + "\n 1. Sorted by Donee ID with ASC"
+                + "\n 2. Sorted by Donee ID with DACS"
+                + "\n 3. Sorted by Donee Request Date with ASC"
+                + "\n 4. Sorted by Donee Request Date with DACS"
+                + "\n 5. Back to Donee MENU");
         System.out.print("\nopt > ");
         String opt = scanner.nextLine();
         return opt;
-        
     }
 
     public void printText(String text) {
@@ -110,11 +119,15 @@ public class DoneeUI {
     }
 
     public void printDoneeTitle() {
-        System.out.printf("\n%-20s %-20s %-20s %-25s %-20s %-35s %-20s\n", "Donee ID", "Donee Type", "Donee Name", "Email", "Contact", "Address", "Location");
+        System.out.printf("\n%-15s %-20s %-20s %-25s %-20s %-30s %-14s %-20s %-20s\n", "Donee ID", "Donee Type", "Donee Name", "Email", "Contact", "Address", "Location", "Request Date", "Request Item");
     }
 
     public void printAllDonees(SortedListSetInterface<Donee> donees) {
-        System.out.println("\n" + donees);
+        System.out.println(donees);
+    }
+
+    public void printRequest(SortedListSetInterface<Request> request) {
+        System.out.print(request);
     }
 
     public void printNumberOfEntries(SortedListSetInterface<Donee> donees) {
@@ -150,14 +163,34 @@ public class DoneeUI {
         String address = scanner.nextLine();
         return address;
     }
-    
-    public String comfirmOperation(){
-        System.out.println("Confirm to perform operation ? (Y = Yes)");
+
+    public Date getRequestDate() {
+        int day, month, year;
+
+        System.out.print("Enter day (1-31): ");
+        day = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Enter month (1-12): ");
+        month = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Enter year (e.g., 2024): ");
+        year = Integer.parseInt(scanner.nextLine());
+
+        return new Date(day, month, year);
+    }
+
+    public String confirmOperation() {
+        System.out.println("Confirm to perform this operation ? (Y = Yes)");
         System.out.print("Opt >");
         String yesNo = scanner.nextLine();
         return yesNo;
     }
     
-    
+    public String continueOperation() {
+        System.out.println("Continue to perform this operation ? (Y = Yes)");
+        System.out.print("Opt >");
+        String yesNo = scanner.nextLine();
+        return yesNo;
+    }
 
 }
