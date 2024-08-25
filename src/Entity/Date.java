@@ -16,7 +16,6 @@ public class Date {
         this.year = year;
     }
 
-  
     public int getDay() {
         return day;
     }
@@ -40,8 +39,8 @@ public class Date {
     public void setYear(int year) {
         this.year = year;
     }
-    
-    public boolean beforeDate(Date otherDate){
+
+    public boolean beforeDate(Date otherDate) {
         if (this.year < otherDate.year) {
             return true;
         } else if (this.year == otherDate.year) {
@@ -53,8 +52,8 @@ public class Date {
         }
         return false;
     }
-    
-    public boolean afterDate(Date otherDate){
+
+    public boolean afterDate(Date otherDate) {
         if (this.year > otherDate.year) {
             return true;
         } else if (this.year == otherDate.year) {
@@ -66,7 +65,7 @@ public class Date {
         }
         return false;
     }
-    
+
     //check within pass week
     public boolean withinPassWeek(Date otherDate) {
         int numberOfDays = 8;
@@ -143,20 +142,20 @@ public class Date {
 
         return (this.year % 4 == 0 && this.month > 2) ? daysInMonth + 1 : daysInMonth;
     }
-    
-      // This method calculates the difference in days between this date and another date
+
+    // This method calculates the difference in days between this date and another date
     public int daysBetween(Date otherDate) {
         // Convert both dates to "days since year 0" and subtract them
-        int thisTotalDays = this.toDays();
-        int otherTotalDays = otherDate.toDays();
-        return thisTotalDays - otherTotalDays;
+//        int thisTotalDays = this.toDays();
+//        int otherTotalDays = otherDate.toDays();
+//        return thisTotalDays - otherTotalDays;
+        return this.toDays() - otherDate.toDays();
     }
 
     // Converts the date to the number of days since year 0 (ignoring leap years and other complications)
     private int toDays() {
         return this.year * 365 + this.month * 30 + this.day;
     }
-    
 
     @Override
     public String toString() {
@@ -189,7 +188,7 @@ public class Date {
         int hash = 7;
         return hash;
     }
-    
+
     public int compareTo(Date other) {
         if (this.year != other.year) {
             return Integer.compare(this.year, other.year);
