@@ -614,7 +614,13 @@ public class DistributionManager {
         }
 
         // Optionally, update the status or other fields of the merged distribution
+         int lastMergeId = Integer.parseInt(sameLocationDistributions.getLastEntries().getDistributionId().substring(4)) + 1;
+            String newMergeId = "MERGED" + String.format("%03d", lastMergeId);
         baseDistribution.setStatus("Merged");
+        baseDistribution.setDistributionId(newMergeId);
+        //baseDistribution.setDonee(null);
+        baseDistribution.setDistributionDate(new Date(localDay, localMonth, localYear));
+
 
         // Display the merged distribution
         distributionUI.displayMessage("\nMerged Distribution:");
