@@ -125,6 +125,12 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
         return lastNode.data;
     }
     
+        
+    @Override
+    public T getFirstEntry(){
+        return firstNode.data;
+    }
+    
  
     @Override
     public T getEntry(int givenPosition){

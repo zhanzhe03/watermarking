@@ -24,6 +24,8 @@ public interface SortedListSetInterface<T extends Comparable<T>> {
     public boolean contains(T anEntry);
     
     public T getLastEntries();
+    
+    public T getFirstEntry();
 
     public int getNumberOfEntries();
 
