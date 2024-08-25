@@ -94,4 +94,3 @@ public class StockUI {
         return getTotalAmount(type,items) >= minimunInventory(type);
     }
 }
-
