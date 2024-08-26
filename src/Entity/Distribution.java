@@ -22,6 +22,11 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
 
     private Donee donee;
 
+    public Distribution() {
+    }
+
+    
+    
     public Distribution(String distributionId, Date distributionDate, Donee donee) {
         this.distributionId = distributionId;
         this.distributionDate = distributionDate;
