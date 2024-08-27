@@ -601,7 +601,7 @@ public class DistributionManager {
     private void updateDoneeDetails(Distribution updateDist, SortedListSetInterface<Donee> donees) {
         distributionUI.displayMessage("Update Donee Details:\n");
         distributionUI.displayMessage("Distribution Details: " + updateDist);
-        distributionUI.displayMessage("Current Donee Details: " + updateDist.getDonee());
+        distributionUI.displayMessage("Current Donee Details: " + updateDist.getDistributedDoneeList());
 
         String yesNo;
         Donee foundDonee = null;
