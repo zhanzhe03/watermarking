@@ -104,12 +104,12 @@ public class EntityInitializer {
         donation6.assignItems(item17);
         donation6.assignItems(item18);
         
-        Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2024));
+        Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2023),donee1);
         
-        Distribution distribution2 = new Distribution("DIST002", new Date(1, 8, 2024), donee2);
-        Distribution distribution3 = new Distribution("DIST003", new Date(11, 8, 2024), donee3);
-        Distribution distribution4 = new Distribution("DIST004", new Date(25, 8, 2024), donee4);
-        Distribution distribution5 = new Distribution("DIST005", new Date(26, 8, 2022), donee4);
+        Distribution distribution2 = new Distribution("DIST002", new Date(1, 8, 2024));
+        Distribution distribution3 = new Distribution("DIST003", new Date(11, 8, 2024));
+        Distribution distribution4 = new Distribution("DIST004", new Date(25, 8, 2024));
+        Distribution distribution5 = new Distribution("DIST005", new Date(26, 8, 2022));
 
         // Create a selected item
         SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
@@ -120,17 +120,21 @@ public class EntityInitializer {
         SelectedItem selectedItem6 = new SelectedItem("I006", 2);
 
         // Add selected item to the distribution
-        distribution1.setDonee(donee1);
+//distribution1.addDonee(donee1);
         distribution1.addSelectedItem(selectedItem1);
         distribution1.addSelectedItem(selectedItem2);
         
+        distribution2.addDonee(donee2);
         distribution2.addSelectedItem(selectedItem3);
         
+        distribution3.addDonee(donee3);
         distribution3.addSelectedItem(selectedItem4);
         
+        distribution4.addDonee(donee4);
         distribution4.addSelectedItem(selectedItem5);
         distribution4.addSelectedItem(selectedItem6);
         
+        distribution5.addDonee(donee1);
         distribution5.addSelectedItem(selectedItem4);
         
         distributions.add(distribution1);

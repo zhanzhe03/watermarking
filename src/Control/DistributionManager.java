@@ -734,7 +734,7 @@ public class DistributionManager {
             if (sameLocationDistributions.getNumberOfEntries() > 1) {
                 String mergeResponse = distributionUI.getInputString("\nDo you want to merge distributions with the same location? (yes/no) > ").toLowerCase();
                 if (mergeResponse.equals("yes")) {
-                    mergeDistributions(sameLocationDistributions,distributions);
+                    mergeLocationDistributions(sameLocationDistributions,distributions);
                 }
             }
             
@@ -747,18 +747,44 @@ public class DistributionManager {
         }
     }
 
-    private void mergeDistributions(SortedListSetInterface<Distribution> mergeDistributions,SortedListSetInterface<Distribution> distributions) {
+    private void mergeDistributions(SortedListSetInterface<Distribution> sameDoneeDistribution,SortedListSetInterface<Distribution> distributions) {
 
         // Get the first distribution as the base for merging
-        Distribution baseDistribution = mergeDistributions.getFirstEntry();
+        Distribution baseDistribution = sameDoneeDistribution.getFirstEntry();
 
         // Iterator for the remaining distributions
-        Iterator<Distribution> iterator = mergeDistributions.getIterator();
+        Iterator<Distribution> iterator = sameDoneeDistribution.getIterator();
         iterator.next(); // Skip the first entry since it's the base
 
         
         while (iterator.hasNext()) {
             Distribution currentDistribution = iterator.next();
+            baseDistribution.getDistributedItemList().merge(currentDistribution.getDistributedItemList());
+           distributions.remove(currentDistribution);
+        }
+
+
+        baseDistribution.setStatus("Merged");
+        baseDistribution.setDistributionDate(new Date(localDay, localMonth, localYear));
+
+        distributionUI.displayMessage("\nMerged Distribution:");
+        distributionUI.printDistributionTitleHeader();
+        distributionUI.printDistributionRecord(baseDistribution);
+    }
+    
+        private void mergeLocationDistributions(SortedListSetInterface<Distribution> sameLocationDistribution,SortedListSetInterface<Distribution> distributions) {
+
+        // Get the first distribution as the base for merging
+        Distribution baseDistribution = sameLocationDistribution.getFirstEntry();
+
+        // Iterator for the remaining distributions
+        Iterator<Distribution> iterator = sameLocationDistribution.getIterator();
+        iterator.next(); // Skip the first entry since it's the base
+
+        
+        while (iterator.hasNext()) {
+            Distribution currentDistribution = iterator.next();
+           // baseDistribution.
             baseDistribution.getDistributedItemList().merge(currentDistribution.getDistributedItemList());
            distributions.remove(currentDistribution);
         }

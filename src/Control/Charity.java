@@ -54,7 +54,7 @@ public class Charity {
                 }
             } catch (NumberFormatException ex) {
                 System.out.println("1");
-                MessageUI.displayInvalidIntegerMessage();
+                    MessageUI.displayInvalidIntegerMessage();
             }
 
         } while (opt != 9);

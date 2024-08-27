@@ -20,18 +20,18 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
     private String status;
     private SortedListSetInterface<SelectedItem> distributedItemList;       //multiple Items
 
+    private SortedListSetInterface<Donee> distributedDoneeList;
     private Donee donee;
 
     public Distribution() {
     }
 
-    
-    
     public Distribution(String distributionId, Date distributionDate, Donee donee) {
         this.distributionId = distributionId;
         this.distributionDate = distributionDate;
         this.donee = donee;
         this.distributedItemList = new SortedDoublyLinkedListSet<>();
+        this.distributedDoneeList = new SortedDoublyLinkedListSet<>();
         this.status = "Pending";
 
     }
@@ -40,15 +40,16 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         this.distributionId = distributionId;
         this.distributionDate = distributionDate;
         this.distributedItemList = new SortedDoublyLinkedListSet<>();
+        this.distributedDoneeList = new SortedDoublyLinkedListSet<>();
         this.status = "Pending";
-    }
-
-    public void assignItems(SelectedItem selecteditem) {
-        distributedItemList.add(selecteditem);
     }
 
     public void addSelectedItem(SelectedItem selectedItem) {
         distributedItemList.add(selectedItem);
+    }
+
+    public void addDonee(Donee donee) {
+        distributedDoneeList.add(donee);
     }
 
     public String getDistributionId() {
@@ -65,6 +66,10 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
 
     public void setDistributionDate(Date date) {
         this.distributionDate = date;
+    }
+
+    public void setDistributedDoneeList(SortedListSetInterface<Donee> distributedDoneeList) {
+        this.distributedDoneeList = distributedDoneeList;
     }
 
     public SortedListSetInterface<SelectedItem> getDistributedItemList() {
@@ -98,8 +103,20 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
 
     @Override
     public String toString() {
-        String outputStr = String.format("\n%-20s  %-15s  %-15s  %-15s  ",distributionId, distributionDate, donee.getDoneeId(), donee.getLocation());
-        // outputStr+=String.format(donee.getDoneeId()+"");
+        String outputStr = String.format("\n%-20s  %-15s  ", distributionId, distributionDate);
+        if (!distributedDoneeList.isEmpty()) {
+            Iterator<Donee> doneeiterator = distributedDoneeList.getIterator();
+            Donee doneeList = doneeiterator.next();
+            outputStr += String.format("%-15s  %-15s  ",doneeList.getDoneeId(),doneeList.getLocation());
+            while (doneeiterator.hasNext()) {
+                doneeList = doneeiterator.next();
+                outputStr += String.format("\n%-20s  %-15s  ", "", "");
+                outputStr += String.format("%-15s  %-15s  ",doneeList.getDoneeId(),doneeList.getLocation());
+            }
+        }else{
+            outputStr += String.format("%-15s  %-15s  ",donee.getDoneeId(),donee.getLocation());
+        }
+
         Iterator<SelectedItem> iterator = distributedItemList.getIterator();
         SelectedItem item = iterator.next();
         outputStr += String.format(item + "");
@@ -111,6 +128,10 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         outputStr += String.format("%-15s  ", status);
 
         return outputStr;
+    }
+
+    public SortedListSetInterface<Donee> getDistributedDoneeList() {
+        return distributedDoneeList;
     }
 
 }
