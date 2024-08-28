@@ -80,9 +80,41 @@ public class MessageUI {
         System.out.println(ANSI_RED + "\nYour input quantity has exceeded." + ANSI_BLACK);
     }
     
-        public static void displayInvalidAmountMessage(){
+    public static void displayInvalidAmountMessage(){
         System.out.println(ANSI_RED + "\nPlease enter a valid amount." + ANSI_BLACK);
     }
+    
+    public static void displayInvalidItemMessage(){
+        System.out.println(ANSI_RED + "\nItem not found." + ANSI_BLACK);
+    }
+    
+    public static void displayRecordAddedMessage(){
+        System.out.println(ANSI_GREEN + "\nDistribution record is added." + ANSI_BLACK);
+    }
+    
+        public static void displayNoRecordAddedMessage(){
+        System.out.println(ANSI_RED + "\nNo distribution added." + ANSI_BLACK);
+    }
+    
+    public static void displayInsufficientMessage(){
+        System.out.println(ANSI_RED + "Sumimasih, this category is currently not sufficient for distribution:(\n" + ANSI_BLACK);
+    }  
+    
+    public static void displayInvalidDonee(){
+        System.out.println(ANSI_RED + "\nDonee not found." + ANSI_BLACK);
+    }
+    
+    public static void displayNoRecord(String ID){
+        System.out.println(ANSI_RED+"\nNo record with ID < " + ID + " > exists."+ ANSI_BLACK);
+    }
+    
+    public static void displayRed(String msg){
+        System.out.println(ANSI_RED + msg +ANSI_BLACK);
+    }
+    
+    
+    
+    
         
 
     
