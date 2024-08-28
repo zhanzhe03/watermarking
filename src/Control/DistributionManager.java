@@ -134,7 +134,8 @@ public class DistributionManager {
             } while (selectedDonee == null); // Continue until a valid donee is selected
 
             // Create the new distribution with the selected donee
-            Distribution newDistribution = new Distribution(newDistId, distributedDate, selectedDonee);
+            Distribution newDistribution = new Distribution(newDistId, distributedDate);
+            newDistribution.addDonee(selectedDonee);
 
             do {
                 try {
@@ -664,90 +665,111 @@ public class DistributionManager {
 
     //**** Update purpose
     //**** Search purpose
-    public void SearchDonationDistribution(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-        String input = distributionUI.getInputString("Please enter the keyword to search > ");
-        String lowerInput = input.toLowerCase();
-        boolean found = false;
-        int foundItem = 0;
-        boolean headerPrinted = false;
+public void SearchDonationDistribution(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
+    String input = distributionUI.getInputString("Please enter the keyword to search > ");
+    String lowerInput = input.toLowerCase();
+    boolean found = false;
+    int foundItem = 0;
+    boolean headerPrinted = false;
+     boolean isMatching;
 
-        // List to store matching distributions with the same location
-        SortedListSetInterface<Distribution> sameLocationDistributions = new SortedDoublyLinkedListSet<>();
+    // Lists to store matching distributions
+    SortedListSetInterface<Distribution> sameLocationDistributions = new SortedDoublyLinkedListSet<>();
+    SortedListSetInterface<Distribution> sameDoneeDistributions = new SortedDoublyLinkedListSet<>();
 
-                SortedListSetInterface<Distribution> sameDoneeDistributions = new SortedDoublyLinkedListSet<>();
+    Iterator<Distribution> distributionIterator = distributions.getIterator();
+    distributionUI.displayMessage("\nResult(s) with " + input + " :");
 
-        Iterator<Distribution> distributionIterator = distributions.getIterator();
-        distributionUI.displayMessage("\nResult(s) with " + input + " :");
+    while (distributionIterator.hasNext()) {
+        Distribution currentDistribution = distributionIterator.next();
+       isMatching = false; //reset for each distribution record
 
-        while (distributionIterator.hasNext()) {
-            Distribution currentDistribution = distributionIterator.next();
-            boolean isMatching = false;
-
-            // Check if the distribution ID, date, donee ID, or status contains the keyword
-            if (currentDistribution.getDistributionId().toLowerCase().contains(lowerInput)
-                    || currentDistribution.getDistributionDate().toString().contains(lowerInput)
-                    || currentDistribution.getDonee().getDoneeId().toLowerCase().contains(lowerInput)
-                    || currentDistribution.getStatus().equalsIgnoreCase(lowerInput)) {
-                isMatching = true;
-                 if (currentDistribution.getStatus().equals("Pending")) {
-                    //ask user whether want to
-                }
-            }
-
-            // Check if donee location matches the keyword
-            if (currentDistribution.getDonee().getLocation().equalsIgnoreCase(lowerInput)) {
-                isMatching = true;
-                if (currentDistribution.getStatus().equals("Pending")) {
-                    sameLocationDistributions.add(currentDistribution);
-                }
-            }
-
-            // Check if any item in the distribution matches the keyword
-            Iterator<SelectedItem> selectedItemIterator = currentDistribution.getDistributedItemList().getIterator();
-            while (selectedItemIterator.hasNext()) {
-                SelectedItem selectedItem = selectedItemIterator.next();
-                Item correspondingItem = checkItemExist(donatedItemList, selectedItem.getItemId());
-                if (correspondingItem != null
-                        && (correspondingItem.getItemId().toLowerCase().contains(lowerInput)
-                        || correspondingItem.getDesc().toLowerCase().contains(lowerInput)
-                        || correspondingItem.getType().toLowerCase().contains(lowerInput))) {
+        // 1. Check if distribution ID, date, or status contains the keyword
+        if (currentDistribution.getDistributionId().equalsIgnoreCase(lowerInput)
+                || currentDistribution.getDistributionDate().toString().contains(lowerInput)
+                || currentDistribution.getStatus().equalsIgnoreCase(lowerInput)) {
+            isMatching = true;
+        } 
+        
+        // 2. If no match so far, check Donee details and location
+        else {
+            Iterator<Donee> doneeIterator = currentDistribution.getDistributedDoneeList().getIterator();
+            while (doneeIterator.hasNext()) {
+                Donee selectedDonee = doneeIterator.next();
+                
+                // Check Donee ID
+                if (selectedDonee.getDoneeId().toLowerCase().contains(lowerInput)) {
                     isMatching = true;
+                    if (currentDistribution.getStatus().equals("Pending")) {
+                        sameDoneeDistributions.add(currentDistribution);
+                    }
                 }
-            }
-            if (isMatching) {
-                if (!headerPrinted) {
-                    distributionUI.printDistributionTitleHeader(); // Print header only once
-                    headerPrinted = true;
+
+                // Check Donee Location
+                if (selectedDonee.getLocation().equalsIgnoreCase(lowerInput)) {
+                    isMatching = true;
+                    if (currentDistribution.getStatus().equals("Pending")) {
+                        sameLocationDistributions.add(currentDistribution);
+                    }
                 }
-                distributionUI.printDistributionRecord(currentDistribution);
-                found = true;
-                foundItem++;
             }
         }
 
-        if (!found) {
-            distributionUI.displayMessage("\nNo matching distributions or items found for the keyword: " + input);
-        } else {
-            distributionUI.displayMessage("\n");
-            distributionUI.displayMessage(foundItem + " item(s) found.");
+            // 3. If no Donee or location match, check items within the distribution
+            if (!isMatching) {
+                Iterator<SelectedItem> selectedItemIterator = currentDistribution.getDistributedItemList().getIterator();
+                while (selectedItemIterator.hasNext()) {
+                    SelectedItem selectedItem = selectedItemIterator.next();
+                    Item correspondingItem = checkItemExist(donatedItemList, selectedItem.getItemId());
+                    if (correspondingItem != null
+                            && (correspondingItem.getItemId().toLowerCase().contains(lowerInput)
+                            || correspondingItem.getDesc().toLowerCase().contains(lowerInput)
+                            || correspondingItem.getType().toLowerCase().contains(lowerInput))) {
+                        isMatching = true;
+                    }
+                }
+            }
+        
 
-            if (sameLocationDistributions.getNumberOfEntries() > 1) {
-                String mergeResponse = distributionUI.getInputString("\nDo you want to merge distributions with the same location? (yes/no) > ").toLowerCase();
-                if (mergeResponse.equals("yes")) {
-                    mergeLocationDistributions(sameLocationDistributions,distributions);
-                }
+        // If a match is found, print the distribution
+        if (isMatching) {
+            if (!headerPrinted) {
+                distributionUI.printDistributionTitleHeader(); // Print header only once
+                headerPrinted = true;
             }
-            
-             if (sameDoneeDistributions.getNumberOfEntries() > 1) {
-                String mergeResponse = distributionUI.getInputString("\nDo you want to merge distributions with the same location? (yes/no) > ").toLowerCase();
-                if (mergeResponse.equals("yes")) {
-                    mergeDistributions(sameDoneeDistributions,distributions);
-                }
-            }
+            distributionUI.printDistributionRecord(currentDistribution);
+            found = true;
+            foundItem++;
         }
     }
 
-    private void mergeDistributions(SortedListSetInterface<Distribution> sameDoneeDistribution,SortedListSetInterface<Distribution> distributions) {
+    
+
+    if (!found) {
+        distributionUI.displayMessage("\nNo matching distributions or items found for the keyword: " + input);
+    } else {
+        distributionUI.displayMessage("\n");
+        distributionUI.displayMessage(foundItem + " item(s) found.");
+
+        if (sameLocationDistributions.getNumberOfEntries() > 1) {
+            String mergeResponse = distributionUI.getInputString("\nDo you want to merge distributions with the same location? (yes/no) > ").toLowerCase();
+            if (mergeResponse.equals("yes")) {
+                mergeLocationDistributions(sameLocationDistributions, distributions);
+            }
+        }
+
+        if (sameDoneeDistributions.getNumberOfEntries() > 1) {
+            String mergeDoneeResponse = distributionUI.getInputString("\nDo you want to merge distributions with the same donee? (yes/no) > ").toLowerCase();
+            if (mergeDoneeResponse.equals("yes")) {
+                mergeDistributions(sameDoneeDistributions, distributions);
+            }
+        }
+    }
+}
+
+
+
+    private void mergeDistributions(SortedListSetInterface<Distribution> sameDoneeDistribution, SortedListSetInterface<Distribution> distributions) {
 
         // Get the first distribution as the base for merging
         Distribution baseDistribution = sameDoneeDistribution.getFirstEntry();
@@ -756,13 +778,12 @@ public class DistributionManager {
         Iterator<Distribution> iterator = sameDoneeDistribution.getIterator();
         iterator.next(); // Skip the first entry since it's the base
 
-        
         while (iterator.hasNext()) {
             Distribution currentDistribution = iterator.next();
             baseDistribution.getDistributedItemList().merge(currentDistribution.getDistributedItemList());
-           distributions.remove(currentDistribution);
+            baseDistribution.getDistributedDoneeList().merge(currentDistribution.getDistributedDoneeList());
+            distributions.remove(currentDistribution);
         }
-
 
         baseDistribution.setStatus("Merged");
         baseDistribution.setDistributionDate(new Date(localDay, localMonth, localYear));
@@ -771,8 +792,8 @@ public class DistributionManager {
         distributionUI.printDistributionTitleHeader();
         distributionUI.printDistributionRecord(baseDistribution);
     }
-    
-        private void mergeLocationDistributions(SortedListSetInterface<Distribution> sameLocationDistribution,SortedListSetInterface<Distribution> distributions) {
+
+    private void mergeLocationDistributions(SortedListSetInterface<Distribution> sameLocationDistribution, SortedListSetInterface<Distribution> distributions) {
 
         // Get the first distribution as the base for merging
         Distribution baseDistribution = sameLocationDistribution.getFirstEntry();
@@ -781,14 +802,12 @@ public class DistributionManager {
         Iterator<Distribution> iterator = sameLocationDistribution.getIterator();
         iterator.next(); // Skip the first entry since it's the base
 
-        
         while (iterator.hasNext()) {
             Distribution currentDistribution = iterator.next();
-           // baseDistribution.
             baseDistribution.getDistributedItemList().merge(currentDistribution.getDistributedItemList());
-           distributions.remove(currentDistribution);
+            baseDistribution.getDistributedDoneeList().merge(currentDistribution.getDistributedDoneeList());
+            distributions.remove(currentDistribution);
         }
-
 
         baseDistribution.setStatus("Merged");
         baseDistribution.setDistributionDate(new Date(localDay, localMonth, localYear));

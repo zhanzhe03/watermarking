@@ -104,13 +104,16 @@ public class EntityInitializer {
         donation6.assignItems(item17);
         donation6.assignItems(item18);
         
-        Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2023),donee1);
+        Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2023));
         
         Distribution distribution2 = new Distribution("DIST002", new Date(1, 8, 2024));
         Distribution distribution3 = new Distribution("DIST003", new Date(11, 8, 2024));
         Distribution distribution4 = new Distribution("DIST004", new Date(25, 8, 2024));
-        Distribution distribution5 = new Distribution("DIST005", new Date(26, 8, 2022));
+        Distribution distribution5 = new Distribution("DIST005", new Date(26, 8, 2024));
+        Distribution distribution6 = new Distribution("DIST006", new Date(28, 8, 2024));
 
+        
+        
         // Create a selected item
         SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
         SelectedItem selectedItem2 = new SelectedItem("I002", 50);
@@ -120,7 +123,7 @@ public class EntityInitializer {
         SelectedItem selectedItem6 = new SelectedItem("I006", 2);
 
         // Add selected item to the distribution
-//distribution1.addDonee(donee1);
+distribution1.addDonee(donee1);
         distribution1.addSelectedItem(selectedItem1);
         distribution1.addSelectedItem(selectedItem2);
         
@@ -137,11 +140,15 @@ public class EntityInitializer {
         distribution5.addDonee(donee1);
         distribution5.addSelectedItem(selectedItem4);
         
+       distribution6.addDonee(donee4);
+        distribution6.addSelectedItem(selectedItem6);
+        
         distributions.add(distribution1);
         distributions.add(distribution2);
         distributions.add(distribution3);
         distributions.add(distribution4);
         distributions.add(distribution5);
+        distributions.add(distribution6);
         
         donors.add(donor1);
         donors.add(donor2);
