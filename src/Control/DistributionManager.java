@@ -142,7 +142,7 @@ public class DistributionManager {
                     CommonUse.printItemHeader();
                     distributionUI.displayMessage("\n");
                     distributionUI.PrintDonatedItemList(donatedItemList);
-                    input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit; 'F' filter) > ");
+                    input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit; 'F' filter By Category ) > ");
 
                     if (input.equalsIgnoreCase("Q")) {  // Quit the loop
                         // Prompt user to decide whether to keep or discard the current distribution
@@ -165,11 +165,10 @@ public class DistributionManager {
                             distributionUI.displayMessage("\n");
                             distributionUI.PrintDonatedItemList(donatedItemList); // Display the list of donated items
                             String inputType = distributionUI.getInputString("Please enter the type you would like to show > ");
-                            ClearScreen.clearJavaConsoleScreen();
                             foundType = filterItemByType(donatedItemList, inputType);
                         } while (!foundType);
 
-                        input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit; 'F' filter) > ");
+                        input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit) > ");
                         if (input.equalsIgnoreCase("Q")) { // Quit the loop
                             // Prompt user to decide whether to keep or discard the current distribution
                             String keepOrDiscard = distributionUI.getInputString("You have not added any items. Do you want to keep the previous actions? ('Y' to keep; 'N' to discard) > ");
@@ -383,10 +382,10 @@ public class DistributionManager {
     public void UpdateDonationDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees) {
         // List all distributions and get the distribution ID to update
         ListAllDistributions(distributions);
-        String updateDistID = distributionUI.getInputString("\nPlease enter the distribution ID that you would like to update > ");
+        String updateDistID = distributionUI.getInputString("\nPlease enter the distribution ID that you would like to ('Q' quit ) > ");
+        if(updateDistID.equalsIgnoreCase("Q"))
+            return;
         Distribution updateDist = checkDistributionExist(distributions, updateDistID);
-
-        boolean isConfirm = false;
 
         if (updateDist != null) {  // Check if the record exists
             boolean continueLoop = true;
@@ -455,12 +454,14 @@ public class DistributionManager {
             distributionUI.printDistriburedItemList(updateDist.getDistributedItemList());
 
             if (updateDist.getDistributedItemList().getNumberOfEntries() >= 1) {
-                SelectedItem selectedItemToUpdate = null;
+                SelectedItem selectedItemToUpdate ;
                 String input;
 
                 // If there's more than one item, ask for the Item ID
                 if (updateDist.getDistributedItemList().getNumberOfEntries() > 1) {
-                    input = distributionUI.getInputString("Enter ItemId that you would like to update > ");
+                    input = distributionUI.getInputString("Enter ItemId that you would like to update ( 'Q' quit ) > ");
+                    if(input.equalsIgnoreCase("q"))
+                        return;
                     selectedItemToUpdate = findSelectedItem(updateDist, input);
                 } else {
                     // If only one item, select it directly
@@ -510,9 +511,10 @@ public class DistributionManager {
 
         do {
             try {
-                updatedAmt = Double.parseDouble(distributionUI.getInputString("Please enter your desired amount to update \n"
-                        + "*** Enter 0 = cancel item from this distribution record \n"
-                        + " > "));
+                 distributionUI.displayMessage("Please enter your desired amount to update ");
+                MessageUI.displayRed("*** Enter 0 = cancel item from this distribution record. ");
+                updatedAmt = Double.parseDouble(distributionUI.getInputString("> "));
+                
 
                 if (updatedAmt == 0) {
                     // Ask for confirmation before removing the item
@@ -527,7 +529,7 @@ public class DistributionManager {
                 }
 
                 if (updatedAmt > instockAmt) {
-                    MessageUI.displayRed("The amount entered exceeds the in-stock amount. Please try again.");
+                    MessageUI.displayRed("The amount entered exceeds the in-stock amount. Please try again.\n\n");
                 } else {
                     // Ask for confirmation before applying the amount update
                     String confirmAmtUpdate = distributionUI.getInputString("You are about to update the amount from " + oriAmt + " to " + updatedAmt + ". Confirm? (Y/N) > ");
@@ -541,7 +543,7 @@ public class DistributionManager {
                     }
                 }
             } catch (Exception ex) {
-                MessageUI.displayInvalidAmountMessage();
+                distributionUI.displayMessage(ex.getMessage());
             }
         } while (updatedAmt > instockAmt);
     }
@@ -557,9 +559,9 @@ public class DistributionManager {
 
         do {
             try {
-                updatedQty = distributionUI.getInputQty("Please enter your desired quantity to update \n"
-                        + "*** Enter 0 = cancel item from this distribution record \n"
-                        + " > ");
+                distributionUI.displayMessage("Please enter your desired quantity to update ");
+                MessageUI.displayRed("*** Enter 0 = cancel item from this distribution record. ");
+                updatedQty = distributionUI.getInputQty("> ");
 
                 if (updatedQty == 0) {
                     // Ask for confirmation before removing the item
@@ -573,7 +575,7 @@ public class DistributionManager {
                     return;
                 }
                 if (updatedQty > instockQty) {
-                    MessageUI.displayRed("The quantity entered exceeds the in-stock quantity. Please try again.");
+                    MessageUI.displayRed("The quantity entered exceeds the in-stock quantity. Please try again.\n\n");
                 } else {
                     // Ask for confirmation before applying the quantity update
                     String confirmQtyUpdate = distributionUI.getInputString("You are about to update the quantity from " + oriQty + " to " + updatedQty + ". Confirm? (Y/N) > ");
@@ -828,6 +830,7 @@ public class DistributionManager {
             return;
         }
 
+       String isConfirm;
         boolean removeSuccessful = false;
 
         do {
@@ -839,9 +842,16 @@ public class DistributionManager {
                 return;
             }
             if (distributionToRemove != null) {
+                isConfirm = distributionUI.getInputString("\nAre you confirm to remove this distribution record < " + inputDistID.toUpperCase() + " > ? (Y/N)");
+                if(isConfirm.equalsIgnoreCase("Y")){
                 distributions.remove(distributionToRemove);
                 distributionUI.displayMessage("Distribution with ID " + inputDistID + " has been removed successfully.\n");
                 removeSuccessful = true;
+                }
+                else{
+                distributionUI.displayMessage("Removal cancel.");
+                break;
+                }
             } else {
                 distributionUI.displayMessage("Distribution with ID " + inputDistID + " not found. Please try again.\n");
             }
