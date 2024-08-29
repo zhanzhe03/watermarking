@@ -81,6 +81,14 @@ public class DistributionUI {
         scanner.nextLine();
         return opt;
     }
+    
+ public double getInputDouble(String desc) {
+    System.out.print(desc);
+    double input = scanner.nextDouble();  // Use nextDouble() instead of nextInt()
+    scanner.nextLine();  // Clear the newline character left by nextDouble()
+    return input;
+}
+
 
     public void listAllDistributions(SortedListSetInterface<Distribution> distributions) {
         printDistributionTitleHeader();
