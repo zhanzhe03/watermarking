@@ -25,6 +25,7 @@ public class Charity {
 
     public void runCharityProgram() {
         entityInitialize.entityEnitialize();
+        
 
         int opt = 0;
 

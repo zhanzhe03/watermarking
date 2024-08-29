@@ -292,8 +292,8 @@ public class DistributionManager {
         while (!isValidAmt) {
             try {
                 // Get and validate the desired amount
-                distributionUI.displayMessage("***Please note that the donee type is "+ donee.getDoneeType() 
-                        +" , suggested minimum distributed amount is "+ minAmt);
+                MessageUI.displayBlueRemindMsg("***Please note that the donee type is "+ donee.getDoneeType() 
+                        +" , suggested minimum distributed amount is  RM "+ minAmt);
                 inputAmt = distributionUI.getInputDouble("Please enter the desired amount > ");
                 if (inputItem.getTotalAmount() >= inputAmt) {
                     SelectedItem selectedItem = new SelectedItem(inputItem.getItemId(), inputAmt);
@@ -656,17 +656,20 @@ public class DistributionManager {
 
     private void updateDoneeDetails(Distribution updateDist, SortedListSetInterface<Donee> donees) {
         distributionUI.displayMessage("Update Donee Details:\n");
-        distributionUI.displayMessage("Distribution Details: " + updateDist);
-        distributionUI.displayMessage("Current Donee Details: " + updateDist.getDistributedDoneeList());
+        distributionUI.displayMessage("Distribution Details: " + updateDist + "\n");
+        MessageUI.displayMagentaPreviewMsg("\u001B[35m" + "Current  Donee Details: " + updateDist.getDistributedDoneeList()
+                +"\u001B[0m");
 
         String yesNo;
-        Donee foundDonee = null;
+        Donee foundDonee;
 
         do {
             try {
                 yesNo = distributionUI.getInputString("\nDo you want to change the donee for this distribution <" + updateDist.getDistributionId() + ">? (Y/N) > ");
 
                 if (yesNo.equalsIgnoreCase("Y")) {
+                    distributionUI.displayMessage("Available Donees : ");
+                    distributionUI.displayMessage(""+donees);
                     String doneeID = distributionUI.getInputString("\nPlease enter the donee ID that you would like to change to: ");
                     foundDonee = CommonUse.findDonee(doneeID, donees);
 
