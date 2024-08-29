@@ -17,8 +17,8 @@ public class Donation implements Comparable<Donation> {
     private String donationId;
     private Date donationDate;
     private SortedListSetInterface<Item> donatedItemList;
+    private String status;
     private Donor donor;
-    private boolean isAssigned = false;
 
     public Donation(String donationId, Date donationDate, Donor donor) {
         this.donationId = donationId;
@@ -32,6 +32,46 @@ public class Donation implements Comparable<Donation> {
         this.donationDate = donationDate;
         this.donatedItemList = new SortedDoublyLinkedListSet<>();
     }
+
+    //get the identifier field for sorting, start
+    public static void setSortByCriteria(SortByCriteria criteria) {
+        sortByCriteria = criteria;
+    }
+
+    public static SortByCriteria sortByCriteria = SortByCriteria.DONATIONID_INASC;
+
+    public enum SortByCriteria {
+        DONATIONID_INASC,
+        DONATIONID_INDESC,
+        DONATIONDATE_INASC,
+        DONATIONDATE_INDESC,
+        STATUS_INASC,
+        STATUS_INDESC;
+    }
+
+    @Override
+    public int compareTo(Donation otherDonation) {
+        if (otherDonation == null) {
+            throw new NullPointerException("Cannot compare to a null object");
+        }
+        switch (sortByCriteria) {
+            case DONATIONID_INASC:
+                return this.donationId.compareTo(otherDonation.donationId);
+            case DONATIONID_INDESC:
+                return otherDonation.donationId.compareTo(this.donationId);
+            case DONATIONDATE_INASC:
+                return this.donationDate.compareTo(otherDonation.donationDate);
+            case DONATIONDATE_INDESC:
+                return otherDonation.donationDate.compareTo(this.donationDate);
+            case STATUS_INASC:
+                return this.status.compareTo(otherDonation.status);
+            case STATUS_INDESC:
+                return otherDonation.status.compareTo(this.status);
+            default:
+                return this.donationId.compareTo(otherDonation.donationId);
+        }
+    }
+    //sorting function method, end
 
     public String getDonationId() {
         return donationId;
@@ -56,14 +96,6 @@ public class Donation implements Comparable<Donation> {
     public void setDonatedItemList(SortedListSetInterface<Item> donatedItemList) {
         this.donatedItemList = donatedItemList;
     }
-    
-    public boolean isIsAssigned() {
-        return isAssigned;
-    }
-
-    public void setIsAssigned(boolean isAssigned) {
-        this.isAssigned = isAssigned;
-    }
 
     public Donor getDonor() {
         return donor;
@@ -75,12 +107,6 @@ public class Donation implements Comparable<Donation> {
 
     public void assignItems(Item item) {
         donatedItemList.add(item);
-        isAssigned = true;
-    }
-
-    @Override
-    public int compareTo(Donation other) {
-        return this.donationId.compareTo(other.donationId);
     }
 
     @Override
@@ -114,7 +140,7 @@ public class Donation implements Comparable<Donation> {
         } else if (this.donationId.equals(other.donationId)) {
             return true;
         }
-        
+
         if (this == obj) {
             return true;
         }
@@ -124,7 +150,7 @@ public class Donation implements Comparable<Donation> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        
+
         if (!Objects.equals(this.donationId, other.donationId)) {
             return false;
         }

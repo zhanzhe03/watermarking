@@ -14,13 +14,12 @@ import Entity.Donor;
 import Entity.Item;
 import Utility.MessageUI;
 import Utility.ClearScreen;
+import Utility.CommonUse;
 import Utility.StockUI;
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import java.util.Stack; //TO BE IMPLEMENTED
 
 /**
  *
@@ -58,7 +57,7 @@ public class DonationMaintenance {
                     break;
                 case 5:
                     ClearScreen.clearJavaConsoleScreen();
-                    RemoveDonation(donations, items);
+                    RemoveDonation(donations, items, donors);
                     break;
                 case 6:
                     ClearScreen.clearJavaConsoleScreen();
@@ -67,6 +66,10 @@ public class DonationMaintenance {
                 case 7:
                     ClearScreen.clearJavaConsoleScreen();
                     TrackItemInDifferentType(items);
+                    break;
+                case 8:
+                    ClearScreen.clearJavaConsoleScreen();
+                    summaryReport();
                     break;
                 case 9:
                     break;
@@ -300,71 +303,6 @@ public class DonationMaintenance {
         return amount;
     }
 
-    //list method
-    private void listAllDonationInACS(SortedListSetInterface<Donation> donations) {
-        donationUI.printDonationEnDash();
-        donationUI.printDonationTitle();
-        donationUI.printDonationEnDash();
-        donationUI.printAllDonations(donations);
-        donationUI.printDonationEnDash();
-        donationUI.printTotalDonation(donations);
-    }
-
-    //need find solution to replace stack method
-    private void listAllDonationInDESC(SortedListSetInterface<Donation> donations) {
-        Stack<Donation> myStack = new Stack<>();
-        Iterator<Donation> iterator = donations.getIterator();
-        do {
-            Donation donation = iterator.next();
-            myStack.push(donation);
-        } while (iterator.hasNext());
-
-        donationUI.printDonationEnDash();
-        donationUI.printDonationTitle();
-        donationUI.printDonationEnDash();
-        while (!myStack.isEmpty()) {
-            donationUI.printOneDonation(myStack.pop());
-        }
-        donationUI.printDonationEnDash();
-        donationUI.printTotalDonation(donations);
-    }
-
-    private void listOneDonation(Donation donation) {
-        donationUI.printDonationEnDash();
-        donationUI.printDonationTitle();
-        donationUI.printDonationEnDash();
-        donationUI.printOneDonation(donation);
-        donationUI.printDonationEnDash();
-    }
-
-    private void listAllItemInACS(SortedListSetInterface<Item> items) {
-        donationUI.printItemEnDash();
-        donationUI.printItemTitle();
-        donationUI.printItemEnDash();
-        donationUI.printAllItems(items);
-        donationUI.printItemEnDash();
-        donationUI.printTotalItem(items);
-    }
-
-    private void listAllItemInDESC(SortedListSetInterface<Item> items) {
-        Stack<Item> myStack = new Stack<>();
-        Iterator<Item> iterator = items.getIterator();
-        do {
-            Item item = iterator.next();
-            myStack.push(item);
-        } while (iterator.hasNext());
-
-        donationUI.printItemEnDash();
-        donationUI.printItemTitle();
-        donationUI.printItemEnDash();
-        donationUI.printText("");
-        while (!myStack.isEmpty()) {
-            donationUI.printOneItem(myStack.pop());
-        }
-        donationUI.printItemEnDash();
-        donationUI.printTotalItem(items);
-    }
-
     //return method
     private String generateNextDonationId(SortedListSetInterface<Donation> donations) {
         int nextDonationId = Integer.parseInt(donations.getLastEntries().getDonationId().substring(1)) + 1;
@@ -378,30 +316,32 @@ public class DonationMaintenance {
 
     private Item createMonetoryItem(String itemId, String type) {
         int opt;
-        String methodName = null;
+        String monetaryDesc = null;
         double amount = 0;
         do {
             opt = validateMenuNumberFormatInput(donationUI.getMonetoryDescMenu());
-
             switch (opt) {
                 case 1:
-                    methodName = "Cash";
-                    amount = validateNumberFormatDoubleInput("Amount: ");
+                    monetaryDesc = "Cash";
                     break;
                 case 2:
-                    methodName = "Online Transfer";
-                    amount = validateNumberFormatDoubleInput("Amount: ");
+                    monetaryDesc = "Online Transfer";
                     break;
                 case 3:
-                    methodName = "QR Code Payment";
-                    amount = validateNumberFormatDoubleInput("Amount: ");
+                    monetaryDesc = "QR Code Payment";
                     break;
                 default:
                     MessageUI.displayInvalidOptionMessage();
                     break;
             }
+
+            if (opt >= 1 && opt <= 3) {
+                donationUI.printText("Type: " + type);
+                donationUI.printText("Description: " + monetaryDesc);
+                amount = validateNumberFormatDoubleInput("Amount: ");
+            }
         } while (opt < 1 || opt > 3);
-        return new Item(itemId, type, methodName, amount);
+        return new Item(itemId, type, monetaryDesc, amount);
     }
 
     private Item createItem(String itemId, String type) {
@@ -420,37 +360,28 @@ public class DonationMaintenance {
         return new Item(itemId, type, desc, qty, valuePerItem, expiryDate);
     }
 
-    private Donor findDonor(String contact, SortedListSetInterface<Donor> donors) {
-        Iterator<Donor> iterator = donors.getIterator();
-        do {
-            Donor donor = iterator.next();
-            if (donor.getContact().equals(contact)) {
-                return donor;
-            }
-        } while (iterator.hasNext());
-        return null;
-    }
-
-    private Donation findDonation(String id, SortedListSetInterface<Donation> donations) {
-        Iterator<Donation> iterator = donations.getIterator();
-        do {
-            Donation donation = iterator.next();
-            if (donation.getDonationId().equalsIgnoreCase(id)) {
-                return donation;
-            }
-        } while (iterator.hasNext());
-        return null;
-    }
-
-    private Item findItem(String id, SortedListSetInterface<Item> items) {
+    private boolean checkDuplicateItem(SortedListSetInterface<Item> items, Item item) {
         Iterator<Item> iterator = items.getIterator();
         do {
-            Item item = iterator.next();
-            if (item.getItemId().equalsIgnoreCase(id)) {
-                return item;
+            Item itemInList = iterator.next();
+            if (itemInList.getType().equalsIgnoreCase("Monetary")
+                    && itemInList.getDesc().equalsIgnoreCase(item.getDesc())) {
+                itemInList.setTotalAmount(itemInList.getTotalAmount() + item.getTotalAmount());
+                return true;
+            } else if (itemInList.getType().equalsIgnoreCase("Food and Beverage")
+                    && itemInList.getDesc().equalsIgnoreCase(item.getDesc())
+                    && itemInList.getValuePerItem() == item.getValuePerItem()
+                    && itemInList.getExpiryDate().equals(item.getExpiryDate())) {
+                itemInList.setQuantity(itemInList.getQuantity() + item.getQuantity());
+                return true;
+            } else if (itemInList.getType().equalsIgnoreCase(item.getType())
+                    && itemInList.getDesc().equalsIgnoreCase(item.getDesc())
+                    && itemInList.getValuePerItem() == item.getValuePerItem()) {
+                itemInList.setQuantity(itemInList.getQuantity() + item.getQuantity());
+                return true;
             }
         } while (iterator.hasNext());
-        return null;
+        return false;
     }
 
     //donor details on hold
@@ -477,53 +408,172 @@ public class DonationMaintenance {
         return null;
     }
 
-    //on hold
-    private boolean checkMultipleMethod() {
-        return true;
+    //display method
+    private void listAllDonation(SortedListSetInterface<Donation> donations) {
+        donationUI.printDonationEnDash();
+        donationUI.printDonationTitle();
+        donationUI.printDonationEnDash();
+        donationUI.printAllDonations(donations);
+        donationUI.printDonationEnDash();
+        donationUI.printTotalDonation(donations);
+    }
+
+    private void listOneDonation(Donation donation) {
+        donationUI.printDonationEnDash();
+        donationUI.printDonationTitle();
+        donationUI.printDonationEnDash();
+        donationUI.printOneDonation(donation);
+        donationUI.printDonationEnDash();
+    }
+
+    private void listAllItem(SortedListSetInterface<Item> items) {
+        donationUI.printItemEnDash();
+        donationUI.printItemTitle();
+        donationUI.printItemEnDash();
+        donationUI.printText("");
+        donationUI.printAllItems(items);
+        donationUI.printItemEnDash();
+        donationUI.printTotalItem(items);
     }
 
     //1. list
     public void ListDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
-        donationUI.printTitle("All Donation Records in Ascending Order");
-        listAllDonationInACS(donations);
+        donationUI.printTitle("All Donation and Item Records");
+        int opt;
+        do {
+            opt = validateMenuNumberFormatInput(donationUI.getListMenu());
+            switch (opt) {
+                case 1:
+                    listDonation(donations);
+                    break;
+                case 2:
+                    listItem(items);
+                case 9:
+                    break;
+                default:
+                    MessageUI.displayInvalidOptionMessage();
+                    break;
+
+            }
+        } while (opt != 9);
+    }
+
+    public void listDonation(SortedListSetInterface<Donation> donations) {
         int opt;
         do {
             opt = validateMenuNumberFormatInput(donationUI.getListDonationMenu());
-
             switch (opt) {
                 case 1:
                     ClearScreen.clearJavaConsoleScreen();
-                    donationUI.printTitle("All Donation Records in Ascending Order");
-                    listAllDonationInACS(donations);
+                    donationUI.printTitle("All Donation Records sorted by Donation ID in Ascending Order");
+                    Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONID_INASC);
                     break;
                 case 2:
                     ClearScreen.clearJavaConsoleScreen();
-                    donationUI.printTitle("All Donation Records in Descending Order");
-                    listAllDonationInDESC(donations);
+                    donationUI.printTitle("All Donation Records sorted by Donation ID in Descending Order");
+                    Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONID_INDESC);
                     break;
                 case 3:
                     ClearScreen.clearJavaConsoleScreen();
-                    donationUI.printTitle("All Item Records in Ascending Order");
-                    listAllItemInACS(items);
+                    donationUI.printTitle("All Donation Records sorted by Donation Date in Ascending Order");
+                    Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONDATE_INASC);
                     break;
                 case 4:
                     ClearScreen.clearJavaConsoleScreen();
-                    donationUI.printTitle("All Item Records in Descending Order");
-                    listAllItemInDESC(items);
+                    donationUI.printTitle("All Donation Records sorted by Donation Date in Descending Order");
+                    Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONDATE_INDESC);
                     break;
                 case 5:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Donation Records sorted by Donation Status in Ascending Order");
+                    Donation.setSortByCriteria(Donation.SortByCriteria.STATUS_INASC);
+                    break;
+                case 6:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Donation Records sorted by Donation Status in Descending Order");
+                    Donation.setSortByCriteria(Donation.SortByCriteria.STATUS_INDESC);
                     break;
                 case 9:
                     break;
                 default:
                     MessageUI.displayInvalidOptionMessage();
                     break;
+
+            }
+            if (opt >= 1 && opt <= 6) {
+                donations.reSort();
+            listAllDonation(donations);
             }
         } while (opt != 9);
+        Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONID_INASC);
+        donations.reSort();
+    }
+
+   
+    public void listItem(SortedListSetInterface<Item> items) {
+        int opt;
+        do {
+            opt = validateMenuNumberFormatInput(donationUI.getListItemMenu());
+            switch (opt) {
+                case 1:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Item Records sorted by Item ID in Ascending Order");
+                    Item.setSortByCriteria(Item.SortByCriteria.ITEMID_INASC);
+                    break;
+                case 2:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Item Records sorted by Item ID in Descending Order");
+                    Item.setSortByCriteria(Item.SortByCriteria.ITEMID_INDESC);
+                    break;
+                case 3:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Item Records sorted by Item Type in Ascending Order");
+                    Item.setSortByCriteria(Item.SortByCriteria.TYPE_INASC);
+                    break;
+                case 4:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Item Records sorted by Item Type in Descending Order");
+                    Item.setSortByCriteria(Item.SortByCriteria.TYPE_INDESC);
+                    break;
+                case 5:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Item Records sorted by Item Description in Ascending Order");
+                    Item.setSortByCriteria(Item.SortByCriteria.DESC_INASC);
+                    break;
+                case 6:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Item Records sorted by Item Description in Descending Order");
+                     Item.setSortByCriteria(Item.SortByCriteria.DESC_INDESC);
+                    break;
+                case 7:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Item Records sorted by Item Total Amount in Ascending Order");
+                    Item.setSortByCriteria(Item.SortByCriteria.TOTALAMOUNT_INASC);
+                    break;
+                case 8:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationUI.printTitle("All Item Records sorted by Item Total Amount in Descending Order");
+                    Item.setSortByCriteria(Item.SortByCriteria.TOTALAMOUNT_INDESC);
+                    break;
+                case 9:
+                    break;
+                default:
+                    MessageUI.displayInvalidOptionMessage();
+                    break;
+
+            }
+            if (opt >= 1 && opt <= 8) {
+                items.reSort();
+                listAllItem(items);
+            }
+        } while (opt != 9);
+        Item.setSortByCriteria(Item.SortByCriteria.ITEMID_INASC);
+        items.reSort();
     }
 
     //2. add
     public void AddDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
+        donationUI.printTitle("Add donation in different method");
         int opt;
         do {
             opt = validateMenuNumberFormatInput(donationUI.getAddDonationMenu());
@@ -549,42 +599,50 @@ public class DonationMaintenance {
     public void processDonation(SortedListSetInterface<Item> newDonatedItems, SortedListSetInterface<Item> items) {
         int n = 1;
         int opt;
+        char keepDonate = 'Y';
+        boolean isDiscontinue = false;
         do {
             opt = validateMenuNumberFormatInput(donationUI.getItemTypeMenu());
             Item item = null;
             String itemId = generateNextItemId(items, n);
+            String type = StockUI.getItemType(opt);
             switch (opt) {
                 case 1:
-                    item = createMonetoryItem(itemId, "Monetory");
-                    break;
-                case 2:
-                    item = createItem(itemId, "Clothing and Apparel");
+                    item = createMonetoryItem(itemId, type);
                     break;
                 case 3:
-                    item = createItemWithExpiryDate(itemId, "Food and Beverage");
+                    donationUI.printText("Type: " + type);
+                    item = createItemWithExpiryDate(itemId, type);
                     break;
+                case 2:
                 case 4:
-                    item = createItem(itemId, "Household Items");
-                    break;
                 case 5:
-                    item = createItem(itemId, "Educational Materials");
-                    break;
                 case 6:
-                    item = createItem(itemId, "Electronic");
-                    break;
                 case 7:
-                    item = createItem(itemId, "Medical");
+                    donationUI.printText("Type: " + type);
+                    item = createItem(itemId, type);
                     break;
-                default:
-                    MessageUI.displayInvalidOptionMessage();
+                case 9:
+                    if (validateYesNoOption("\nDiscontinue and cancel this donation (Y = yes, N = no)? ") == 'Y') {
+                        isDiscontinue = true;
+                        newDonatedItems.clear();
+                    }
                     break;
             }
 
             if (item != null) {
-                newDonatedItems.add(item);
-                n++;
+                if (newDonatedItems.isEmpty()) {
+                    newDonatedItems.add(item);
+                    n++;
+                } else {
+                    if (!checkDuplicateItem(newDonatedItems, item)) {
+                        newDonatedItems.add(item);
+                        n++;
+                    }
+                }
+                keepDonate = validateYesNoOption("Keep Donating (Y = yes, N = no)? ");
             }
-        } while (validateYesNoOption("Keep Donating (Y = yes, N = no)? ") == 'Y');
+        } while (keepDonate == 'Y' && !isDiscontinue);
     }
 
     public void AddNewDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
@@ -602,7 +660,7 @@ public class DonationMaintenance {
 
             if (validateYesNoOption("\nDonation Confirmation (Y = yes, N = No)? ") == 'Y') {
                 String contact = getValidContactNumber();
-                Donor donor = findDonor(contact, donors);
+                Donor donor = CommonUse.findDonor(contact, donors);
                 if (donor != null) {
                     newDonation.setDonor(donor);
                 } else {
@@ -620,16 +678,17 @@ public class DonationMaintenance {
     }
 
     public void AddItemToExistingDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
-        donationUI.printTitle("Add Items to an existing donation");
+        donationUI.printTitle("Add Item to an existing donation");
         String id = donationUI.getInputString("Donation ID : ");
-        Donation donation = findDonation(id, donations);
+        Donation donation = CommonUse.findDonation(id, donations);
         if (donation != null) {
+            listOneDonation(donation);
+            donationUI.printText("\nDonation Record " + id + " Found, proceed to adding...");
             SortedListSetInterface<Item> newDonatedItems = new SortedDoublyLinkedListSet<>();
             processDonation(newDonatedItems, items);
             if (!newDonatedItems.isEmpty()) {
-                listAllItemInACS(newDonatedItems);
-
-                if (validateYesNoOption("\nDonation Confirmation (Y = yes, N = No)? ") == 'Y') {
+                listAllItem(newDonatedItems);
+                if (validateYesNoOption("Donation Confirmation (Y = yes, N = No)? ") == 'Y') {
                     donation.getDonatedItemList().merge(newDonatedItems);
                     items.merge(newDonatedItems);
                     MessageUI.displaySuccessfulMessage();
@@ -648,8 +707,8 @@ public class DonationMaintenance {
         String id = donationUI.getInputString(""
                 + "Enter Donation ID or related Item ID"
                 + "\n(Donation ID = D001, Item Id = I001): ");
-        Donation currentDonation = findDonation(id, donations);
-        Item currentItem = findItem(id, items);
+        Donation currentDonation = CommonUse.findDonation(id, donations);
+        Item currentItem = CommonUse.findItem(id, items);
 
         if (currentItem != null || currentDonation != null) {
             if (currentDonation == null) {
@@ -751,7 +810,7 @@ public class DonationMaintenance {
                     break;
                 case 2:
                     String id = donationUI.getInputString("Item Id: ");
-                    Item item = findItem(id, currentDonation.getDonatedItemList());
+                    Item item = CommonUse.findItem(id, currentDonation.getDonatedItemList());
                     if (item != null) {
                         processItemDetailsAmended(item, items, currentDonation);
                     } else {
@@ -778,7 +837,7 @@ public class DonationMaintenance {
         } while (opt != 9 && !isRemoved);
     }
 
-    //4. amend - on hold
+    //4. amend
     public void amendDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
         int opt;
         do {
@@ -807,7 +866,7 @@ public class DonationMaintenance {
     }
 
     //5. remove
-    public void RemoveDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
+    public void RemoveDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donor> donors) {
         donationUI.printTitle("Remove donation and item in different method");
         int opt;
         do {
@@ -830,6 +889,10 @@ public class DonationMaintenance {
                     ClearScreen.clearJavaConsoleScreen();
                     removedExpiredItem(donations, items);
                     break;
+                case 5:
+                    ClearScreen.clearJavaConsoleScreen();
+                    removedAllDonationForDonor(donations, items, donors);
+                    break;
                 case 9:
                     break;
                 default:
@@ -841,7 +904,7 @@ public class DonationMaintenance {
 
     public void handleConfirmRemoveProcess(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donation> donationRemovedList, SortedListSetInterface<Item> itemRemovedList, String text) {
         if (!donationRemovedList.isEmpty()) {
-            listAllDonationInACS(donationRemovedList);
+            listAllDonation(donationRemovedList);
             if (validateYesNoOption("\nDonation Removed Confirmation (Y = yes, N = No)? ") == 'Y') {
                 donations.relativeComplement(donationRemovedList);
                 items.relativeComplement(itemRemovedList);
@@ -919,6 +982,28 @@ public class DonationMaintenance {
         }
     }
 
+    public void removedAllDonationForDonor(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donor> donors) {
+        donationUI.printTitle("Remove all donation made by a donor");
+        SortedListSetInterface<Donation> donationForOneDonor = new SortedDoublyLinkedListSet<>();
+        SortedListSetInterface<Item> itemForOneDonor = new SortedDoublyLinkedListSet<>();
+        String contactNumber = getValidContactNumber();
+        Donor donor = CommonUse.findDonor(contactNumber, donors);
+        if (donor != null) {
+            filterByDonor(donor, donations, donationForOneDonor, itemForOneDonor);
+            if (!donationForOneDonor.isEmpty()) {
+                if (validateYesNoOption("\nRemoved All Donation Record For this donor Confirmation (Y = yes, N = No)? ") == 'Y') {
+                    donations.relativeComplement(donationForOneDonor);
+                    items.relativeComplement(itemForOneDonor);
+                    MessageUI.displaySuccessfulMessage();
+                } else {
+                    MessageUI.displayUnsuccessfulMessage();
+                }
+            }
+        } else {
+            donationUI.printText("\nThis contact number " + contactNumber + " Not Found !");
+        }
+    }
+
     //6. filter
     public void FilterDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donor> donors) {
         donationUI.printTitle("Filter donation and item based on specific criteria");
@@ -930,10 +1015,12 @@ public class DonationMaintenance {
                 case 1:
                     ClearScreen.clearJavaConsoleScreen();
                     donationUI.printTitle("Donation Made By this donor");
+                    SortedListSetInterface<Donation> donationForOneDonor = new SortedDoublyLinkedListSet<>();
+                    SortedListSetInterface<Item> itemForOneDonor = new SortedDoublyLinkedListSet<>();
                     String contactNumber = getValidContactNumber();
-                    Donor donor = findDonor(contactNumber, donors);
+                    Donor donor = CommonUse.findDonor(contactNumber, donors);
                     if (donor != null) {
-                        filterByDonor(donor, donations);
+                        filterByDonor(donor, donations, donationForOneDonor, itemForOneDonor);
                     } else {
                         donationUI.printText("\nThis contact number " + contactNumber + " Not Found !");
                     }
@@ -973,9 +1060,7 @@ public class DonationMaintenance {
         } while (opt != 9);
     }
 
-    public void filterByDonor(Donor donor, SortedListSetInterface<Donation> donations) {
-        SortedListSetInterface<Donation> donationForOneDonor = new SortedDoublyLinkedListSet<>();
-        SortedListSetInterface<Item> itemForOneDonor = new SortedDoublyLinkedListSet<>();
+    public void filterByDonor(Donor donor, SortedListSetInterface<Donation> donations, SortedListSetInterface<Donation> donationForOneDonor, SortedListSetInterface<Item> itemForOneDonor) {
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
@@ -986,7 +1071,7 @@ public class DonationMaintenance {
         } while (iterator.hasNext());
 
         if (!donationForOneDonor.isEmpty()) {
-            listAllDonationInACS(donationForOneDonor);
+            listAllDonation(donationForOneDonor);
             donationUI.printText("Total Value: RM" + getTotalValue(itemForOneDonor) + "\n");
         } else {
             donationUI.printText("\nNo donation record for this donor !!\n");
@@ -998,7 +1083,7 @@ public class DonationMaintenance {
         SortedListSetInterface<Item> itemListed = new SortedDoublyLinkedListSet<>();
         Iterator<Donation> iterator = donations.getIterator();
         switch (opt) {
-            case 1:
+            case 2:
                 do {
                     Donation donation = iterator.next();
                     if (donation.getDonationDate().withinPassWeek(getCurrentDate())) {
@@ -1007,7 +1092,7 @@ public class DonationMaintenance {
                     }
                 } while (iterator.hasNext());
                 break;
-            case 2:
+            case 3:
                 do {
                     Donation donation = iterator.next();
                     if (donation.getDonationDate().withinPassMonth(getCurrentDate())) {
@@ -1021,7 +1106,7 @@ public class DonationMaintenance {
                 break;
         }
         if (!filterDonation.isEmpty()) {
-            listAllDonationInACS(filterDonation);
+            listAllDonation(filterDonation);
             donationUI.printText("Total Value: RM" + getTotalValue(itemListed) + "\n");
         } else {
             donationUI.printText("\nNo donation record found!!\n");
@@ -1050,7 +1135,7 @@ public class DonationMaintenance {
             }
         } while (iterator.hasNext());
         if (!expiredItems.isEmpty()) {
-            listAllItemInACS(expiredItems);
+            listAllItem(expiredItems);
         } else {
             donationUI.printText("\nNo expired item found !!\n");
         }
@@ -1066,7 +1151,7 @@ public class DonationMaintenance {
             }
         } while (iterator.hasNext());
         if (!expiredItem.isEmpty()) {
-            listAllItemInACS(expiredItem);
+            listAllItem(expiredItem);
         } else {
             donationUI.printText("\nNo upcoming expiry item found !!\n");
         }
@@ -1092,7 +1177,7 @@ public class DonationMaintenance {
             if (!itemInType.isEmpty()) {
                 ClearScreen.clearJavaConsoleScreen();
                 donationUI.printText("\n\nAll Donated Item In Type (" + typeOpt + ")");
-                listAllItemInACS(itemInType);
+                listAllItem(itemInType);
                 int min = StockUI.minimunInventory(typeOpt);
                 if (typeOpt.equalsIgnoreCase("Monetary")) {
                     double ttlAmount = StockUI.getTotalAmount(typeOpt, items);
@@ -1117,4 +1202,8 @@ public class DonationMaintenance {
         } while (opt != 9);
     }
 
+    //8. report
+    public void summaryReport() {
+
+    }
 }

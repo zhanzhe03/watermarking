@@ -13,6 +13,8 @@ import java.util.Iterator;
  */
 public interface SortedListSetInterface<T extends Comparable<T>> {
 
+    public void reSort();
+    
     public boolean merge(SortedListSetInterface<T> anotherSet);
     
     public boolean relativeComplement(SortedListSetInterface<T> otherListSet);

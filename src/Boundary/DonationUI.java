@@ -20,8 +20,8 @@ public class DonationUI {
     public String getDonationMenu() {
         System.out.println(""
                 + "\nDONATION MANAGEMENT SYSTEM"
-                + "\n 1. List all donation (on hold)"
-                + "\n 2. Add donation (on hold)"
+                + "\n 1. List all donation"
+                + "\n 2. Add donation (donor registration, and any donor status lead to unsuccess donation)"
                 + "\n 3. Search donation details"   //consider add a keyword function
                 + "\n 4. Amend donation (on hold)"
                 + "\n 5. Remove donation"   //consider do a remove history
@@ -33,28 +33,56 @@ public class DonationUI {
         return scanner.nextLine();
     }
 
+    public String getListMenu() {
+        System.out.println(""
+                + "\nList Method"
+                + "\n 1. Donation"
+                + "\n 2. Only Item"
+                + "\n 9. Return");
+        System.out.print("opt > ");
+        return scanner.nextLine();
+    }
+    
     public String getListDonationMenu() {
         System.out.println(""
-                + "\nDonation Display Method"
-                + "\n  1. Sorted by Donation ID in ASC"
-                + "\n  2. Sorted by Donation ID in DASC"
-                + "\nItem Display Method "
-                + "\n  3. Sorted by Item ID in ASC"
-                + "\n  4. Sorted by Item ID in DESC"
-                + "\n  5. Sorted by Item Total Amount in ASC"
-                + "\n  6. Sorted by Item Total Amount in DESC"
-                + "\n  9. Return");
+                + "\nAll Donation Display Method"
+                + "\n 1. Sorted by Donation ID in ASC"
+                + "\n 2. Sorted by Donation ID in DESC"
+                + "\n 3. Sorted by Donation Date in ASC"
+                + "\n 4. Sorted by Donation Date in DESC"
+                + "\n 5. Sorted by Donation Status in ASC"
+                + "\n 6. Sorted by Donation Status in DESC"
+                + "\n 9. Return");
+        System.out.print("opt > ");
+        return scanner.nextLine();
+    }
+    
+    public String getListItemMenu() {
+        System.out.println(""
+                + "\nAll Item Display Method "
+                + "\n 1. Sorted by Item ID in ASC"
+                + "\n 2. Sorted by Item ID in DESC"
+                + "\n 3. Sorted by Item Type in ASC"
+                + "\n 4. Sorted by Item Type in DESC"
+                + "\n 5. Sorted by Item Description in ASC"
+                + "\n 6. Sorted by Item Description in DESC"
+                + "\n 7. Sorted by Item Total Amount in ASC"
+                + "\n 8. Sorted by Item Total Amount in DESC"
+                + "\n 9. Return");
         System.out.print("opt > ");
         return scanner.nextLine();
     }
 
     public String getAddDonationMenu() {
         System.out.println(""
+                + "\n----------------------------------------------------"
                 + "\nDonation Added Method"
+                + "\n----------------------------------------------------"
                 + "\n 1. Add a New Donation"
                 + "\n 2. Add Items in Existing Donation Records"
+                + "\n----------------------------------------------------"
                 + "\n 9. Return");
-        System.out.print("opt > ");
+        System.out.print("\nopt > ");
         return scanner.nextLine();
     }
 
@@ -105,7 +133,7 @@ public class DonationUI {
                 + "\n 3. Remove this donation"
                 + "\n----------------------------------------------------"
                 + "\n 9. Return");
-        System.out.print("opt > ");
+        System.out.print("\nopt > ");
         return scanner.nextLine();
     }
     
@@ -122,7 +150,7 @@ public class DonationUI {
                 + "\n 6. Remove this item from this donation"
                 + "\n----------------------------------------------------"
                 + "\n 9. Return");
-        System.out.print("opt > ");
+        System.out.print("\nopt > ");
         return scanner.nextLine();
     }
     
@@ -144,6 +172,7 @@ public class DonationUI {
                 + "\n 2. Removed All before a Specific Donation Date"
                 + "\n 3. By a Range of Donation Date"
                 + "\n 4. Remove Expired Item"
+                + "\n 5. Remove all donation made by a donor"
                 + "\n----------------------------------------------------"
                 + "\n 9. Return");
         System.out.print("\nopt > ");
@@ -194,7 +223,7 @@ public class DonationUI {
     }
     
     public void printAllItems(SortedListSetInterface<Item> items){
-        System.out.print("\n" + items);
+        System.out.print(items);
     }
     
     public void printDonationTitle() {

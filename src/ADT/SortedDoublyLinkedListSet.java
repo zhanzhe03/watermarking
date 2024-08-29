@@ -22,6 +22,14 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
     }
     
     @Override
+    public void reSort() {
+        SortedListSetInterface<T> tempList = new SortedDoublyLinkedListSet<>();
+        tempList.merge(this);
+        this.clear();
+        this.merge(tempList);
+    }
+    
+    @Override
     public boolean merge(SortedListSetInterface<T> otherListSet) {
         Iterator<T> iterator = otherListSet.getIterator();
         do{

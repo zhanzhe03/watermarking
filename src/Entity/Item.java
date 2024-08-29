@@ -50,6 +50,52 @@ public class Item implements Comparable<Item> {
         this.expiryDate = expiryDate;
     }
 
+    //get the identifier field for sorting, start
+    public static void setSortByCriteria(SortByCriteria criteria) {
+        sortByCriteria = criteria;
+    }
+
+    public static SortByCriteria sortByCriteria = SortByCriteria.ITEMID_INASC;
+
+    public enum SortByCriteria {
+        ITEMID_INASC,
+        ITEMID_INDESC,
+        TYPE_INASC,
+        TYPE_INDESC,
+        DESC_INASC,
+        DESC_INDESC,
+        TOTALAMOUNT_INASC,
+        TOTALAMOUNT_INDESC;
+    }
+
+    @Override
+    public int compareTo(Item otherItem) {
+        if (otherItem == null) {
+            throw new NullPointerException("Cannot compare to a null object");
+        }
+        switch (sortByCriteria) {
+            case ITEMID_INASC:
+                return this.itemId.compareTo(otherItem.itemId);
+            case ITEMID_INDESC:
+                return otherItem.itemId.compareTo(this.itemId);
+            case TYPE_INASC:
+                return this.type.compareTo(otherItem.type);
+            case TYPE_INDESC:
+                return otherItem.type.compareTo(this.type);
+            case DESC_INASC:
+                return this.desc.compareTo(otherItem.desc);
+            case DESC_INDESC:
+                return otherItem.desc.compareTo(this.desc);
+            case TOTALAMOUNT_INASC:
+                return Double.compare(this.totalAmount, otherItem.totalAmount);
+            case TOTALAMOUNT_INDESC:
+                return Double.compare(otherItem.totalAmount, this.totalAmount);
+            default:
+                return this.itemId.compareTo(otherItem.itemId);
+        }
+    }
+    //sorting function method, end
+
     public String getItemId() {
         return itemId;
     }
@@ -112,11 +158,10 @@ public class Item implements Comparable<Item> {
         return (double) this.quantity * this.valuePerItem;
     }
 
-    @Override
-    public int compareTo(Item other) {
-        return this.itemId.compareTo(other.itemId);
-    }
-
+//    @Override
+//    public int compareTo(Item other) {
+//        return this.itemId.compareTo(other.itemId);
+//    }
     @Override
     public String toString() {
         return (expiryDate != null)
