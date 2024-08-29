@@ -123,6 +123,9 @@ public class MessageUI {
         System.out.println(ANSI_MAGENTA + msg + ANSI_BLACK);
     }
     
+    public static void displayGreenSuccessfulMsg(String msg){
+        System.out.println(ANSI_GREEN + msg + ANSI_BLACK);
+    }
     
     
     

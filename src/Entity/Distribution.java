@@ -32,7 +32,7 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         this.donee = donee;
         this.distributedItemList = new SortedDoublyLinkedListSet<>();
         this.distributedDoneeList = new SortedDoublyLinkedListSet<>();
-        this.status = "Pending";
+        this.status = "PENDING";
 
     }
 
@@ -41,7 +41,7 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         this.distributionDate = distributionDate;
         this.distributedItemList = new SortedDoublyLinkedListSet<>();
         this.distributedDoneeList = new SortedDoublyLinkedListSet<>();
-        this.status = "Pending";
+        this.status = "PENDING";
     }
 
     public void addSelectedItem(SelectedItem selectedItem) {

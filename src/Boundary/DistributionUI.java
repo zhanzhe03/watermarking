@@ -26,7 +26,7 @@ public class DistributionUI {
                 + "\n 1. List all donation distributions (sort by distributeditem(type) / distributeddate" 
                 + "\n 2. Add new donation distribution"
                 + "\n 3. Update donation distribution details"
-                + "\n 4. Search donation distribution details (filterdistribution by distributeditem(type) / distributeddate"
+                + "\n 4. Search donation distribution details "
                 + "\n 5. Remove donation distribution"
                 + "\n 6. Monitor/track distributed items"
                 + "\n 7. Generate summary reports"
@@ -110,6 +110,9 @@ public class DistributionUI {
         
     }
     
+    public void displayFormat(){
+        System.out.println(String.format("%-15s  ",  ""));
+    }
 
     
 
