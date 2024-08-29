@@ -130,7 +130,7 @@ public class DistributionManager {
                             distributionUI.displayMessage("" + selectedDonee.getRequests());
                         }
                         
-                        if(selectedDonee.getDoneeType().equalsIgnoreCase("Organisation")){
+                        if(selectedDonee.getDoneeType().equalsIgnoreCase("Organization")){
                             minQty = 10;
                             minttlAmt =1000.00;
                         }
@@ -138,7 +138,7 @@ public class DistributionManager {
                             minQty = 3;
                             minttlAmt = 100.00;
                         }
-                        else{
+                        else {
                             minQty = 1;
                             minttlAmt = 1.00;
                         }
@@ -187,6 +187,7 @@ public class DistributionManager {
                         input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit) > ");
                         if (input.equalsIgnoreCase("Q")) { // Quit the loop
                             // Prompt user to decide whether to keep or discard the current distribution
+                            if(isContinue==true){
                             String keepOrDiscard = distributionUI.getInputString("You have not added any items. Do you want to keep the previous actions? ('Y' to keep; 'N' to discard) > ");
                             if (keepOrDiscard.equalsIgnoreCase("Y")) {
                                 distributions.add(newDistribution); // Add the distribution to the list even if empty
@@ -196,13 +197,14 @@ public class DistributionManager {
                             }
                             return; // Exit method
                         }
+                        }
                     }
 
                     Item inputItem = checkItemExist(donatedItemList, input); // Check if the item exists              
                     if (inputItem != null) { // If item is found
                         if (inputItem.getType().equalsIgnoreCase("Monetary")) {
                             if (StockUI.checkMonetary("Monetary", donatedItemList)) {
-                                isContinue = handleMonetaryItem(inputItem, newDistribution, distributions);
+                                isContinue = handleMonetaryItem(inputItem, newDistribution, distributions,minttlAmt,selectedDonee);
                                 isDistributionMatchingRequest(newDistribution, selectedDonee, donatedItemList);
 
                             } else {
@@ -282,7 +284,7 @@ public class DistributionManager {
         return null; // Return null if the item is not found
     }
 
-    private boolean handleMonetaryItem(Item inputItem, Distribution newDistribution, SortedListSetInterface<Distribution> distributions) {
+    private boolean handleMonetaryItem(Item inputItem, Distribution newDistribution, SortedListSetInterface<Distribution> distributions,double minAmt,Donee donee) {
         boolean isValidAmt = false;
         boolean isContinue = false;
         double inputAmt;
@@ -290,6 +292,8 @@ public class DistributionManager {
         while (!isValidAmt) {
             try {
                 // Get and validate the desired amount
+                distributionUI.displayMessage("***Please note that the donee type is "+ donee.getDoneeType() 
+                        +" , suggested minimum distributed amount is "+ minAmt);
                 inputAmt = distributionUI.getInputDouble("Please enter the desired amount > ");
                 if (inputItem.getTotalAmount() >= inputAmt) {
                     SelectedItem selectedItem = new SelectedItem(inputItem.getItemId(), inputAmt);
