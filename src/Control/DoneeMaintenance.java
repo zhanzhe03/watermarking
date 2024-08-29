@@ -9,9 +9,9 @@ import ADT.SortedListSetInterface;
 import Boundary.DonationUI;
 import Boundary.DoneeUI;
 import DAO.EntityInitializer;
+import Entity.Donation;
 import Entity.Donee;
-import Entity.Distribution;
-import Entity.Item;
+import Entity.Donor;
 import Utility.ClearScreen;
 import Utility.MessageUI;
 import java.time.LocalDate;
@@ -19,7 +19,6 @@ import java.util.Iterator;
 import Entity.Date;
 import Entity.Request;
 import java.util.Stack;
-import Entity.SelectedItem;
 
 /**
  *
@@ -45,7 +44,7 @@ public class DoneeMaintenance {
         int nextNumericPart = Integer.parseInt(lastId.substring(2)) + 1;
         return String.format("DE%03d", nextNumericPart);
     }
-
+    
     private boolean confirmUpdate() {
         return doneeUI.confirmOperation().equalsIgnoreCase("Y");
     }
@@ -216,8 +215,6 @@ public class DoneeMaintenance {
     //Public method 
     public void doneeManagement(EntityInitializer entityInitialize) {
         SortedListSetInterface<Donee> donees = entityInitialize.getDonees();
-        SortedListSetInterface<Distribution> distributions = entityInitialize.getDistributions();
-        SortedListSetInterface<Item> items = entityInitialize.getItems();
 
         int opt = 0;
         do {
@@ -247,7 +244,7 @@ public class DoneeMaintenance {
                         break;
                     case 6:
                         ClearScreen.clearJavaConsoleScreen();
-                        DoneeWithDistribute(donees, distributions, items);
+                        DoneeWithDistribute(donees);
                         break;
                     case 7:
                         ClearScreen.clearJavaConsoleScreen();
@@ -269,60 +266,6 @@ public class DoneeMaintenance {
                 MessageUI.displayInvalidIntegerMessage();
             }
         } while (opt != 9);
-    }
-
-    private String printDistributionDetails(String doneeId, Date distributionDate, SortedListSetInterface<SelectedItem> distributedItemList, SortedListSetInterface<Item> donatedItemList) {
-        StringBuilder output = new StringBuilder();
-
-        boolean hasPrintedDoneeId = false;
-
-        // Iterator for distributed items
-        Iterator<SelectedItem> itemIterator = distributedItemList.getIterator();
-
-        while (itemIterator.hasNext()) {
-            SelectedItem selectedItem = itemIterator.next();
-
-            // Get item type from donatedItemList
-            String itemType = getItemTypeFromDistributedItem(selectedItem, donatedItemList);
-
-            if (!hasPrintedDoneeId) {
-                // Print the Donee ID once
-                output.append(String.format(
-                        "%-15s %-30s %-20s %-20s %-20s %-10s\n",
-                        doneeId, // Donee ID
-                        itemType, // Received Item (Item Type)
-                        "", // Request Date (empty as we don't need it anymore)
-                        distributionDate, // Receive Date
-                        selectedItem.getItemId(), // Item ID
-                        selectedItem.getSelectedQuantity() > 0 ? selectedItem.getSelectedQuantity() : String.format("%.2f", selectedItem.getAmount()) // Quantity/Amount
-                ));
-                hasPrintedDoneeId = true;
-            } else {
-                // Print details without Donee ID
-                output.append(String.format(
-                        "%-15s %-30s %-20s %-20s %-20s %-10s\n",
-                        "", // No Donee ID for subsequent items
-                        itemType, // Received Item (Item Type)
-                        "", // Request Date (empty as we don't need it anymore)
-                        distributionDate, // Receive Date
-                        selectedItem.getItemId(), // Item ID
-                        selectedItem.getSelectedQuantity() > 0 ? selectedItem.getSelectedQuantity() : String.format("%.2f", selectedItem.getAmount()) // Quantity/Amount
-                ));
-            }
-        }
-
-        return output.toString();
-    }
-
-    private String getItemTypeFromDistributedItem(SelectedItem selectedItem, SortedListSetInterface<Item> donatedItemList) {
-        Iterator<Item> itemIterator = donatedItemList.getIterator();
-        while (itemIterator.hasNext()) {
-            Item item = itemIterator.next();
-            if (item.getItemId().equalsIgnoreCase(selectedItem.getItemId())) {
-                return item.getType(); // Return the item type
-            }
-        }
-        return ""; // Return an empty string if item type is not found
     }
 
     private Donee findDoneeID(SortedListSetInterface<Donee> donees, String inputId) {
@@ -763,7 +706,7 @@ public class DoneeMaintenance {
                 switch (choose) {
                     case 1:
                         // Update Name
-                        newName = inputName();
+                        newName = inputName(); 
                         if (confirmUpdate()) {
                             targetDonee.setName(newName);
                             doneeUI.printText("Donee name updated successfully.");
@@ -772,7 +715,7 @@ public class DoneeMaintenance {
 
                     case 2:
                         // Update Contact
-                        newContact = inputContact();
+                        newContact = inputContact(); 
                         if (confirmUpdate()) {
                             targetDonee.setContact(newContact);
                             doneeUI.printText("Donee contact updated successfully.");
@@ -781,7 +724,7 @@ public class DoneeMaintenance {
 
                     case 3:
                         // Update Location
-                        newLocation = inputLocation();
+                        newLocation = inputLocation(); 
                         if (confirmUpdate()) {
                             targetDonee.setLocation(newLocation);
                             doneeUI.printText("Donee location updated successfully.");
@@ -813,28 +756,10 @@ public class DoneeMaintenance {
         }
     }
 
-    public void DoneeWithDistribute(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-        doneeUI.donationTitle();
-        doneeUI.displayEnDash();
+    
 
-        // Create an iterator for the distributions
-        Iterator<Distribution> distributionIterator = distributions.getIterator();
+    public void DoneeWithDistribute(SortedListSetInterface<Donee> donees) {
 
-        // Iterate through each distribution
-        while (distributionIterator.hasNext()) {
-            Distribution distribution = distributionIterator.next();
-            Iterator<Donee> doneeIterator = distribution.getDistributedDoneeList().getIterator();
-            while (doneeIterator.hasNext()) {
-                Donee donee = doneeIterator.next();
-                String doneeId = donee.getDoneeId();
-                Date date = distribution.getDistributionDate();
-                SortedListSetInterface<SelectedItem> item = distribution.getDistributedItemList();
-                String outputStr = printDistributionDetails(doneeId, date, item, donatedItemList);
-                doneeUI.printText(outputStr);
-            }
-        }
-        doneeUI.displayEnDash();
-        doneeUI.printText("Number of distributions: " + distributions.getNumberOfEntries());
     }
 
     public void FilterDonee(SortedListSetInterface<Donee> donees) {
