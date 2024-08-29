@@ -204,15 +204,7 @@ public class DistributionManager {
                         input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit) > ");
                         if (input.equalsIgnoreCase("Q")) { // Quit the loop
                             // Prompt user to decide whether to keep or discard the current distribution
-                            if (isContinue == true) {
-                                String keepOrDiscard = distributionUI.getInputString("You have not added any items. Do you want to keep the previous actions? ('Y' to keep; 'N' to discard) > ");
-                                if (keepOrDiscard.equalsIgnoreCase("Y")) {
-                                    distributions.add(newDistribution); // Add the distribution to the list even if empty
-                                    MessageUI.displayRecordAddedMessage();
-                                } else {
-                                    MessageUI.displayNoRecordAddedMessage();
-                                }
-                                return; // Exit method
+                                MessageUI.displayNoRecordAddedMessage();
                             }
                         }
                     }
