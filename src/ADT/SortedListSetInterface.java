@@ -14,19 +14,19 @@ import java.util.Iterator;
 public interface SortedListSetInterface<T extends Comparable<T>> {
 
     public void reSort();
-    
+
     public boolean merge(SortedListSetInterface<T> anotherSet);
-    
+
     public boolean relativeComplement(SortedListSetInterface<T> otherListSet);
-    
+
     public boolean add(T newEntry);
 
     public boolean remove(T anEntry);
 
     public boolean contains(T anEntry);
-    
+
     public T getLastEntries();
-    
+
     public T getFirstEntry();
 
     public int getNumberOfEntries();
@@ -36,6 +36,10 @@ public interface SortedListSetInterface<T extends Comparable<T>> {
     public void clear();
 
     public Iterator<T> getIterator();
-    
+
     public T getEntry(int givenPosition);   //szewen
+
+    public int indexOf(T anEntry);           // Get index of an entry
+
+    public T setIndex(int index, T newEntry); // Set entry at a specific index
 }

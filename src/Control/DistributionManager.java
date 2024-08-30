@@ -1007,36 +1007,54 @@ public class DistributionManager {
     }
 
     public void GenerateSummaryReport(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-
-        //default report will show in current year
         System.out.println(String.format("%50s Distributions Summary Report of " + localYear, ""));
         distributionUI.printDistributionTitleHeader();
-        int times = 0;
+
+        int distFound = 0;
+
+        SortedListSetInterface<String> trackedCategories = new SortedDoublyLinkedListSet<>();
+        SortedListSetInterface<Integer> categoryCounts = new SortedDoublyLinkedListSet<>();
 
         Iterator<Distribution> distributionIterator = distributions.getIterator();
         while (distributionIterator.hasNext()) {
             Distribution currentRecord = distributionIterator.next();
-            Iterator<Item> itemIterator = donatedItemList.getIterator();
-            while(itemIterator.hasNext()){
-                //drop down each appear category / item times
-            }
-            if (currentRecord.getDistributionDate().getYear() == localYear) {
-                System.out.println(currentRecord);
-                times++;
-            }
-        }
-        int totalDistributions = distributions.getNumberOfEntries();
-        System.out.println("Total Distributions: " + totalDistributions);
-        System.out.println("Distributions This Year: " + times);
 
-        if (totalDistributions > 0) {
-            double rate = (double) times / totalDistributions;
-            System.out.println("Rate: " + String.format("%.2f", rate));
-        } else {
-            System.out.println("Rate: N/A (No distributions found)");
+            // default will be showed by current system year
+            if (currentRecord.getDistributionDate().getYear() == localYear) {
+                distributionUI.displayMessage(""+currentRecord);
+                distFound++;
+
+            Iterator<SelectedItem> selectedItemIterator = currentRecord.getDistributedItemList().getIterator();
+            while (selectedItemIterator.hasNext()) {
+                SelectedItem selectedItem = selectedItemIterator.next();
+
+                Iterator<Item> itemIterator = donatedItemList.getIterator();
+                while (itemIterator.hasNext()) {
+                    Item currentItem = itemIterator.next();
+                    if (selectedItem.getItemId().equalsIgnoreCase(currentItem.getItemId())) {
+                        // Track category distribution count
+                        int categoryIndex = trackedCategories.indexOf(currentItem.getType());
+                        if (categoryIndex == -1) {
+                            trackedCategories.add(currentItem.getType());
+                            categoryCounts.add(1); // Initialize count for new category
+                        } else {
+                            int currentCategoryCount = categoryCounts.getEntry(categoryIndex);
+                            categoryCounts.setIndex(categoryIndex, currentCategoryCount + 1); // Increment count
+                        }
+
+                    }
+                }
+            }
         }
-        
+        }
+
+        distributionUI.displayMessage("\n");
+        distributionUI.printCategoryCountTitleHeader();
+        for (int i = 1; i <= trackedCategories.getNumberOfEntries(); i++) {
+            distributionUI.displayMessage(String.format("\n %-30s  %-15s",trackedCategories.getEntry(i), categoryCounts.getEntry(i)));       
+        }
         
         
     }
+
 }

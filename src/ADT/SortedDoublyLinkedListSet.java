@@ -20,7 +20,7 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
     public SortedDoublyLinkedListSet() {
         clear();
     }
-    
+
     @Override
     public void reSort() {
         SortedListSetInterface<T> tempList = new SortedDoublyLinkedListSet<>();
@@ -28,26 +28,26 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
         this.clear();
         this.merge(tempList);
     }
-    
+
     @Override
     public boolean merge(SortedListSetInterface<T> otherListSet) {
         Iterator<T> iterator = otherListSet.getIterator();
-        do{
+        do {
             T anEntry = iterator.next();
             add(anEntry);
-        }while(iterator.hasNext());
+        } while (iterator.hasNext());
         return true;
     }
-    
+
     @Override
-    public boolean relativeComplement(SortedListSetInterface<T> otherListSet){
+    public boolean relativeComplement(SortedListSetInterface<T> otherListSet) {
         Iterator<T> iterator = otherListSet.getIterator();
-        do{
+        do {
             T anEntry = iterator.next();
-            if(contains(anEntry)){
+            if (contains(anEntry)) {
                 remove(anEntry);
             }
-        }while(iterator.hasNext());
+        } while (iterator.hasNext());
         return true;
     }
 
@@ -127,27 +127,59 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
         }
         return found;
     }
-    
+
     @Override
-    public T getLastEntries(){
+    public T getLastEntries() {
         return lastNode.data;
     }
-    
-        
+
     @Override
-    public T getFirstEntry(){
+    public T getFirstEntry() {
         return firstNode.data;
     }
-    
- 
+
     @Override
-    public T getEntry(int givenPosition){
-        Node currentNode =firstNode;
-           for (int counter = 1; counter < givenPosition; counter++) {
+    public T getEntry(int givenPosition) {
+        Node currentNode = firstNode;
+        for (int counter = 1; counter < givenPosition; counter++) {
             currentNode = currentNode.next;
         }
 
         return currentNode.data;
+    }
+
+    @Override
+    public int indexOf(T entry) {
+        Node currentNode = firstNode;
+        int position = 1; // Start with 1-based index
+
+        while (currentNode != null) {
+            if (currentNode.data.equals(entry)) {
+                return position; // Item found, return the current position
+            }
+            currentNode = currentNode.next;
+            position++;
+        }
+
+        return -1; // Item not found, return -1
+    }
+
+
+    @Override
+    public T setIndex(int givenPosition, T newEntry) {
+        if (givenPosition < 1 || givenPosition > getNumberOfEntries()) {
+            throw new IndexOutOfBoundsException("Invalid position");
+        }
+
+        Node currentNode = firstNode;
+        for (int counter = 1; counter < givenPosition; counter++) {
+            currentNode = currentNode.next;
+        }
+
+        T oldData = currentNode.data;
+        currentNode.data = newEntry; // Set the new entry at the given position
+
+        return oldData; // Return the old entry
     }
 
     @Override
@@ -188,8 +220,6 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
     public Iterator<T> getIterator() {
         return new SortedDoublyLinkedListSetIterator();
     }
-
-
 
     private class SortedDoublyLinkedListSetIterator implements Iterator<T> {
 

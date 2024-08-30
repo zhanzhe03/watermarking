@@ -125,12 +125,6 @@ public class EntityInitializer {
         SelectedItem selectedItem5 = new SelectedItem("I005", 3);
         SelectedItem selectedItem6 = new SelectedItem("I006", 2);
 
-        distributedItem.add(selectedItem1);
-        distributedItem.add(selectedItem2);
-        distributedItem.add(selectedItem3);
-        distributedItem.add(selectedItem4);
-        distributedItem.add(selectedItem5);
-        distributedItem.add(selectedItem6);
 
 
         // Add selected item to the distribution
@@ -145,17 +139,18 @@ public class EntityInitializer {
         distribution3.addSelectedItem(selectedItem4);
 
         distribution4.addDonee(donee4);
+        distribution4.addSelectedItem(selectedItem2);
         distribution4.addSelectedItem(selectedItem5);
-        distribution4.addSelectedItem(selectedItem6);
+        
 
         distribution5.addDonee(donee1);
         distribution5.addSelectedItem(selectedItem4);
 
         distribution6.addDonee(donee4);
-        distribution6.addSelectedItem(selectedItem6);
+        distribution6.addSelectedItem(selectedItem4);
 
         distributions.add(distribution1);
-        distributions.add(distribution2);
+       distributions.add(distribution2);
         distributions.add(distribution3);
         distributions.add(distribution4);
         distributions.add(distribution5);
