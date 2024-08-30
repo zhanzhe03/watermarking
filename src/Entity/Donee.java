@@ -22,11 +22,15 @@ public class Donee implements Comparable<Donee> {
     private String contact;
     private String address;
     private String location;
+    private Date registerDate;
     private SortedListSetInterface<Request> requests;
-    private SortedListSetInterface<Distribution> distributions;
 
-    public SortedListSetInterface<Distribution> getDistributions() {
-        return distributions;
+    public Date getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(Date registerDate) {
+        this.registerDate = registerDate;
     }
 
     public void addRequest(Request request) {
@@ -92,7 +96,7 @@ public class Donee implements Comparable<Donee> {
         this.address = address;
     }
 
-    public Donee(String doneeId, String doneeType, String name, String email, String contact, String address, String location) {
+    public Donee(String doneeId, String doneeType, String name, String email, String contact, String address, String location, Date registerDate) {
         this.doneeType = doneeType;
         this.doneeId = doneeId;
         this.name = name;
@@ -100,13 +104,12 @@ public class Donee implements Comparable<Donee> {
         this.contact = contact;
         this.address = address;
         this.location = location;
+        this.registerDate = registerDate;
         this.requests = new SortedDoublyLinkedListSet<>();
-        this.distributions = new SortedDoublyLinkedListSet<>();
     }
 
     public Donee() {
         this.requests = new SortedDoublyLinkedListSet<>();
-        this.distributions = new SortedDoublyLinkedListSet<>();
     }
 
     public SortedListSetInterface<Request> getRequests() {
@@ -173,10 +176,6 @@ public class Donee implements Comparable<Donee> {
                 return compareByEarliestRequestDate(this, other);
             case REQUESTDATE_INDESC:
                 return compareByLatestRequestDate(this, other);
-            case RECEIVEDATE_INASC:
-                return compareByEarliestReceiveDate(this, other);
-            case RECEIVEDATE_INDESC:
-                return compareByLatestReceiveDate(this, other);
             default:
                 return this.doneeId.compareTo(other.doneeId); // Default to ascending by ID
         }
@@ -234,73 +233,19 @@ public class Donee implements Comparable<Donee> {
         return donee.requests.getLastEntries(); // Assumes the SortedListSetInterface sorts by request date
     }
 
-    private int compareByEarliestReceiveDate(Donee d1, Donee d2) {
-        Distribution earliestD1 = getEarliestDistribution(d1);
-        Distribution earliestD2 = getEarliestDistribution(d2);
-
-        Date earliestDateD1 = (earliestD1 != null) ? earliestD1.getDistributionDate() : null;
-        Date earliestDateD2 = (earliestD2 != null) ? earliestD2.getDistributionDate() : null;
-
-        if (earliestDateD1 == null && earliestDateD2 == null) {
-            return 0;
-        }
-        if (earliestDateD1 == null) {
-            return -1;
-        }
-        if (earliestDateD2 == null) {
-            return 1;
-        }
-
-        return earliestDateD1.compareTo(earliestDateD2);
-    }
-
-    private int compareByLatestReceiveDate(Donee d1, Donee d2) {
-        Distribution latestD1 = getLatestDistribution(d1);
-        Distribution latestD2 = getLatestDistribution(d2);
-
-        Date latestDateD1 = (latestD1 != null) ? latestD1.getDistributionDate() : null;
-        Date latestDateD2 = (latestD2 != null) ? latestD2.getDistributionDate() : null;
-
-        if (latestDateD1 == null && latestDateD2 == null) {
-            return 0;
-        }
-        if (latestDateD1 == null) {
-            return -1;
-        }
-        if (latestDateD2 == null) {
-            return 1;
-        }
-
-        return latestDateD2.compareTo(latestDateD1); // Descending order
-    }
-
-    private Distribution getEarliestDistribution(Donee donee) {
-        if (donee.getDistributions() == null || donee.getDistributions().isEmpty()) {
-            return null;
-        }
-        return donee.getDistributions().getFirstEntry(); // Assumes the SortedListSetInterface sorts by distribution date
-    }
-
-    private Distribution getLatestDistribution(Donee donee) {
-        if (donee.getDistributions() == null || donee.getDistributions().isEmpty()) {
-            return null;
-        }
-        return donee.getDistributions().getLastEntries();
-    }
-
     @Override
     public String toString() {
         // Base Donee information
         String outputStr = String.format(
-                "\n%-15s %-20s %-20s %-25s %-20s %-30s %-15s",
-                doneeId, doneeType, name, email, contact, address, location
+                "\n%-15s %-20s %-20s %-25s %-20s %-30s %-15s %-20s",
+                doneeId, doneeType, name, email, contact, address, location, registerDate
         );
         if (requests != null && requests.getNumberOfEntries() > 0) {
             Iterator<Request> iterator = requests.getIterator();
             while (iterator.hasNext()) {
                 Request request = iterator.next();
                 outputStr += String.format("%-20s %-20s", request.getRequestDate(), request.getRequestItems());
-                outputStr += String.format("\n%-15s %-20s %-20s %-25s %-20s %-30s %-15s", "", "", "", "", "", "", "");
+                outputStr += String.format("\n%-15s %-20s %-20s %-25s %-20s %-30s %-15s %-20s", "", "", "", "", "", "", "", "");
             }
         } else {
             outputStr += String.format("%5s %25s", "-", "-");

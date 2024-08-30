@@ -205,7 +205,7 @@ public class DoneeMaintenance {
         return categoryType;
     }
 
-    private Date getRequestDate() {
+    private Date getCurrentDate() {
         LocalDate localDate = LocalDate.now();
         int day = localDate.getDayOfMonth();
         int month = localDate.getMonthValue();
@@ -465,6 +465,9 @@ public class DoneeMaintenance {
 
             // Location
             String location = inputLocation();
+            
+            //getCurrentDate
+            Date registerDate = getCurrentDate();
 
             // Confirm Operation
             String confirmOpt;
@@ -476,7 +479,7 @@ public class DoneeMaintenance {
                 }
             } while (!confirmOpt.equalsIgnoreCase("Y"));
 
-            Donee newDonee = new Donee(doneeId, doneeType, name, email, contact, address, location);
+            Donee newDonee = new Donee(doneeId, doneeType, name, email, contact, address, location, registerDate);
             donees.add(newDonee);
             doneeUI.printText("New Donee Added: ");
             doneeUI.printText(newDonee.toString());
@@ -701,7 +704,7 @@ public class DoneeMaintenance {
                     case 4:
                         // Update Request
                         String requestItems = inputCategory();
-                        Date requestDate = getRequestDate();
+                        Date requestDate = getCurrentDate();
                         Request newRequest = new Request(requestDate, requestItems);
                         if (confirmUpdate()) {
                             targetDonee.addRequest(newRequest);
@@ -748,8 +751,26 @@ public class DoneeMaintenance {
                 return; // Exit the sort menu and return to the previous menu
             }
 
-            // Sort the donees
+            // Set sorting criteria based on user input
+            switch (sortOption) {
+                case 1:
+                    Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INASC);
+                    break;
+                case 2:
+                    Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INDESC);
+                    break;
+                case 3:
+                    Donee.setSortByCriteria(Donee.SortByCriteria.RECEIVEDATE_INASC);
+                    break;
+                case 4:
+                    Donee.setSortByCriteria(Donee.SortByCriteria.RECEIVEDATE_INDESC);
+                    break;
+                default:
+                    MessageUI.displayInvalidOptionMessage(); // Handle unexpected cases
+                    continue;
+            }
             
+            donees.reSort();
             doneeUI.donationTitle();
             doneeUI.displayEnDash();
 
@@ -766,25 +787,6 @@ public class DoneeMaintenance {
                     Date date = distribution.getDistributionDate();
                     SortedListSetInterface<SelectedItem> item = distribution.getDistributedItemList();
                     String outputStr = printDistributionDetails(doneeId, date, item, donatedItemList);
-                    // Set sorting criteria based on user input
-                    switch (sortOption) {
-                        case 1:
-                            Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INASC);
-                            break;
-                        case 2:
-                            Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INDESC);
-                            break;
-                        case 3:
-                            Donee.setSortByCriteria(Donee.SortByCriteria.RECEIVEDATE_INASC);
-                            break;
-                        case 4:
-                            Donee.setSortByCriteria(Donee.SortByCriteria.RECEIVEDATE_INDESC);
-                            break;
-                        default:
-                            MessageUI.displayInvalidOptionMessage(); // Handle unexpected cases
-                            continue;
-                    }
-                    donees.reSort();
                     doneeUI.printText(outputStr);
                 }
             }
@@ -795,7 +797,8 @@ public class DoneeMaintenance {
     }
 
     public void FilterDonee(SortedListSetInterface<Donee> donees) {
-
+        //Range date receive item and total
+        //
     }
 
     public void DoneeReports(SortedListSetInterface<Donee> donees) {
