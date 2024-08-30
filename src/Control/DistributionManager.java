@@ -63,9 +63,10 @@ public class DistributionManager {
                         RemoveDonationDistribution(distributions);
                         break;
                     case 6:
-                        TrackDistributedItem(distributions, distributedItemList);
+                        TrackDistributedItems(distributions, donatedItemList);
                         break;
                     case 7:
+
                         break;
                     case 9:
                         break;
@@ -87,15 +88,19 @@ public class DistributionManager {
             Distribution currentRecord = iterator.next();
             Date distributedDate = currentRecord.getDistributionDate();
             int daysBetween = currentDate.daysBetween(distributedDate);
-            if (daysBetween >= 3) {
-                currentRecord.setStatus("DISTRIBUTED"); // update status 
+            if (daysBetween >= 2) {
+                currentRecord.setStatus("DISTRIBUTED");
+            } else if (daysBetween == 1) {
+                currentRecord.setStatus("SHIPPED");
+            } else {
+                currentRecord.setStatus("PENDING"); // Or another default status if needed
             }
         }
 
     }
 
     public void ListAllDistributions(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList,
-             SortedListSetInterface<Donee> donees) {
+            SortedListSetInterface<Donee> donees) {
         distributionUI.listAllDistributions(distributions);
         ListAllDistributionsInDESC(distributions);
     }
@@ -133,7 +138,7 @@ public class DistributionManager {
             Donee selectedDonee = null;
             do {
                 try {
-                    distributionUI.displayMessage("Available Donees: \n" + donees); // Display the list of donees
+                    distributionUI.displayMessage(""+donees); // Display the list of donees
                     input = distributionUI.getInputString("Please enter the Donee ID to distribute to ('Q' quit) > ");
 
                     if (input.equalsIgnoreCase("Q")) {  // Quit the loop
@@ -145,7 +150,7 @@ public class DistributionManager {
                         MessageUI.displayInvalidDonee();
                     } else {
                         if (selectedDonee.getRequests().getNumberOfEntries() >= 1) {
-                            distributionUI.displayMessage("Donee Requests for : ");
+                            distributionUI.displayMessage("\nDonee "+selectedDonee.getDoneeId()+" requests for : ");
                             distributionUI.displayMessage("" + selectedDonee.getRequests());
                         }
 
@@ -183,9 +188,9 @@ public class DistributionManager {
                             String keepOrDiscard = distributionUI.getInputString("You have not added any items. Do you want to keep the previous actions? ('Y' to keep; 'N' to discard) > ");
                             if (keepOrDiscard.equalsIgnoreCase("Y")) {
                                 distributions.add(newDistribution); // Add the distribution to the list even if empty
-                                MessageUI.displayRecordAddedMessage();
+                                MessageUI.displayGreenSuccessfulMsg("\nDistribution record is added.");
                             } else {
-                                MessageUI.displayNoRecordAddedMessage();
+                                MessageUI.displayBlueRemindMsg("\nNo distribution added.");
                             }
                         }
                         return; // Exit method
@@ -309,18 +314,18 @@ public class DistributionManager {
         while (!isValidAmt) {
             try {
                 // Get and validate the desired amount
-                MessageUI.displayBlueRemindMsg("***Please note that the donee type is " + donee.getDoneeType()
+                MessageUI.displayCyanNote("***Please note that the donee type is " + donee.getDoneeType()
                         + " , suggested minimum distributed amount is  RM " + minAmt);
-                inputAmt = distributionUI.getInputDouble("Please enter the desired amount > ");
+                inputAmt = distributionUI.getInputDouble("\nPlease enter the desired amount (RM) > ");
                 if (inputItem.getTotalAmount() >= inputAmt) {
                     SelectedItem selectedItem = new SelectedItem(inputItem.getItemId(), inputAmt);
 
                     // Display details for confirmation
                     distributionUI.displayMessage("You are about to add the following item to the distribution:");
-                    distributionUI.displayMessage("Item ID : " + selectedItem.getItemId());
-                    distributionUI.displayMessage("Description : " + inputItem.getDesc());
-                    distributionUI.displayMessage("Amount : " + inputAmt);
-                    String confirmAdd = distributionUI.getInputString("Do you want to confirm adding this item? (y/n) > ");
+                    MessageUI.displayMagentaPreviewMsg("Item ID : " + selectedItem.getItemId()+"\n");
+                    MessageUI.displayMagentaPreviewMsg("Description : " + inputItem.getDesc()+"\n");
+                    MessageUI.displayMagentaPreviewMsg("Amount : " + inputAmt +"\n");
+                    String confirmAdd = distributionUI.getInputString("\nDo you want to confirm adding this item? (y/n) > ");
 
                     if (confirmAdd.equalsIgnoreCase("Y")) {
                         newDistribution.addSelectedItem(selectedItem); // Add selected item into the new distribution
@@ -330,17 +335,18 @@ public class DistributionManager {
                         String keepAdding = distributionUI.getInputString("Do you want to add another item into this distribution? (y/n) > ");
                         if (keepAdding.equalsIgnoreCase("N")) {
                             distributions.add(newDistribution); // Add the distribution to the list
-                            MessageUI.displayRecordAddedMessage();
+                            MessageUI.displayGreenSuccessfulMsg("\nDistribution record is added.");
                             isContinue = false; // Stop adding items
                         } else {
                             isContinue = true; // Continue adding items
                         }
                     } else {
-                        distributionUI.displayMessage("Item addition canceled. Please enter a new Item ID.");
+                        MessageUI.displayBlueRemindMsg("Item addition canceled. Please enter a new Item ID.");
                         return true; // Return true to continue the outer loop to allow re-entry of item ID
                     }
                 } else {
-                    MessageUI.displayExceedMessage();
+                    MessageUI.displayRed("Your input amount has exceed the in-stock amount. Please try again." );
+                    distributionUI.displayMessage("In-stock amount : " +inputItem.getTotalAmount());
                 }
             } catch (NumberFormatException e) {
                 MessageUI.displayInvalidAmountMessage();
@@ -363,9 +369,9 @@ public class DistributionManager {
 
                     // Display details for confirmation
                     distributionUI.displayMessage("You are about to add the following item to the distribution:");
-                    distributionUI.displayMessage("Item ID: " + selectedItem.getItemId());
-                    distributionUI.displayMessage("Description : " + inputItem.getDesc());
-                    distributionUI.displayMessage("Quantity : " + inputQty);
+                     MessageUI.displayMagentaPreviewMsg("Item ID : " + selectedItem.getItemId()+"\n");
+                    MessageUI.displayMagentaPreviewMsg("Description : " + inputItem.getDesc()+"\n");
+                    MessageUI.displayMagentaPreviewMsg("Quantity : " + inputQty +"\n");
                     String confirmAdd = distributionUI.getInputString("Do you want to confirm adding this item? (y/n) > ");
 
                     if (confirmAdd.equalsIgnoreCase("Y")) {
@@ -376,17 +382,18 @@ public class DistributionManager {
                         String keepAdding = distributionUI.getInputString("Do you want to add another item into this distribution? (y/n) > ");
                         if (keepAdding.equalsIgnoreCase("N")) {
                             distributions.add(newDistribution); // Add the distribution to the list
-                            MessageUI.displayRecordAddedMessage();
+                            MessageUI.displayGreenSuccessfulMsg("\nDistribution record is added.");
                             isContinue = false; // Stop adding items
                         } else {
                             isContinue = true; // Continue adding items
                         }
                     } else {
-                        distributionUI.displayMessage("Item addition canceled. Please enter a new Item ID.");
+                        MessageUI.displayBlueRemindMsg("Item addition canceled. Please enter a new Item ID.");
                         return true; // Return true to continue the outer loop to allow re-entry of item ID
                     }
                 } else {
-                    MessageUI.displayExceedMessage();
+                    MessageUI.displayRed("Your input amount has exceed the in-stock amount. Please try again." );
+                    distributionUI.displayMessage("In-stock quantity : " +inputItem.getQuantity());
                 }
             } catch (NumberFormatException e) {
                 MessageUI.displayInvalidIntegerMessage();
@@ -409,7 +416,7 @@ public class DistributionManager {
             }
         }
         if (!foundtype) {
-            distributionUI.displayMessage("No item match < " + type + " > type.\n\n");
+            MessageUI.displayRed("No item match < " + type + " > type.\n\n");
         }
         return foundtype;
     }
@@ -431,8 +438,11 @@ public class DistributionManager {
             boolean continueLoop = true;
 
             if (updateDist.getStatus().equalsIgnoreCase("Distributed")) {
+                MessageUI.displayBlueRemindMsg("The distribution record with ID < " + updateDistID + " > is already distributed  and cannot be updated.");
+                return;
+            } else if (updateDist.getStatus().equalsIgnoreCase("Shipped")) {
 
-                distributionUI.displayMessage("\nThe distribution record with ID < " + updateDistID + " > is already distributed and cannot be updated.");
+                MessageUI.displayBlueRemindMsg("The distribution record with ID < " + updateDistID + " > is already shipped and cannot be updated.");
                 return;
             }
 
@@ -488,9 +498,9 @@ public class DistributionManager {
 
     private void updateItemDetails(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList, Distribution updateDist) {
         boolean continueUpdating = true;
-        distributionUI.displayMessage("Update item details: ");
 
         while (continueUpdating) {
+            
             distributionUI.printDistriburedItemList(updateDist.getDistributedItemList());
 
             if (updateDist.getDistributedItemList().getNumberOfEntries() >= 1) {
@@ -929,41 +939,73 @@ public class DistributionManager {
         } while (!removeSuccessful); // Repeat until a valid ID is entered and removal is successful
     }
 
-    public void TrackDistributedItem(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<SelectedItem> distributedItemList) {
-    boolean isFound = false;
-    String inputItem = distributionUI.getInputString("Please enter the distributed itemID that you would like to track > ");
 
-    // Iterate through all distributions
-    Iterator<Distribution> distributionIterator = distributions.getIterator();
-    while (distributionIterator.hasNext()) {
-        Distribution currentDistribution = distributionIterator.next();
-        
-        // Iterate through the items in the current distribution
-        Iterator<SelectedItem> itemIterator = currentDistribution.getDistributedItemList().getIterator();
-        while (itemIterator.hasNext()) {
-            SelectedItem currentItem = itemIterator.next();
-            
-            // Check if the current item matches the inputItem ID
-            if (currentItem.getItemId().equals(inputItem)) {
-                // Perform the tracking operation
-                isFound = true;
-                System.out.println("Distribution : " + currentDistribution);
-               // System.out.println("Item found: " + currentItem);
-                System.out.println("Current Status : " + currentDistribution.getStatus());
-                System.out.println("Assigned On : " + currentDistribution.getDistributionDate());
-                
-                // You can add more logic here to display more details or take action
-               
+
+    public void TrackDistributedItems(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
+
+        boolean itemFound = false;
+        while (!itemFound) {
+
+            String inputItem = distributionUI.getInputString("Please enter the distributed itemID that you would like to track ('Q' Quit) > ");
+            if (inputItem.equalsIgnoreCase("Q")) {
+                return;
+            }
+            Iterator<Item> itemIterator = donatedItemList.getIterator();
+
+            while (itemIterator.hasNext()) {
+                Item currentItem = itemIterator.next();
+
+                if (currentItem.getItemId().equalsIgnoreCase(inputItem)) {
+                    itemFound = true;
+                    distributionUI.displayMessage(String.format("\nItem ID: %s\nDescription: %s\nCategory: %s\n",
+                            currentItem.getItemId(), currentItem.getDesc(), currentItem.getType()));
+
+                    // Check the distributions for this item
+                    Iterator<Distribution> distributionIterator = distributions.getIterator();
+                    boolean distributionFound = false;
+                    int distFound = 0;
+
+                    while (distributionIterator.hasNext()) {
+                        Distribution currentDistribution = distributionIterator.next();
+
+                        // Check if the current distribution contains the selected item
+                        Iterator<SelectedItem> selectedItemIterator = currentDistribution.getDistributedItemList().getIterator();
+                        while (selectedItemIterator.hasNext()) {
+                            SelectedItem selectedItem = selectedItemIterator.next();
+                            if (selectedItem.getItemId().equalsIgnoreCase(currentItem.getItemId())) {
+                                distributionFound = true;
+                                distFound++;
+                                distributionUI.printDistributionTitleHeader();
+                                distributionUI.displayMessage(currentDistribution + "");
+                                MessageUI.displayMagentaPreviewMsg("Assigned On: ");
+                                MessageUI.displayMagentaPreviewMsg(currentDistribution.getDistributionDate() + "\n");
+
+                                if (currentDistribution.getStatus().equalsIgnoreCase("Distributed")) {
+                                    MessageUI.displayMagentaPreviewMsg("Shipped On: ");
+                                    MessageUI.displayMagentaPreviewMsg(currentDistribution.getDistributionDate().addDays(1) + "\n");
+                                    MessageUI.displayMagentaPreviewMsg("Distributed On: ");
+                                    MessageUI.displayMagentaPreviewMsg(currentDistribution.getDistributionDate().addDays(2) + "\n");
+                                } else if (currentDistribution.getStatus().equalsIgnoreCase("Shipped")) {
+                                    MessageUI.displayMagentaPreviewMsg("Shipped On: ");
+                                    MessageUI.displayMagentaPreviewMsg(currentDistribution.getDistributionDate().addDays(1) + "\n");
+                                }
+                            }
+                        }
+                    }
+                    if(distFound>=1){
+                    MessageUI.displayBlueRemindMsg("\n" + currentItem.getDesc() + " is found in "
+                            + distFound + " record(s). ");
+                    }
+                    if (!distributionFound) {
+                        MessageUI.displayBlueRemindMsg("No distribution records found for this item.\n");
+                    }
+                    break;  // Exit the loop as the item has been found
+                }
+            }
+            if (!itemFound) {
+                MessageUI.displayRed("The item ID you entered does not exist in the donated items list. Please try again.\n");
             }
         }
-        
     }
-
-    // If the item is not found, notify the user
-    if (!isFound) {
-        System.out.println("The item with ID " + inputItem + " was not found in any distribution.");
-    }
-}
-
 
 }

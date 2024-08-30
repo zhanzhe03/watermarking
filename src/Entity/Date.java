@@ -148,8 +148,60 @@ public class Date {
         return this.convertToDays() - otherDate.convertToDays();
     }
 
+    //szewen
+       public Date addDays(int daysToAdd) {
+        int newDay = this.day;
+        int newMonth = this.month;
+        int newYear = this.year;
+        
+        while (daysToAdd > 0) {
+            int daysInCurrentMonth = getDaysInMonth(newMonth, newYear);
+            
+            if (newDay + daysToAdd <= daysInCurrentMonth) {
+                newDay += daysToAdd;
+                daysToAdd = 0;  // All days have been added
+            } else {
+                // Move to the next month
+                daysToAdd -= (daysInCurrentMonth - newDay + 1);
+                newDay = 1;
 
+                if (newMonth == 12) {
+                    newMonth = 1;
+                    newYear++;
+                } else {
+                    newMonth++;
+                }
+            }
+        }
 
+        return new Date(newDay, newMonth, newYear);
+    }
+
+    // Helper method to get the number of days in a month considering leap years
+    private int getDaysInMonth(int month, int year) {
+        switch (month) {
+            case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+                return 31;
+            case 4: case 6: case 9: case 11:
+                return 30;
+            case 2:
+                return isLeapYear(year) ? 29 : 28;
+            default:
+                throw new IllegalArgumentException("Invalid month: " + month);
+        }
+    }
+
+    // Helper method to check if a year is a leap year
+    private boolean isLeapYear(int year) {
+        if (year % 4 != 0) {
+            return false;
+        } else if (year % 100 != 0) {
+            return true;
+        } else {
+            return year % 400 == 0;
+        }
+    }
+    
     @Override
     public String toString() {
         return String.format("%02d-%02d-%04d", day, month, year);

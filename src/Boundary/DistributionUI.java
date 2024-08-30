@@ -55,6 +55,12 @@ public class DistributionUI {
         printDistributionTitle();
         printDistributionTitleDash();
     }
+    
+    private void printSelectedItemDash(){
+         for (int i = 0; i < 125; i++) {
+            System.out.print("-");
+        }
+    }
 
 
     public LocalDate getLocalDate() {
@@ -110,9 +116,7 @@ public class DistributionUI {
         
     }
     
-    public void displayFormat(){
-        System.out.println(String.format("%-15s  ",  ""));
-    }
+  
 
     
 

@@ -14,6 +14,7 @@ public class MessageUI {
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_BLUE = "\u001B[34m";
      private static final String ANSI_MAGENTA = "\u001B[35m";
+     private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_BLACK = "\u001B[0m";
     
     
@@ -119,8 +120,12 @@ public class MessageUI {
         System.out.println(ANSI_BLUE + msg + ANSI_BLACK);
     }
     
+    public static void displayCyanNote(String msg){
+        System.out.println(ANSI_CYAN + msg + ANSI_BLACK);
+    }
+    
     public static void displayMagentaPreviewMsg(String msg){
-        System.out.println(ANSI_MAGENTA + msg + ANSI_BLACK);
+        System.out.print(ANSI_MAGENTA + msg + ANSI_BLACK);
     }
     
     public static void displayGreenSuccessfulMsg(String msg){
