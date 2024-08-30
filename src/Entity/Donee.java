@@ -136,9 +136,89 @@ public class Donee implements Comparable<Donee> {
         return Objects.equals(this.contact, other.contact);
     }
 
+    public static void setSortByCriteria(SortByCriteria criteria) {
+        sortByCriteria = criteria;
+    }
+
+    public static SortByCriteria sortByCriteria = SortByCriteria.DONEEID_INASC;
+
+    public enum SortByCriteria {
+        DONEEID_INASC,
+        DONEEID_INDESC,
+        REQUESTDATE_INASC,
+        REQUESTDATE_INDESC;
+    }
+
     @Override
     public int compareTo(Donee other) {
-        return this.doneeId.compareTo(other.doneeId);
+        if (other == null) {
+            throw new NullPointerException("Cannot compare to a null object");
+        }
+
+        switch (sortByCriteria) {
+            case DONEEID_INASC:
+                return this.doneeId.compareTo(other.doneeId);
+            case DONEEID_INDESC:
+                return other.doneeId.compareTo(this.doneeId);
+            case REQUESTDATE_INASC:
+                return compareByEarliestRequestDate(this, other);
+            case REQUESTDATE_INDESC:
+                return compareByLatestRequestDate(this, other);
+            default:
+                return this.doneeId.compareTo(other.doneeId); // Default to ascending by ID
+        }
+    }
+
+// Helper method to compare by earliest request date
+    private int compareByEarliestRequestDate(Donee d1, Donee d2) {
+        Request earliestD1 = getEarliestRequest(d1);
+        Request earliestD2 = getEarliestRequest(d2);
+
+        if (earliestD1 == null && earliestD2 == null) {
+            return 0;
+        }
+        if (earliestD1 == null) {
+            return -1;
+        }
+        if (earliestD2 == null) {
+            return 1;
+        }
+
+        return earliestD1.getRequestDate().compareTo(earliestD2.getRequestDate());
+    }
+
+// Helper method to compare by latest request date
+    private int compareByLatestRequestDate(Donee d1, Donee d2) {
+        Request latestD1 = getLatestRequest(d1);
+        Request latestD2 = getLatestRequest(d2);
+
+        if (latestD1 == null && latestD2 == null) {
+            return 0;
+        }
+        if (latestD1 == null) {
+            return -1;
+        }
+        if (latestD2 == null) {
+            return 1;
+        }
+
+        return latestD2.getRequestDate().compareTo(latestD1.getRequestDate()); // Descending order
+    }
+
+// Retrieve the earliest request
+    private Request getEarliestRequest(Donee donee) {
+        if (donee.requests == null || donee.requests.isEmpty()) {
+            return null;
+        }
+        return donee.requests.getFirstEntry(); // Assumes the SortedListSetInterface sorts by request date
+    }
+
+// Retrieve the latest request
+    private Request getLatestRequest(Donee donee) {
+        if (donee.requests == null || donee.requests.isEmpty()) {
+            return null;
+        }
+        return donee.requests.getLastEntries(); // Assumes the SortedListSetInterface sorts by request date
     }
 
     @Override
@@ -153,7 +233,7 @@ public class Donee implements Comparable<Donee> {
             while (iterator.hasNext()) {
                 Request request = iterator.next();
                 outputStr += String.format("%-20s %-20s", request.getRequestDate(), request.getRequestItems());
-                outputStr += String.format("\n%-15s %-20s %-20s %-25s %-20s %-30s %-15s","","","","","","","");
+                outputStr += String.format("\n%-15s %-20s %-20s %-25s %-20s %-30s %-15s", "", "", "", "", "", "", "");
             }
         } else {
             outputStr += String.format("%5s %25s", "-", "-");

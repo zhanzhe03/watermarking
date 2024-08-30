@@ -123,7 +123,7 @@ public class DoneeUI {
     }
 
     public void donationTitle() {
-        System.out.printf("\n%-15s %-30s %-20s %-20s %-20s %-10s\n", "Donee ID", "Receive Item", "Request Date", "Recevice Date", "Item ID", "Quantity/Amount");
+        System.out.printf("\n%-15s %-30s %-20s %-20s %-10s\n", "Donee ID", "Receive Item", "Recevice Date", "Item ID", "Quantity/Amount");
     }
 
     public void printAllDonees(SortedListSetInterface<Donee> donees) {

@@ -288,10 +288,9 @@ public class DoneeMaintenance {
             if (!hasPrintedDoneeId) {
                 // Print the Donee ID once
                 output.append(String.format(
-                        "%-15s %-30s %-20s %-20s %-20s %-10s\n",
+                        "%-15s %-30s %-20s %-20s %-10s\n",
                         doneeId, // Donee ID
                         itemType, // Received Item (Item Type)
-                        "", // Request Date (empty as we don't need it anymore)
                         distributionDate, // Receive Date
                         selectedItem.getItemId(), // Item ID
                         selectedItem.getSelectedQuantity() > 0 ? selectedItem.getSelectedQuantity() : String.format("%.2f", selectedItem.getAmount()) // Quantity/Amount
@@ -300,10 +299,9 @@ public class DoneeMaintenance {
             } else {
                 // Print details without Donee ID
                 output.append(String.format(
-                        "%-15s %-30s %-20s %-20s %-20s %-10s\n",
+                        "%-15s %-30s %-20s %-20s %-10s\n",
                         "", // No Donee ID for subsequent items
                         itemType, // Received Item (Item Type)
-                        "", // Request Date (empty as we don't need it anymore)
                         distributionDate, // Receive Date
                         selectedItem.getItemId(), // Item ID
                         selectedItem.getSelectedQuantity() > 0 ? selectedItem.getSelectedQuantity() : String.format("%.2f", selectedItem.getAmount()) // Quantity/Amount
@@ -383,97 +381,6 @@ public class DoneeMaintenance {
         return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
     }
 
-    private void sortDoneesByIdDesc(SortedListSetInterface<Donee> donees) {
-        Stack<Donee> myStack = new Stack<>();
-        Iterator<Donee> iterator = donees.getIterator();
-
-        // Push all Donee objects onto the stack
-        while (iterator.hasNext()) {
-            Donee donee = iterator.next();
-            myStack.push(donee);
-        }
-
-        // Pop Donees from the stack (in LIFO order) and print them
-        while (!myStack.isEmpty()) {
-            Donee donee = myStack.pop();
-            doneeUI.printText(donee.toString());
-        }
-    }
-
-    private void sortDoneesByIdAsc(SortedListSetInterface<Donee> donees) {
-        Stack<Donee> myStack = new Stack<>();
-        Stack<Donee> reversedStack = new Stack<>();
-        Iterator<Donee> iterator = donees.getIterator();
-
-        // Push all Donee objects onto the stack
-        while (iterator.hasNext()) {
-            Donee donee = iterator.next();
-            myStack.push(donee);
-        }
-
-        // Reverse the stack by popping from myStack and pushing onto reversedStack
-        while (!myStack.isEmpty()) {
-            reversedStack.push(myStack.pop());
-        }
-
-        // Pop Donees from the reversed stack (now in descending order) and print them
-        while (!reversedStack.isEmpty()) {
-            Donee donee = reversedStack.pop();
-            doneeUI.printText(donee.toString());
-        }
-    }
-
-    private void sortDoneesByRequestDateAsc(SortedListSetInterface<Donee> donees) {
-        Stack<Donee> myStack = new Stack<>();
-        Iterator<Donee> iterator = donees.getIterator();
-
-        // Push all Donee objects onto the stack
-        while (iterator.hasNext()) {
-            Donee donee = iterator.next();
-            insertInOrder(myStack, donee, true);  // true for ascending
-        }
-
-        // Pop Donees from the stack and print them
-        while (!myStack.isEmpty()) {
-            doneeUI.printText(myStack.pop().toString());
-        }
-    }
-
-    private void sortDoneesByRequestDateDesc(SortedListSetInterface<Donee> donees) {
-        Stack<Donee> myStack = new Stack<>();
-        Iterator<Donee> iterator = donees.getIterator();
-
-        // Push all Donee objects onto the stack
-        while (iterator.hasNext()) {
-            Donee donee = iterator.next();
-            insertInOrder(myStack, donee, false);  // false for descending
-        }
-
-        // Pop Donees from the stack and print them
-        while (!myStack.isEmpty()) {
-            doneeUI.printText(myStack.pop().toString());
-        }
-    }
-
-    private void insertInOrder(Stack<Donee> stack, Donee donee, boolean ascending) {
-        if (stack.isEmpty()) {
-            stack.push(donee);
-            return;
-        }
-
-        Donee top = stack.pop();
-        Date topDate = top.getRequests().getIterator().next().getRequestDate();
-        Date doneeDate = donee.getRequests().getIterator().next().getRequestDate();
-
-        if (ascending ? doneeDate.beforeDate(topDate) : doneeDate.afterDate(topDate)) {
-            stack.push(top);
-            stack.push(donee);
-        } else {
-            insertInOrder(stack, donee, ascending);
-            stack.push(top);
-        }
-    }
-
     public void ListAllDonee(SortedListSetInterface<Donee> donees) {
         while (true) {
             int sortOption = 0;
@@ -503,26 +410,29 @@ public class DoneeMaintenance {
             doneeUI.printDoneeTitle();
             doneeUI.displayEnDash();
 
-            // Perform the chosen sorting operation
             switch (sortOption) {
                 case 1:
-                    sortDoneesByIdAsc(donees);
+                    Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INASC);
                     break;
                 case 2:
-                    sortDoneesByIdDesc(donees);
+                    Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INDESC);
                     break;
                 case 3:
-                    sortDoneesByRequestDateAsc(donees);
+                    Donee.setSortByCriteria(Donee.SortByCriteria.REQUESTDATE_INASC);
                     break;
                 case 4:
-                    sortDoneesByRequestDateDesc(donees);
+                    Donee.setSortByCriteria(Donee.SortByCriteria.REQUESTDATE_INDESC);
                     break;
                 default:
                     break;
             }
-
+            // Sort the donees
+            donees.reSort();
+            doneeUI.printAllDonees(donees);
             doneeUI.displayEnDash();
             doneeUI.printNumberOfEntries(donees);
+            Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INASC);
+            donees.reSort();
         }
     }
 
