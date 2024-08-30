@@ -132,7 +132,7 @@ public class DoneeUI {
     }
 
     public void printDoneeTitle() {
-        System.out.printf("\n%-15s %-20s %-20s %-25s %-20s %-30s %-14s %-20s %-20s\n", "Donee ID", "Donee Type", "Donee Name", "Email", "Contact", "Address", "Location", "Request Date", "Request Item");
+        System.out.printf("\n%-15s %-20s %-20s %-25s %-20s %-30s %-14s %-20s %-20s %-20s\n", "Donee ID", "Donee Type", "Donee Name", "Email", "Contact", "Address", "Location", "Register Date", "Request Date", "Request Item");
     }
 
     public void donationTitle() {
