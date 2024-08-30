@@ -113,6 +113,19 @@ public class DoneeUI {
         String opt = scanner.nextLine();
         return opt;
     }
+    
+    public String getReceiveSortMenu() {
+        System.out.println(""
+                + "\nDONEE SORT MANAGEMENT"
+                + "\n 1. Sorted by Donee ID with ASC"
+                + "\n 2. Sorted by Donee ID with DACS"
+                + "\n 3. Sorted by Donee Receive Date with ASC"
+                + "\n 4. Sorted by Donee Receive Date with DACS"
+                + "\n 5. Back to Donee MENU");
+        System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+    }
 
     public void printText(String text) {
         System.out.println("\n" + text + "\n");

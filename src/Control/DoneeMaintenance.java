@@ -646,7 +646,7 @@ public class DoneeMaintenance {
 
     public void UpdateDonee(SortedListSetInterface<Donee> donees) {
         boolean founded = false;
-        String newLocation = null;
+        String newLocation;
         Donee targetDonee = null;
         String newName;
         String newContact;
@@ -724,28 +724,74 @@ public class DoneeMaintenance {
     }
 
     public void DoneeWithDistribute(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-        doneeUI.donationTitle();
-        doneeUI.displayEnDash();
+        while (true) {
+            int sortOption = 0;
 
-        // Create an iterator for the distributions
-        Iterator<Distribution> distributionIterator = distributions.getIterator();
+            // Get valid sort option from user
+            while (true) {
+                try {
+                    sortOption = Integer.parseInt(doneeUI.getReceiveSortMenu());
 
-        // Iterate through each distribution
-        while (distributionIterator.hasNext()) {
-            Distribution distribution = distributionIterator.next();
-            Iterator<Donee> doneeIterator = distribution.getDistributedDoneeList().getIterator();
-            while (doneeIterator.hasNext()) {
-                Donee donee = doneeIterator.next();
-                String doneeId = donee.getDoneeId();
-                Date date = distribution.getDistributionDate();
-                SortedListSetInterface<SelectedItem> item = distribution.getDistributedItemList();
-                String outputStr = printDistributionDetails(doneeId, date, item, donatedItemList);
-                doneeUI.printText(outputStr);
+                    // Check if the input is within the valid range
+                    if (sortOption >= 1 && sortOption <= 5) {
+                        break; // Valid input, exit loop
+                    } else {
+                        MessageUI.displayInvalidOptionMessage();
+                    }
+
+                } catch (NumberFormatException e) {
+                    MessageUI.displayInvalidInputMessage();
+                }
             }
+
+            if (sortOption == 5) {
+                return; // Exit the sort menu and return to the previous menu
+            }
+
+            // Sort the donees
+            
+            doneeUI.donationTitle();
+            doneeUI.displayEnDash();
+
+            // Create an iterator for the distributions
+            Iterator<Distribution> distributionIterator = distributions.getIterator();
+
+            // Iterate through each distribution
+            while (distributionIterator.hasNext()) {
+                Distribution distribution = distributionIterator.next();
+                Iterator<Donee> doneeIterator = distribution.getDistributedDoneeList().getIterator();
+                while (doneeIterator.hasNext()) {
+                    Donee donee = doneeIterator.next();
+                    String doneeId = donee.getDoneeId();
+                    Date date = distribution.getDistributionDate();
+                    SortedListSetInterface<SelectedItem> item = distribution.getDistributedItemList();
+                    String outputStr = printDistributionDetails(doneeId, date, item, donatedItemList);
+                    // Set sorting criteria based on user input
+                    switch (sortOption) {
+                        case 1:
+                            Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INASC);
+                            break;
+                        case 2:
+                            Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INDESC);
+                            break;
+                        case 3:
+                            Donee.setSortByCriteria(Donee.SortByCriteria.RECEIVEDATE_INASC);
+                            break;
+                        case 4:
+                            Donee.setSortByCriteria(Donee.SortByCriteria.RECEIVEDATE_INDESC);
+                            break;
+                        default:
+                            MessageUI.displayInvalidOptionMessage(); // Handle unexpected cases
+                            continue;
+                    }
+                    donees.reSort();
+                    doneeUI.printText(outputStr);
+                }
+            }
+
+            doneeUI.displayEnDash();
+            doneeUI.printText("Number of distributions: " + distributions.getNumberOfEntries());
         }
-        doneeUI.displayEnDash();
-        doneeUI.printText("Number of distributions: " + distributions.getNumberOfEntries());
-        //test
     }
 
     public void FilterDonee(SortedListSetInterface<Donee> donees) {

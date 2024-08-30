@@ -23,6 +23,11 @@ public class Donee implements Comparable<Donee> {
     private String address;
     private String location;
     private SortedListSetInterface<Request> requests;
+    private SortedListSetInterface<Distribution> distributions;
+
+    public SortedListSetInterface<Distribution> getDistributions() {
+        return distributions;
+    }
 
     public void addRequest(Request request) {
         if (requests == null) {
@@ -96,10 +101,12 @@ public class Donee implements Comparable<Donee> {
         this.address = address;
         this.location = location;
         this.requests = new SortedDoublyLinkedListSet<>();
+        this.distributions = new SortedDoublyLinkedListSet<>();
     }
 
     public Donee() {
         this.requests = new SortedDoublyLinkedListSet<>();
+        this.distributions = new SortedDoublyLinkedListSet<>();
     }
 
     public SortedListSetInterface<Request> getRequests() {
@@ -146,7 +153,9 @@ public class Donee implements Comparable<Donee> {
         DONEEID_INASC,
         DONEEID_INDESC,
         REQUESTDATE_INASC,
-        REQUESTDATE_INDESC;
+        REQUESTDATE_INDESC,
+        RECEIVEDATE_INASC,
+        RECEIVEDATE_INDESC;
     }
 
     @Override
@@ -164,6 +173,10 @@ public class Donee implements Comparable<Donee> {
                 return compareByEarliestRequestDate(this, other);
             case REQUESTDATE_INDESC:
                 return compareByLatestRequestDate(this, other);
+            case RECEIVEDATE_INASC:
+                return compareByEarliestReceiveDate(this, other);
+            case RECEIVEDATE_INDESC:
+                return compareByLatestReceiveDate(this, other);
             default:
                 return this.doneeId.compareTo(other.doneeId); // Default to ascending by ID
         }
@@ -219,6 +232,60 @@ public class Donee implements Comparable<Donee> {
             return null;
         }
         return donee.requests.getLastEntries(); // Assumes the SortedListSetInterface sorts by request date
+    }
+
+    private int compareByEarliestReceiveDate(Donee d1, Donee d2) {
+        Distribution earliestD1 = getEarliestDistribution(d1);
+        Distribution earliestD2 = getEarliestDistribution(d2);
+
+        Date earliestDateD1 = (earliestD1 != null) ? earliestD1.getDistributionDate() : null;
+        Date earliestDateD2 = (earliestD2 != null) ? earliestD2.getDistributionDate() : null;
+
+        if (earliestDateD1 == null && earliestDateD2 == null) {
+            return 0;
+        }
+        if (earliestDateD1 == null) {
+            return -1;
+        }
+        if (earliestDateD2 == null) {
+            return 1;
+        }
+
+        return earliestDateD1.compareTo(earliestDateD2);
+    }
+
+    private int compareByLatestReceiveDate(Donee d1, Donee d2) {
+        Distribution latestD1 = getLatestDistribution(d1);
+        Distribution latestD2 = getLatestDistribution(d2);
+
+        Date latestDateD1 = (latestD1 != null) ? latestD1.getDistributionDate() : null;
+        Date latestDateD2 = (latestD2 != null) ? latestD2.getDistributionDate() : null;
+
+        if (latestDateD1 == null && latestDateD2 == null) {
+            return 0;
+        }
+        if (latestDateD1 == null) {
+            return -1;
+        }
+        if (latestDateD2 == null) {
+            return 1;
+        }
+
+        return latestDateD2.compareTo(latestDateD1); // Descending order
+    }
+
+    private Distribution getEarliestDistribution(Donee donee) {
+        if (donee.getDistributions() == null || donee.getDistributions().isEmpty()) {
+            return null;
+        }
+        return donee.getDistributions().getFirstEntry(); // Assumes the SortedListSetInterface sorts by distribution date
+    }
+
+    private Distribution getLatestDistribution(Donee donee) {
+        if (donee.getDistributions() == null || donee.getDistributions().isEmpty()) {
+            return null;
+        }
+        return donee.getDistributions().getLastEntries();
     }
 
     @Override
