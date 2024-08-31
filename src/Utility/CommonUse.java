@@ -9,6 +9,7 @@ import Entity.Donation;
 import Entity.Donor;
 import Entity.Item;
 import Entity.Donee;
+import Entity.Distribution;
 import Entity.SelectedItem;
 import java.util.Iterator;
 import java.util.regex.Matcher;
