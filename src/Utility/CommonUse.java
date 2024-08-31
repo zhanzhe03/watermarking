@@ -10,6 +10,7 @@ import Entity.Donor;
 import Entity.Item;
 import Entity.Donee;
 import Entity.SelectedItem;
+import Entity.Distribution;
 import java.util.Iterator;
 
 /**
@@ -18,16 +19,20 @@ import java.util.Iterator;
  */
 public class CommonUse {
 
-    public static int countType(String type, SortedListSetInterface<SelectedItem> selectedItemList, SortedListSetInterface<Item> items) {
+    public static int countType(String type, SortedListSetInterface<Distribution> distributions,SortedListSetInterface<Item> items) {
         int count = 0;
-        Iterator<SelectedItem> iterator = selectedItemList.getIterator();
+        Iterator<Distribution> iterator = distributions.getIterator();
         do {
-            SelectedItem selectedItem = iterator.next();
-            String id = selectedItem.getItemId();
-            Item item = findItem(id, items);
-            if (item.getType().equalsIgnoreCase(type)) {
+            Distribution distribution = iterator.next();
+            Iterator<SelectedItem> i = distribution.getDistributedItemList().getIterator();
+            do{
+                SelectedItem selectedItem = i.next();
+                String id = selectedItem.getItemId();
+                Item item = findItem(id, items);
+                if (item.getType().equalsIgnoreCase(type)) {
                 count++;
             }
+            }while(i.hasNext());
         } while (iterator.hasNext());
         return count;
     }
