@@ -143,16 +143,19 @@ public class DoneeUI {
                 + "\nDONEE REPORT MANAGEMENT"
                 + "\n 1. List total donee register from date to date"
                 + "\n 2. List donee has been fulfilled and is being requested."
-                + "\n 3. List donee most frequently requested items"
-                + "\n 4. List donee most frequently receive items"
-                + "\n 5. Back to Donee MENU");
+                + "\n 3. Back to Donee MENU");
         System.out.print("\nopt > ");
         String opt = scanner.nextLine();
         return opt;
     }
 
     public void printText(String text) {
-        System.out.println("\n" + text);
+        System.out.println(text);
+    }
+    
+    public void printSummaryHeader(Date startDate, Date endDate) {
+        System.out.printf("\n%-40s %-20s %-20s", "", "Summary Report", "");
+        System.out.printf("\n%-40s The date start :%-12s to end :%-12s\n", "",startDate,endDate);
     }
 
     public void printDoneeTitle() {
@@ -162,9 +165,17 @@ public class DoneeUI {
     public void donationTitle() {
         System.out.printf("\n%-15s %-30s %-20s %-20s %-10s\n", "Donee ID", "Receive Item", "Recevice Date", "Item ID", "Quantity/Amount");
     }
+    
+    public void filterByItemHeader(){
+        System.out.printf("\n%-15s %-30s %-20s\n", "Donee ID", "Receive Item", "Receive Date");
+    }
 
     public void printAllDonees(SortedListSetInterface<Donee> donees) {
         System.out.println(donees);
+    }
+    
+    public void requestReceiveTitle(){
+        System.out.println("                                      Report of Donee with Requst & Receive item");
     }
 
     public void printRequest(SortedListSetInterface<Request> request) {
