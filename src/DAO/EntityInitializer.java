@@ -129,14 +129,14 @@ public class EntityInitializer {
         Distribution distribution2 = new Distribution("DIST002", new Date(1, 8, 2024));
         Distribution distribution3 = new Distribution("DIST003", new Date(11, 8, 2024));
         Distribution distribution4 = new Distribution("DIST004", new Date(25, 8, 2024));
-        Distribution distribution5 = new Distribution("DIST005", new Date(29, 8, 2024));
-        Distribution distribution6 = new Distribution("DIST006", new Date(30, 8, 2024));
+        Distribution distribution5 = new Distribution("DIST005", new Date(30, 6, 2024));
+        Distribution distribution6 = new Distribution("DIST006", new Date(31, 8, 2024));
 
         // Create a selected item
         SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
         SelectedItem selectedItem2 = new SelectedItem("I002", 50);
         SelectedItem selectedItem3 = new SelectedItem("I003", 1);
-        SelectedItem selectedItem4 = new SelectedItem("I004", 10);
+        SelectedItem selectedItem4 = new SelectedItem("I002", 10);
         SelectedItem selectedItem5 = new SelectedItem("I005", 3);
         SelectedItem selectedItem6 = new SelectedItem("I006", 2);
 
