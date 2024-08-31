@@ -9,6 +9,7 @@ import Entity.Donation;
 import Entity.Donor;
 import Entity.Item;
 import Entity.Donee;
+import Entity.SelectedItem;
 import java.util.Iterator;
 
 /**
@@ -16,6 +17,20 @@ import java.util.Iterator;
  * @author szewen
  */
 public class CommonUse {
+
+    public static int countType(String type, SortedListSetInterface<SelectedItem> selectedItemList, SortedListSetInterface<Item> items) {
+        int count = 0;
+        Iterator<SelectedItem> iterator = selectedItemList.getIterator();
+        do {
+            SelectedItem selectedItem = iterator.next();
+            String id = selectedItem.getItemId();
+            Item item = findItem(id, items);
+            if (item.getType().equalsIgnoreCase(type)) {
+                count++;
+            }
+        } while (iterator.hasNext());
+        return count;
+    }
 
     public static Donor findDonor(String contact, SortedListSetInterface<Donor> donors) {
         Iterator<Donor> iterator = donors.getIterator();
