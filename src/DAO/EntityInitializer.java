@@ -133,12 +133,12 @@ public class EntityInitializer {
         Distribution distribution6 = new Distribution("DIST006", new Date(31, 8, 2024));
 
         // Create a selected item
-        SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
-        SelectedItem selectedItem2 = new SelectedItem("I002", 50);
-        SelectedItem selectedItem3 = new SelectedItem("I003", 1);
-        SelectedItem selectedItem4 = new SelectedItem("I002", 10);
-        SelectedItem selectedItem5 = new SelectedItem("I005", 3);
-        SelectedItem selectedItem6 = new SelectedItem("I006", 2);
+        SelectedItem selectedItem1 = new SelectedItem(item1.getItemId(), 20.22);
+        SelectedItem selectedItem2 = new SelectedItem(item2.getItemId(), 50);
+        SelectedItem selectedItem3 = new SelectedItem(item3.getItemId(), 1);
+        SelectedItem selectedItem4 = new SelectedItem(item4.getItemId(), 10);
+        SelectedItem selectedItem5 = new SelectedItem(item5.getItemId(), 3);
+        SelectedItem selectedItem6 = new SelectedItem(item6.getItemId(), 2);
 
 
 

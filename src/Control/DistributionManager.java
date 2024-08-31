@@ -1037,95 +1037,29 @@ public class DistributionManager {
     }
 
     private void displayReportForYear(SortedListSetInterface<Distribution> distributions, int year, SortedListSetInterface<Item> donatedItemList) {
-    System.out.println(String.format("%50s Distributions Summary Report for " + year, ""));
-    distributionUI.printDistributionTitleHeader();
+        System.out.println(String.format("%50s Distributions Summary Report for " + year, ""));
+        distributionUI.printDistributionTitleHeader();
 
-    int distFound = 0;
-    String mostDistributedItem = null;
-    int maxCount = 0;
+        int distFound = 0;
+        SortedListSetInterface<Distribution> foundDistribution = new SortedDoublyLinkedListSet<>();
 
-    // Track occurrences of each item type
-    int monetaryCount = 0;
-    int householdCount = 0;
-    int electronicCount = 0;
-    int fnbCount = 0;
-    int cnaCount = 0;
-    int eduCount = 0;
-    int medCount = 0;
-
-    // Track counts for each item type
-    Iterator<Distribution> distIterator = distributions.getIterator();
-    while (distIterator.hasNext()) {
-        Distribution currentDist = distIterator.next();
-        if (currentDist.getDistributionDate().getYear() == year) {
-            distFound++;
-            distributionUI.displayMessage("" + currentDist);
-
-            // Iterate over items in the current distribution
-            Iterator<SelectedItem> selectedItemIterator = currentDist.getDistributedItemList().getIterator();
-            while (selectedItemIterator.hasNext()) {
-                SelectedItem currentItem = selectedItemIterator.next();
-                String itemId = currentItem.getItemId();
-
-                String itemType = "";
-                Iterator<Item> itemIterator = donatedItemList.getIterator();
-                while (itemIterator.hasNext()) {
-                    Item item = itemIterator.next();
-                    if (item.getItemId().equalsIgnoreCase(itemId)) {
-                        itemType = item.getType();
-                        break; // Exit the loop once the item is found
-                    }
-                }
-
-                if (itemType.isEmpty()) {
-                    System.out.println("Error: Item with ID " + itemId + " not found in the donated list.");
-                    continue;
-                }
-
-                // Update counts based on item type
-                if (itemType.equalsIgnoreCase("Monetary")) {
-                    monetaryCount++;
-                } else if (itemType.equalsIgnoreCase("Household Items")) {
-                    householdCount++;
-                } else if (itemType.equalsIgnoreCase("Electronic")) {
-                    electronicCount++;
-                } else if (itemType.equalsIgnoreCase("Food and Beverage")) {
-                    fnbCount++;
-                } else if (itemType.equalsIgnoreCase("Clothing and Apparel")) {
-                    cnaCount++;
-                } else if (itemType.equalsIgnoreCase("Educational Materials")) {
-                    eduCount++;
-                } else if (itemType.equalsIgnoreCase("Medical")) {
-                    medCount++;
-                }
+        Iterator<Distribution> distIterator = distributions.getIterator();
+        while (distIterator.hasNext()) {
+            Distribution currentDist = distIterator.next();
+            if (currentDist.getDistributionDate().getYear() == year) {
+                distFound++;
+                distributionUI.displayMessage("" + currentDist);
+                foundDistribution.add(currentDist);
             }
         }
+
+        distributionUI.displayMessage("Total distributions : " + distributions.getNumberOfEntries());
+        double rate = (double) distFound / distributions.getNumberOfEntries() * 100;
+        distributionUI.displayMessage("Distributions found in " + year + " : " + distFound + String.format(" ( %.2f%% )", rate));
+
+        // Call getItemTypeCount to display the counts for each item type
+        getItemTypeCount(foundDistribution, donatedItemList);
     }
-
-    // Determine the most distributed item type
-    int[] counts = {monetaryCount, householdCount, electronicCount, fnbCount, cnaCount, eduCount, medCount};
-    String[] itemTypes = {"Monetary", "Household Items", "Electronic", "Food and Beverage", "Clothing and Apparel", "Educational Materials", "Medical"};
-
-    for (int i = 0; i < counts.length; i++) {
-        if (counts[i] > maxCount) {
-            maxCount = counts[i];
-            mostDistributedItem = itemTypes[i];
-        }
-    }
-
-    // Print all item type counts
-    System.out.println("Monetary Count: " + monetaryCount);
-    System.out.println("Household Items Count: " + householdCount);
-    System.out.println("Electronic Count: " + electronicCount);
-    System.out.println("Food and Beverage Count: " + fnbCount);
-    System.out.println("Clothing and Apparel Count: " + cnaCount);
-    System.out.println("Educational Materials Count: " + eduCount);
-    System.out.println("Medical Count: " + medCount);
-
-    // Print most distributed item and its count
-    System.out.println("Most Distributed Item Type: " + mostDistributedItem + " with count: " + maxCount);
-}
-
 
     private void displayReportForDateRange(SortedListSetInterface<Distribution> distributions,
             Date startDate, Date endDate) {
@@ -1141,6 +1075,112 @@ public class DistributionManager {
             }
         }
     }
+
+    private void getItemTypeCount(SortedListSetInterface<Distribution> distRecords, SortedListSetInterface<Item> donatedItemList) {
+
+        int monetaryCount = CommonUse.countType("Monetary", distRecords, donatedItemList);
+        int clothingCount = CommonUse.countType("Clothing and Apparel", distRecords, donatedItemList);
+        int fnbCount = CommonUse.countType("Food and Beverage", distRecords, donatedItemList);
+        int householdCount = CommonUse.countType("Household Items", distRecords, donatedItemList);
+        int eduCount = CommonUse.countType("Educational Materials", distRecords, donatedItemList);
+        int elecCount = CommonUse.countType("Electronic", distRecords, donatedItemList);
+        int medCount = CommonUse.countType("Medical", distRecords, donatedItemList);
+
+        SortedListSetInterface<SelectedItem> uniqueSelected;
+
+        if (monetaryCount > 0) {
+            distributionUI.displayMessage("Monetary Count: " + monetaryCount);
+
+         uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Monetary");
+                        printUniqueSLID(uniqueSelected);
+
+
+        }
+
+        if (clothingCount > 0) {
+            distributionUI.displayMessage("Clothing and Apparel Count: " + clothingCount);
+            uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Clothing and Apparel");
+            printUniqueSLID(uniqueSelected);
+        }
+
+        if (fnbCount > 0) {
+            distributionUI.displayMessage("Food and Beverage Count: " + fnbCount);
+             uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Food and Beverage");
+            printUniqueSLID(uniqueSelected);
+        }
+
+        if (householdCount > 0) {
+            distributionUI.displayMessage("Household Items Count: " + householdCount);
+            uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Household Items");
+            printUniqueSLID(uniqueSelected);
+        }
+
+        if (eduCount > 0) {
+            distributionUI.displayMessage("Educational Materials Count: " + eduCount);
+             uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Educational Materials");
+            printUniqueSLID(uniqueSelected);
+        }
+
+        if (elecCount > 0) {
+            distributionUI.displayMessage("Electronic Count: " + elecCount);
+             uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Electronic");
+            printUniqueSLID(uniqueSelected);
+        }
+
+        if (medCount > 0) {
+            distributionUI.displayMessage("Medical Count: " + medCount);
+             uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Medical");
+            printUniqueSLID(uniqueSelected);
+        }
+
+    }
+
+    private SortedListSetInterface<SelectedItem> getItemUniquely(SortedListSetInterface<Distribution> distRecords, 
+                                                             SortedListSetInterface<Item> donatedItemList, 
+                                                             String type) {
+    SortedListSetInterface<SelectedItem> uniqueSelected = new SortedDoublyLinkedListSet<>();
+
+    // Iterate over each distribution record
+    Iterator<Distribution> distIterator = distRecords.getIterator();
+    while (distIterator.hasNext()) {
+        Distribution currentDist = distIterator.next();
+
+        // Iterate over each selected item in the current distribution
+        Iterator<SelectedItem> slIterator = currentDist.getDistributedItemList().getIterator();
+        while (slIterator.hasNext()) {
+            SelectedItem currentSL = slIterator.next();
+            String currentItemId = currentSL.getItemId();
+
+            // Check if the selected item matches the required type
+            Iterator<Item> itemIterator = donatedItemList.getIterator();
+            while (itemIterator.hasNext()) {
+                Item currentItem = itemIterator.next();
+                if (currentItem.getItemId().equalsIgnoreCase(currentItemId) && 
+                    currentItem.getType().equalsIgnoreCase(type)) {
+
+                    // Add to the set if it's not already present
+                    if (uniqueSelected.indexOf(currentSL) == -1) {
+                        uniqueSelected.add(currentSL);
+                    }
+                    break; // Exit the loop once the matching item is found
+                }
+            }
+        }
+    }
+
+    return uniqueSelected;
+}
+    
+    private void printUniqueSLID( SortedListSetInterface<SelectedItem> uniqueSelected ){
+        Iterator<SelectedItem> slIterator = uniqueSelected.getIterator();
+        
+        while(slIterator.hasNext()){
+            SelectedItem currentSL = slIterator.next();
+            distributionUI.displayMessage("" + currentSL.getItemId());
+        }
+    
+    }
+
 
     private boolean validateDate(int day, int month, int year) {
 
