@@ -113,7 +113,7 @@ public class DoneeUI {
         String opt = scanner.nextLine();
         return opt;
     }
-    
+
     public String getReceiveSortMenu() {
         System.out.println(""
                 + "\nDONEE SORT MANAGEMENT"
@@ -127,8 +127,32 @@ public class DoneeUI {
         return opt;
     }
 
+    public String getFilterMenu() {
+        System.out.println(""
+                + "\nDONEE FILTER MANAGEMENT"
+                + "\n 1. Filter donee from date to date that receive item (Sort By DoneeID ASC)"
+                + "\n 2. Filter donee based on item receive (Sort By DoneeID ASC)"
+                + "\n 3. Back to Donee MENU");
+        System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+    }
+
+    public String getReportMenu() {
+        System.out.println(""
+                + "\nDONEE REPORT MANAGEMENT"
+                + "\n 1. List total donee register from date to date"
+                + "\n 2. List donee has been fulfilled and is being requested."
+                + "\n 3. List donee most frequently requested items"
+                + "\n 4. List donee most frequently receive items"
+                + "\n 5. Back to Donee MENU");
+        System.out.print("\nopt > ");
+        String opt = scanner.nextLine();
+        return opt;
+    }
+
     public void printText(String text) {
-        System.out.println("\n" + text + "\n");
+        System.out.println("\n" + text);
     }
 
     public void printDoneeTitle() {

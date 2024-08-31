@@ -14,6 +14,7 @@ import Entity.Distribution;
 import Entity.Item;
 import Utility.ClearScreen;
 import Utility.MessageUI;
+import Utility.CommonUse;
 import java.time.LocalDate;
 import java.util.Iterator;
 import Entity.Date;
@@ -251,11 +252,11 @@ public class DoneeMaintenance {
                         break;
                     case 7:
                         ClearScreen.clearJavaConsoleScreen();
-                        FilterDonee(donees);
+                        FilterDonee(donees, distributions, items);
                         break;
                     case 8:
                         ClearScreen.clearJavaConsoleScreen();
-                        DoneeReports(donees);
+                        DoneeReports(donees, distributions, items);
                         break;
                     case 9:
                         ClearScreen.clearJavaConsoleScreen();
@@ -381,6 +382,27 @@ public class DoneeMaintenance {
         return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
     }
 
+    private SortedListSetInterface<Donee> findDoneesDateInRange(SortedListSetInterface<Donee> donees, Date startDate, Date endDate) {
+        SortedListSetInterface<Donee> foundDonees = new SortedDoublyLinkedListSet<>();
+        Iterator<Donee> iterator = donees.getIterator();
+
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            Date registrationDate = donee.getRegisterDate();
+
+            if (isDateInRange(registrationDate, startDate, endDate)) {
+                foundDonees.add(donee);
+            }
+        }
+
+        return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
+    }
+
+    private boolean isDateInRange(Date date, Date startDate, Date endDate) {
+        return (date.afterDate(startDate) || date.equals(startDate))
+                && (date.beforeDate(endDate) || date.equals(endDate));
+    }
+
     public void ListAllDonee(SortedListSetInterface<Donee> donees) {
         while (true) {
             int sortOption = 0;
@@ -465,7 +487,7 @@ public class DoneeMaintenance {
 
             // Location
             String location = inputLocation();
-            
+
             //getCurrentDate
             Date registerDate = getCurrentDate();
 
@@ -727,82 +749,348 @@ public class DoneeMaintenance {
     }
 
     public void DoneeWithDistribute(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-        while (true) {
-            int sortOption = 0;
 
-            // Get valid sort option from user
-            while (true) {
-                try {
-                    sortOption = Integer.parseInt(doneeUI.getReceiveSortMenu());
+        doneeUI.donationTitle();
+        doneeUI.displayEnDash();
 
-                    // Check if the input is within the valid range
-                    if (sortOption >= 1 && sortOption <= 5) {
-                        break; // Valid input, exit loop
-                    } else {
-                        MessageUI.displayInvalidOptionMessage();
-                    }
+        // Create an iterator for the distributions
+        Iterator<Distribution> distributionIterator = distributions.getIterator();
 
-                } catch (NumberFormatException e) {
-                    MessageUI.displayInvalidInputMessage();
-                }
+        // Iterate through each distribution
+        while (distributionIterator.hasNext()) {
+            Distribution distribution = distributionIterator.next();
+            Iterator<Donee> doneeIterator = distribution.getDistributedDoneeList().getIterator();
+            while (doneeIterator.hasNext()) {
+                Donee donee = doneeIterator.next();
+                String doneeId = donee.getDoneeId();
+                Date date = distribution.getDistributionDate();
+                SortedListSetInterface<SelectedItem> item = distribution.getDistributedItemList();
+                String outputStr = printDistributionDetails(doneeId, date, item, donatedItemList);
+                doneeUI.printText(outputStr);
             }
+        }
 
-            if (sortOption == 5) {
-                return; // Exit the sort menu and return to the previous menu
-            }
+        doneeUI.displayEnDash();
+        doneeUI.printText("Number of distributions: " + distributions.getNumberOfEntries());
+    }
 
-            // Set sorting criteria based on user input
-            switch (sortOption) {
-                case 1:
-                    Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INASC);
-                    break;
-                case 2:
-                    Donee.setSortByCriteria(Donee.SortByCriteria.DONEEID_INDESC);
-                    break;
-                case 3:
-                    Donee.setSortByCriteria(Donee.SortByCriteria.RECEIVEDATE_INASC);
-                    break;
-                case 4:
-                    Donee.setSortByCriteria(Donee.SortByCriteria.RECEIVEDATE_INDESC);
-                    break;
-                default:
-                    MessageUI.displayInvalidOptionMessage(); // Handle unexpected cases
-                    continue;
-            }
-            
-            donees.reSort();
-            doneeUI.donationTitle();
-            doneeUI.displayEnDash();
+    private void filterDoneesByDate(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList, Date startDate, Date endDate) {
+        // Print the filtering header
+        doneeUI.printText("Filtering donees who received items between " + startDate + " and " + endDate);
+        doneeUI.displayEnDash();
 
-            // Create an iterator for the distributions
-            Iterator<Distribution> distributionIterator = distributions.getIterator();
+        // Iterate through each distribution
+        Iterator<Distribution> distributionIterator = distributions.getIterator();
+        while (distributionIterator.hasNext()) {
+            Distribution distribution = distributionIterator.next();
+            Date distributionDate = distribution.getDistributionDate();
 
-            // Iterate through each distribution
-            while (distributionIterator.hasNext()) {
-                Distribution distribution = distributionIterator.next();
+            // Check if the distribution date is within the specified range
+            if (!distributionDate.beforeDate(startDate) && !distributionDate.afterDate(endDate)) {
+
+                // Iterate through the donees in the current distribution
                 Iterator<Donee> doneeIterator = distribution.getDistributedDoneeList().getIterator();
                 while (doneeIterator.hasNext()) {
                     Donee donee = doneeIterator.next();
-                    String doneeId = donee.getDoneeId();
-                    Date date = distribution.getDistributionDate();
-                    SortedListSetInterface<SelectedItem> item = distribution.getDistributedItemList();
-                    String outputStr = printDistributionDetails(doneeId, date, item, donatedItemList);
-                    doneeUI.printText(outputStr);
+
+                    // Iterate through the items received by the donee in this distribution
+                    Iterator<SelectedItem> itemIterator = distribution.getDistributedItemList().getIterator();
+                    while (itemIterator.hasNext()) {
+                        SelectedItem selectedItem = itemIterator.next();
+
+                        // Get the item details (Assume checkItemExist is available)
+                        Item item = checkItemExist(donatedItemList, selectedItem.getItemId());
+
+                        // Print the donee's ID, received item, and the distribution date
+                        if (item != null) {
+                            doneeUI.printText(String.format("%-15s %-30s %-20s",
+                                    donee.getDoneeId(), // Donee ID
+                                    item.getType(), // Received Item Name
+                                    distributionDate.toString() // Distribution Date
+                            ));
+                        }
+                    }
                 }
             }
+        }
 
-            doneeUI.displayEnDash();
-            doneeUI.printText("Number of distributions: " + distributions.getNumberOfEntries());
+        doneeUI.displayEnDash();
+    }
+
+    private void filterDoneesByItem(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList, String itemType) {
+        // Print the header for filtering by item type
+        doneeUI.printText("Filtering donees who received items of type: " + itemType);
+        doneeUI.displayEnDash();
+
+        // Iterate through each distribution
+        Iterator<Distribution> distributionIterator = distributions.getIterator();
+        while (distributionIterator.hasNext()) {
+            Distribution distribution = distributionIterator.next();
+
+            // Iterate through the selected items in the current distribution
+            Iterator<SelectedItem> itemIterator = distribution.getDistributedItemList().getIterator();
+            while (itemIterator.hasNext()) {
+                SelectedItem selectedItem = itemIterator.next();
+
+                // Use the checkItemExist method to find the item by its ID
+                Item item = checkItemExist(donatedItemList, selectedItem.getItemId());
+
+                // Check if the item exists and matches the item type
+                if (item != null && item.getType().equalsIgnoreCase(itemType)) {
+                    // Iterate through donees in the distribution
+                    Iterator<Donee> doneeIterator = distribution.getDistributedDoneeList().getIterator();
+                    while (doneeIterator.hasNext()) {
+                        Donee donee = doneeIterator.next();
+
+                        doneeUI.printText(String.format("%-15s %-30s %-20s",
+                                donee.getDoneeId(), // Donee ID
+                                item.getType(), // Received Item Name
+                                distribution.getDistributionDate().toString() // Distribution Date
+                        ));
+                    }
+                    break;
+                }
+            }
+        }
+
+        doneeUI.displayEnDash();
+    }
+
+    private Item checkItemExist(SortedListSetInterface<Item> donatedItemList, String itemId) {
+        // Iterate through the donated item list
+        Iterator<Item> itemIterator = donatedItemList.getIterator();
+        while (itemIterator.hasNext()) {
+            Item item = itemIterator.next();
+            // Check if the itemId matches the current item in the list
+            if (item.getItemId().equals(itemId)) {
+                return item;  // Return the item if found
+            }
+        }
+        return null;  // Return null if no matching item is found
+    }
+
+    public void FilterDonee(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distribution, SortedListSetInterface<Item> Item) {
+        String option = doneeUI.getFilterMenu();
+        switch (option) {
+            case "1":
+                // Filter donees by date range who have received items
+                doneeUI.printText("Please enter the range of date");
+                doneeUI.printText("Start Date (dd-mm-yyyy):");
+                Date startDate = doneeUI.getRequestDate();
+                doneeUI.displayEnDash();
+                doneeUI.printText("End Date (dd-mm-yyyy):");
+                Date endDate = doneeUI.getRequestDate();
+                filterDoneesByDate(distribution, Item, startDate, endDate);
+                break;
+
+            case "2":
+                // Filter donees by item received
+                doneeUI.printText("Please enter the item type to filter by:");
+                String itemType = inputCategory();
+                filterDoneesByItem(distribution, Item, itemType);
+                break;
+
+            case "3":
+                break;
+
+            default:
+                MessageUI.displayInvalidOptionMessage();
+                //FilterDonee(donees, distribution);  // Re-display the filter menu for a valid input
+                break;
         }
     }
 
-    public void FilterDonee(SortedListSetInterface<Donee> donees) {
-        //Range date receive item and total
-        //
+    public void DoneeReports(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> items) {
+        String option;
+        // Keep asking for input until the correct option is selected
+        do {
+            option = doneeUI.getReportMenu();
+
+            switch (option) {
+                case "1":
+                    listDoneesByDate(donees, distributions,items);
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                case "5":
+                    return; // Exit the method to return to the previous menu
+                default:
+                    MessageUI.displayInvalidOptionMessage();
+            }
+        } while (!option.equals("5"));
     }
 
-    public void DoneeReports(SortedListSetInterface<Donee> donees) {
+    private void listDoneesByDate(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> items) {
+        // Lists to track item types and donee types
+        SortedListSetInterface<Item> itemTypes = new SortedDoublyLinkedListSet<>();
+        SortedListSetInterface<Donee> doneeTypes = new SortedDoublyLinkedListSet<>();
 
+        // Totals
+        int totalRequests = 0;
+
+        System.out.println(distributions);
+        int monetary = CommonUse.countType("Monetary", distributions, items);
+        int clothing = CommonUse.countType("Clothing and Apparel", distributions, items);
+        int food = CommonUse.countType("Food and Beverage", distributions, items);
+        int household = CommonUse.countType("Household Items", distributions, items);
+        int edu = CommonUse.countType("Educational Materials", distributions, items);
+        int elec = CommonUse.countType("Electronic", distributions, items);
+        int medical = CommonUse.countType("Medical", distributions, items);
+        
+        System.out.println(monetary);
+        System.out.println(clothing);
+        System.out.println(food);
+        System.out.println(household);
+        System.out.println(edu);
+        System.out.println(elec);
+        System.out.println(medical);
+        
+        doneeUI.printText("Please enter the range of date");
+        doneeUI.printText("Start Date (dd-mm-yyyy):");
+        Date startDate = doneeUI.getRequestDate();
+        doneeUI.displayEnDash();
+        doneeUI.printText("End Date (dd-mm-yyyy):");
+        Date endDate = doneeUI.getRequestDate();
+        SortedListSetInterface<Donee> foundDonees = findDoneesDateInRange(donees, startDate, endDate);
+
+        if (foundDonees != null && foundDonees.getNumberOfEntries() > 0) {
+            doneeUI.printText("Donees registered between " + startDate + " and " + endDate + ":");
+            doneeUI.printDoneeTitle();
+            doneeUI.displayEnDash();
+
+            // Iterate through the found donees
+            Iterator<Donee> doneeIterator = foundDonees.getIterator();
+            while (doneeIterator.hasNext()) {
+                Donee donee = doneeIterator.next();
+                doneeUI.printText(donee.toString());
+
+                // Count total requests
+                totalRequests += donee.getRequests().getNumberOfEntries();
+
+                // Track item types and their counts
+                Iterator<Request> requestIterator = donee.getRequests().getIterator();
+                while (requestIterator.hasNext()) {
+                    Request request = requestIterator.next();
+                    String itemTypeString = request.getRequestItems(); // Assuming this is a String
+
+                    // Find or create the Item object
+                    Item item = findOrCreateItem(itemTypes, itemTypeString);
+
+                    // Update item type count
+                    //updateItemCount(itemTypes, item);
+
+                    // Track donee types
+                    String doneeType = donee.getDoneeType();
+                    updateDoneeTypeCount(doneeTypes, doneeType);
+                }
+            }
+            doneeUI.displayEnDash();
+
+            // Print the summary
+            doneeUI.printText("Summary:");
+            doneeUI.printText("Total Donees: " + foundDonees.getNumberOfEntries());
+            doneeUI.printText("Total Requests: " + totalRequests);
+
+            doneeUI.printText("Item Types and Their Quantities:");
+            printItemTypesQuantities(itemTypes);
+
+            doneeUI.printText("Donee Types and Their Totals:");
+            printDoneeTypesTotals(doneeTypes);
+        } else {
+            doneeUI.printText("No donees found within the specified date range.");
+        }
     }
 
+//    private void updateItemCount(SortedListSetInterface<Item> itemTypes, Item item) {
+//        // Find the existing item in the itemTypes list
+//        Iterator<Item> iterator = itemTypes.getIterator();
+//        while (iterator.hasNext()) {
+//            Item existingItem = iterator.next();
+//            if (existingItem.getType().equals(item.getType())) {
+//                // Update quantity (assuming you have a method to increment it)
+//                existingItem.incrementQuantity(item.getQuantity()); // You might need to implement this method
+//                return;
+//            }
+//        }
+//        // If not found, add the new item to the list
+//        itemTypes.add(item);
+//    }
+
+    private void updateDoneeTypeCount(SortedListSetInterface<Donee> donees, String doneeType) {
+        boolean found = false;
+        Iterator<Donee> iterator = donees.getIterator();
+
+        // Check if the doneeType already exists in the donees set
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            if (donee.getDoneeType().equalsIgnoreCase(doneeType)) {
+                found = true;
+                break;
+            }
+        }
+
+        // If doneeType is not found, add a new Donee with this type
+        if (!found) {
+            Donee newDonee = new Donee(/* provide necessary parameters here, e.g., doneeType */);
+            newDonee.setDoneeType(doneeType);
+            donees.add(newDonee);
+        }
+    }
+
+    private void printItemTypesQuantities(SortedListSetInterface<Item> itemTypes) {
+        Iterator<Item> iterator = itemTypes.getIterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            doneeUI.printText(item.getType() + ": " + item.getQuantity()); // Assuming Item has a getQuantity() method
+        }
+    }
+
+    private void printDoneeTypesTotals(SortedListSetInterface<Donee> donees) {
+        // Count the occurrences of each donee type
+        SortedListSetInterface<String> doneeTypeList = new SortedDoublyLinkedListSet<>();
+        Iterator<Donee> iterator = donees.getIterator();
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            String doneeType = donee.getDoneeType();
+            if (!doneeTypeList.contains(doneeType)) {
+                doneeTypeList.add(doneeType);
+            }
+        }
+
+        // Print donee type counts
+        Iterator<String> typeIterator = doneeTypeList.getIterator();
+        while (typeIterator.hasNext()) {
+            String type = typeIterator.next();
+            int count = countDoneeTypeOccurrences(donees, type);
+            doneeUI.printText(type + ": " + count);
+        }
+    }
+
+    private int countDoneeTypeOccurrences(SortedListSetInterface<Donee> donees, String doneeType) {
+        int count = 0;
+        Iterator<Donee> iterator = donees.getIterator();
+        while (iterator.hasNext()) {
+            Donee donee = iterator.next();
+            if (donee.getDoneeType().equalsIgnoreCase(doneeType)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private Item findOrCreateItem(SortedListSetInterface<Item> itemTypes, String itemTypeString) {
+        Iterator<Item> iterator = itemTypes.getIterator();
+        while (iterator.hasNext()) {
+            Item existingItem = iterator.next();
+            if (existingItem.getType().equalsIgnoreCase(itemTypeString)) {
+                return existingItem;
+            }
+        }
+        // Create a new Item if not found
+        Item newItem = new Item(itemTypeString, "", "", 0, 0.0); // Update with actual constructor parameters
+        itemTypes.add(newItem);
+        return newItem;
+    }
 }

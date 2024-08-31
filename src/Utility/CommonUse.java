@@ -12,6 +12,8 @@ import Entity.Donee;
 import Entity.SelectedItem;
 import Entity.Distribution;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -19,20 +21,20 @@ import java.util.Iterator;
  */
 public class CommonUse {
 
-    public static int countType(String type, SortedListSetInterface<Distribution> distributions,SortedListSetInterface<Item> items) {
+    public static int countType(String type, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> items) {
         int count = 0;
         Iterator<Distribution> iterator = distributions.getIterator();
         do {
             Distribution distribution = iterator.next();
             Iterator<SelectedItem> i = distribution.getDistributedItemList().getIterator();
-            do{
+            do {
                 SelectedItem selectedItem = i.next();
                 String id = selectedItem.getItemId();
                 Item item = findItem(id, items);
                 if (item.getType().equalsIgnoreCase(type)) {
-                count++;
-            }
-            }while(i.hasNext());
+                    count++;
+                }
+            } while (i.hasNext());
         } while (iterator.hasNext());
         return count;
     }
@@ -95,5 +97,12 @@ public class CommonUse {
         printItemEnDash();
         printItemTitle();
         printItemEnDash();
+    }
+
+    public static boolean validateDateFormat(String date) {
+        String regex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(date);
+        return matcher.matches();
     }
 }

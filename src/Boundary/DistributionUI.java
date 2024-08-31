@@ -8,6 +8,8 @@ import ADT.SortedDoublyLinkedListSet;
 import ADT.SortedListSetInterface;
 import Entity.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -110,6 +112,11 @@ public class DistributionUI {
         scanner.nextLine();  // Clear the newline character left by nextDouble()
         return input;
     }
+    
+
+
+
+
 
     public void listAllDistributions(SortedListSetInterface<Distribution> distributions) {
         printDistributionTitleHeader();
@@ -129,5 +136,14 @@ public class DistributionUI {
         System.out.println(msg);
 
     }
+    
+    public boolean promptForDateRangeFilter() {
+    System.out.print("\nWould you like to filter the report by a date range? (Y/N): ");
+    String response = scanner.nextLine().trim().toUpperCase();
+    return response.equals("Y");
+}
+
+    
+
 
 }

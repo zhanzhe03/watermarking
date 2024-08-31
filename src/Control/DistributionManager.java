@@ -15,7 +15,6 @@ import ADT.SortedListSetInterface;
 import Entity.*;
 import java.util.Iterator;
 import DAO.EntityInitializer;
-import java.util.Stack;
 
 public class DistributionManager {
 
@@ -102,21 +101,6 @@ public class DistributionManager {
     public void ListAllDistributions(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList,
             SortedListSetInterface<Donee> donees) {
         distributionUI.listAllDistributions(distributions);
-        ListAllDistributionsInDESC(distributions);
-    }
-
-    private void ListAllDistributionsInDESC(SortedListSetInterface<Distribution> distributions) {
-        Stack<Distribution> myStack = new Stack<>();
-        Iterator<Distribution> iterator = distributions.getIterator();
-        do {
-            Distribution currentDistribution = iterator.next();
-            myStack.push(currentDistribution);
-        } while (iterator.hasNext());
-
-        distributionUI.printDistributionTitleHeader();
-        while (!myStack.isEmpty()) {
-            distributionUI.printDistributionRecord(myStack.pop());
-        }
     }
 
 //**** Adding purpose  //done ask whether add other items into same distribution
@@ -150,8 +134,7 @@ public class DistributionManager {
                         MessageUI.displayInvalidDonee();
                     } else {
                         if (selectedDonee.getRequests().getNumberOfEntries() >= 1) {
-                            distributionUI.displayMessage("\nDonee " + selectedDonee.getDoneeId() + " requests for : ");
-                            distributionUI.displayMessage("" + selectedDonee.getRequests());
+                            displayDoneeRequest(selectedDonee); // Display Donee request
                         }
 
                         if (selectedDonee.getDoneeType().equalsIgnoreCase("Organization")) {
@@ -177,48 +160,49 @@ public class DistributionManager {
 
             do {
                 try {
+                    // Display Donee request each time before prompting for item input
+                    displayDoneeRequest(selectedDonee);
+
                     CommonUse.printItemHeader();
                     distributionUI.displayMessage("\n");
                     distributionUI.PrintDonatedItemList(donatedItemList);
-                    input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit; 'F' filter By Category ) > ");
+                    input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit; 'S' sort By Category ; F' filter By Category ) > ");
 
                     if (input.equalsIgnoreCase("Q")) {  // Quit the loop
-                        // Prompt user to decide whether to keep or discard the current distribution
-                        if (isContinue == true) {
-                            String keepOrDiscard = distributionUI.getInputString("You have not added any items. Do you want to keep the previous actions? ('Y' to keep; 'N' to discard) > ");
-                            if (keepOrDiscard.equalsIgnoreCase("Y")) {
-                                distributions.add(newDistribution); // Add the distribution to the list even if empty
-                                MessageUI.displayGreenSuccessfulMsg("\nDistribution record is added.");
-                            } else {
-                                MessageUI.displayBlueRemindMsg("\nNo distribution added.");
-                            }
-                        }
+                        handleQuit(isContinue, newDistribution, distributions);
                         return; // Exit method
                     }
 
                     if (input.equalsIgnoreCase("F")) { // Filter items
-                        do {
-                            ClearScreen.clearJavaConsoleScreen();
-                            CommonUse.printItemHeader();
-                            distributionUI.displayMessage("\n");
-                            distributionUI.PrintDonatedItemList(donatedItemList); // Display the list of donated items
-                            String inputType = distributionUI.getInputString("Please enter the type you would like to show > ");
-                            foundType = filterItemByType(donatedItemList, inputType);
-                        } while (!foundType);
+
+                        String inputType = distributionUI.getInputString("Please enter the type you would like to show > ");
+                        foundType = filterItemByType(donatedItemList, inputType, selectedDonee);
+
+                        if (!foundType) {
+                            return;
+                        }
 
                         input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit) > ");
                         if (input.equalsIgnoreCase("Q")) { // Quit the loop
-                            // Prompt user to decide whether to keep or discard the current distribution
-                            if (isContinue == true) {
-                                String keepOrDiscard = distributionUI.getInputString("You have not added any items. Do you want to keep the previous actions? ('Y' to keep; 'N' to discard) > ");
-                                if (keepOrDiscard.equalsIgnoreCase("Y")) {
-                                    distributions.add(newDistribution); // Add the distribution to the list even if empty
-                                    MessageUI.displayRecordAddedMessage();
-                                } else {
-                                    MessageUI.displayNoRecordAddedMessage();
-                                }
-                                return; // Exit method
-                            }
+                            handleQuit(isContinue, newDistribution, distributions);
+                            return; // Exit method
+                        }
+                    } else if (input.equalsIgnoreCase("S")) {
+                        ClearScreen.clearJavaConsoleScreen();
+
+                        displayDoneeRequest(selectedDonee); // Display Donee request again after sorting
+                        CommonUse.printItemHeader();
+                        distributionUI.displayMessage("\n");
+                        Item.setSortByCriteria(Item.SortByCriteria.TYPE_INASC);
+                        donatedItemList.reSort();
+                        distributionUI.displayMessage("" + donatedItemList);
+                        Item.setSortByCriteria(Item.SortByCriteria.ITEMID_INASC);
+                        donatedItemList.reSort();
+
+                        input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit) > ");
+                        if (input.equalsIgnoreCase("Q")) { // Quit the loop
+                            handleQuit(isContinue, newDistribution, distributions);
+                            return; // Exit method
                         }
                     }
 
@@ -256,6 +240,23 @@ public class DistributionManager {
 
             input = distributionUI.getInputString("\nWould you like to add another distribution for a different donee? ('Y' to continue; 'N' to quit) > ");
         } while (input.equalsIgnoreCase("Y"));
+    }
+
+    private void displayDoneeRequest(Donee selectedDonee) {
+        distributionUI.displayMessage("\nDonee " + selectedDonee.getDoneeId() + " requests for : ");
+        distributionUI.displayMessage("" + selectedDonee.getRequests());
+    }
+
+    private void handleQuit(boolean isContinue, Distribution newDistribution, SortedListSetInterface<Distribution> distributions) {
+        if (isContinue == true) {
+            String keepOrDiscard = distributionUI.getInputString("You have not added any items. Do you want to keep the previous actions? ('Y' to keep; 'N' to discard) > ");
+            if (keepOrDiscard.equalsIgnoreCase("Y")) {
+                distributions.add(newDistribution); // Add the distribution to the list even if empty
+                MessageUI.displayGreenSuccessfulMsg("\nDistribution record is added.");
+            } else {
+                MessageUI.displayBlueRemindMsg("\nNo distribution added.");
+            }
+        }
     }
 
     private void isDistributionMatchingRequest(Distribution distribution, Donee donee, SortedListSetInterface<Item> donatedItemList) {
@@ -404,21 +405,37 @@ public class DistributionManager {
     }
 
 //**** Adding purpose
-    private boolean filterItemByType(SortedListSetInterface<Item> donatedItemList, String type) {
-        boolean foundtype = false;
+    private boolean filterItemByType(SortedListSetInterface<Item> donatedItemList, String type, Donee selectedDonee) {
+        boolean foundType = false;
         Iterator<Item> iterator = donatedItemList.getIterator();
-        distributionUI.displayMessage("Item List filter by " + type + " : ");
+
+        // Display the donee request before filtering
+        displayDoneeRequest(selectedDonee);
+
+        // Iterate through the item list and check for items of the specified type
         while (iterator.hasNext()) {
             Item currentItem = iterator.next();
             if (currentItem.getType().equalsIgnoreCase(type)) {
-                distributionUI.PrintItemList(currentItem);
-                foundtype = true;
+                if (!foundType) {
+                    // Print the item header only once, before the first matching item is displayed
+
+                    distributionUI.displayMessage("Item List filtered by " + type + " : \n");
+                    CommonUse.printItemHeader();
+                    distributionUI.displayMessage("\n");
+                    foundType = true;
+                }
+                distributionUI.displayMessage("" + currentItem);
             }
         }
-        if (!foundtype) {
-            MessageUI.displayRed("No item match < " + type + " > type.\n\n");
+
+        // If no items of the specified type are found, display a message
+        if (!foundType) {
+            MessageUI.displayRed("No items match the type: < " + type + " >.\n\n");
         }
-        return foundtype;
+
+        distributionUI.displayMessage("\n");
+
+        return foundType;
     }
 
     //update add/dltitem qty  done  //add another item consider as merge
@@ -1006,55 +1023,166 @@ public class DistributionManager {
         }
     }
 
-    public void GenerateSummaryReport(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-        System.out.println(String.format("%50s Distributions Summary Report of " + localYear, ""));
-        distributionUI.printDistributionTitleHeader();
+    public void GenerateSummaryReport(SortedListSetInterface<Distribution> distributions,
+            SortedListSetInterface<Item> donatedItemList) {
+        // Display results for the local year first
+        displayReportForYear(distributions, localYear, donatedItemList);
 
-        int distFound = 0;
+        // Prompt user if they want to filter by a date range
+        if (distributionUI.promptForDateRangeFilter()) {
+            Date startDate = getValidDate("Enter start date (DD-MM-YYYY): ");
+            Date endDate = getValidDate("Enter end date (DD-MM-YYYY): ");
+            displayReportForDateRange(distributions, startDate, endDate);
+        }
+    }
 
-        SortedListSetInterface<String> trackedCategories = new SortedDoublyLinkedListSet<>();
-        SortedListSetInterface<Integer> categoryCounts = new SortedDoublyLinkedListSet<>();
+    private void displayReportForYear(SortedListSetInterface<Distribution> distributions, int year, SortedListSetInterface<Item> donatedItemList) {
+    System.out.println(String.format("%50s Distributions Summary Report for " + year, ""));
+    distributionUI.printDistributionTitleHeader();
 
-        Iterator<Distribution> distributionIterator = distributions.getIterator();
-        while (distributionIterator.hasNext()) {
-            Distribution currentRecord = distributionIterator.next();
+    int distFound = 0;
+    String mostDistributedItem = null;
+    int maxCount = 0;
 
-            // default will be showed by current system year
-            if (currentRecord.getDistributionDate().getYear() == localYear) {
-                distributionUI.displayMessage(""+currentRecord);
-                distFound++;
+    // Track occurrences of each item type
+    int monetaryCount = 0;
+    int householdCount = 0;
+    int electronicCount = 0;
+    int fnbCount = 0;
+    int cnaCount = 0;
+    int eduCount = 0;
+    int medCount = 0;
 
-            Iterator<SelectedItem> selectedItemIterator = currentRecord.getDistributedItemList().getIterator();
+    // Track counts for each item type
+    Iterator<Distribution> distIterator = distributions.getIterator();
+    while (distIterator.hasNext()) {
+        Distribution currentDist = distIterator.next();
+        if (currentDist.getDistributionDate().getYear() == year) {
+            distFound++;
+            distributionUI.displayMessage("" + currentDist);
+
+            // Iterate over items in the current distribution
+            Iterator<SelectedItem> selectedItemIterator = currentDist.getDistributedItemList().getIterator();
             while (selectedItemIterator.hasNext()) {
-                SelectedItem selectedItem = selectedItemIterator.next();
+                SelectedItem currentItem = selectedItemIterator.next();
+                String itemId = currentItem.getItemId();
 
+                String itemType = "";
                 Iterator<Item> itemIterator = donatedItemList.getIterator();
                 while (itemIterator.hasNext()) {
-                    Item currentItem = itemIterator.next();
-                    if (selectedItem.getItemId().equalsIgnoreCase(currentItem.getItemId())) {
-                        // Track category distribution count
-                        int categoryIndex = trackedCategories.indexOf(currentItem.getType());
-                        if (categoryIndex == -1) {
-                            trackedCategories.add(currentItem.getType());
-                            categoryCounts.add(1); // Initialize count for new category
-                        } else {
-                            int currentCategoryCount = categoryCounts.getEntry(categoryIndex);
-                            categoryCounts.setIndex(categoryIndex, currentCategoryCount + 1); // Increment count
-                        }
-
+                    Item item = itemIterator.next();
+                    if (item.getItemId().equalsIgnoreCase(itemId)) {
+                        itemType = item.getType();
+                        break; // Exit the loop once the item is found
                     }
+                }
+
+                if (itemType.isEmpty()) {
+                    System.out.println("Error: Item with ID " + itemId + " not found in the donated list.");
+                    continue;
+                }
+
+                // Update counts based on item type
+                if (itemType.equalsIgnoreCase("Monetary")) {
+                    monetaryCount++;
+                } else if (itemType.equalsIgnoreCase("Household Items")) {
+                    householdCount++;
+                } else if (itemType.equalsIgnoreCase("Electronic")) {
+                    electronicCount++;
+                } else if (itemType.equalsIgnoreCase("Food and Beverage")) {
+                    fnbCount++;
+                } else if (itemType.equalsIgnoreCase("Clothing and Apparel")) {
+                    cnaCount++;
+                } else if (itemType.equalsIgnoreCase("Educational Materials")) {
+                    eduCount++;
+                } else if (itemType.equalsIgnoreCase("Medical")) {
+                    medCount++;
                 }
             }
         }
-        }
+    }
 
-        distributionUI.displayMessage("\n");
-        distributionUI.printCategoryCountTitleHeader();
-        for (int i = 1; i <= trackedCategories.getNumberOfEntries(); i++) {
-            distributionUI.displayMessage(String.format("\n %-30s  %-15s",trackedCategories.getEntry(i), categoryCounts.getEntry(i)));       
+    // Determine the most distributed item type
+    int[] counts = {monetaryCount, householdCount, electronicCount, fnbCount, cnaCount, eduCount, medCount};
+    String[] itemTypes = {"Monetary", "Household Items", "Electronic", "Food and Beverage", "Clothing and Apparel", "Educational Materials", "Medical"};
+
+    for (int i = 0; i < counts.length; i++) {
+        if (counts[i] > maxCount) {
+            maxCount = counts[i];
+            mostDistributedItem = itemTypes[i];
         }
-        
-        
+    }
+
+    // Print all item type counts
+    System.out.println("Monetary Count: " + monetaryCount);
+    System.out.println("Household Items Count: " + householdCount);
+    System.out.println("Electronic Count: " + electronicCount);
+    System.out.println("Food and Beverage Count: " + fnbCount);
+    System.out.println("Clothing and Apparel Count: " + cnaCount);
+    System.out.println("Educational Materials Count: " + eduCount);
+    System.out.println("Medical Count: " + medCount);
+
+    // Print most distributed item and its count
+    System.out.println("Most Distributed Item Type: " + mostDistributedItem + " with count: " + maxCount);
+}
+
+
+    private void displayReportForDateRange(SortedListSetInterface<Distribution> distributions,
+            Date startDate, Date endDate) {
+        System.out.println(String.format("%40s Distributions Summary Report from " + startDate + " to " + endDate, ""));
+        distributionUI.printDistributionTitleHeader();
+
+        Iterator<Distribution> distIterator = distributions.getIterator();
+        while (distIterator.hasNext()) {
+            Distribution currentDist = distIterator.next();
+            Date distDate = currentDist.getDistributionDate();
+            if (!distDate.beforeDate(startDate) && !distDate.afterDate(endDate)) {
+                distributionUI.displayMessage("" + currentDist);
+            }
+        }
+    }
+
+    private boolean validateDate(int day, int month, int year) {
+
+        if (year < 2000 || year > localYear) {
+            return false;
+        } else if (year == localYear && month > localMonth) {
+            return false;
+        } else if (year == localYear && month == localMonth && day > localDay) {
+            return false;
+        } else if ((month == 4 || month == 6 || month == 9 || month == 11) && (day == 31)) {
+            return false;
+        } else if (month == 2 && day > 29 && (year % 4 == 0)) {
+            return false;
+        } else if (month == 2 && day > 28 && (year % 4 != 0)) {
+            return false;
+        }
+        return true;
+    }
+
+    private Date getValidDate(String desc) {
+        String date;
+        boolean isValid = false;
+        int day = 0;
+        int month = 0;
+        int year = 0;
+        do {
+            date = donationUI.getInputString(desc);
+            if (!CommonUse.validateDateFormat(date)) {
+                MessageUI.displayInvalidDateFormatMessage();
+            } else {
+                day = Integer.parseInt(date.substring(0, 2));
+                month = Integer.parseInt(date.substring(3, 5));
+                year = Integer.parseInt(date.substring(6));
+                if (!validateDate(day, month, year)) {
+                    MessageUI.displayInvalidDateMessage();
+                } else {
+                    isValid = true;
+                }
+            }
+        } while (!isValid);
+
+        return new Date(day, month, year);
     }
 
 }
