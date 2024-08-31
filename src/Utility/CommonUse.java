@@ -10,7 +10,6 @@ import Entity.Donor;
 import Entity.Item;
 import Entity.Donee;
 import Entity.SelectedItem;
-import Entity.Distribution;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,21 +20,22 @@ import java.util.regex.Pattern;
  */
 public class CommonUse {
 
-    public static int countType(String type, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> items) {
+    public static int countType(String type, SortedListSetInterface<SelectedItem> selectedItemList, SortedListSetInterface<Item> items) {
         int count = 0;
-        Iterator<Distribution> iterator = distributions.getIterator();
-        do {
-            Distribution distribution = iterator.next();
-            Iterator<SelectedItem> i = distribution.getDistributedItemList().getIterator();
-            do {
-                SelectedItem selectedItem = i.next();
-                String id = selectedItem.getItemId();
-                Item item = findItem(id, items);
-                if (item.getType().equalsIgnoreCase(type)) {
-                    count++;
-                }
-            } while (i.hasNext());
-        } while (iterator.hasNext());
+        Iterator<SelectedItem> iterator = selectedItemList.getIterator();
+
+        while (iterator.hasNext()) {
+            SelectedItem selectedItem = iterator.next();
+            String id = selectedItem.getItemId();
+            Item item = findItem(id, items);
+
+            if (item == null) {
+                System.out.println("Error: Item with ID " + id + " not found.It may be removed.");
+                break;
+            } else if (item.getType().equalsIgnoreCase(type)) {
+                count++;
+            }
+        }
         return count;
     }
 
@@ -105,4 +105,5 @@ public class CommonUse {
         Matcher matcher = pattern.matcher(date);
         return matcher.matches();
     }
+
 }

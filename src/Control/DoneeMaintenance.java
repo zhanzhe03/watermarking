@@ -931,21 +931,21 @@ public class DoneeMaintenance {
         int totalRequests = 0;
 
         System.out.println(distributions);
-        int monetary = CommonUse.countType("Monetary", distributions, items);
-        int clothing = CommonUse.countType("Clothing and Apparel", distributions, items);
-        int food = CommonUse.countType("Food and Beverage", distributions, items);
-        int household = CommonUse.countType("Household Items", distributions, items);
-        int edu = CommonUse.countType("Educational Materials", distributions, items);
-        int elec = CommonUse.countType("Electronic", distributions, items);
-        int medical = CommonUse.countType("Medical", distributions, items);
-        
-        System.out.println(monetary);
-        System.out.println(clothing);
-        System.out.println(food);
-        System.out.println(household);
-        System.out.println(edu);
-        System.out.println(elec);
-        System.out.println(medical);
+//        int monetary = CommonUse.countType("Monetary", distributions, items);
+//        int clothing = CommonUse.countType("Clothing and Apparel", distributions, items);
+//        int food = CommonUse.countType("Food and Beverage", distributions, items);
+//        int household = CommonUse.countType("Household Items", distributions, items);
+//        int edu = CommonUse.countType("Educational Materials", distributions, items);
+//        int elec = CommonUse.countType("Electronic", distributions, items);
+//        int medical = CommonUse.countType("Medical", distributions, items);
+//        
+     //   System.out.println(monetary);
+     //   System.out.println(clothing);
+      //  System.out.println(food);
+//     //   System.out.println(household);
+//        System.out.println(edu);
+//        System.out.println(elec);
+//        System.out.println(medical);
         
         doneeUI.printText("Please enter the range of date");
         doneeUI.printText("Start Date (dd-mm-yyyy):");
