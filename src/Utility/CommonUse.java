@@ -20,19 +20,26 @@ import java.util.regex.Pattern;
  */
 public class CommonUse {
 
-    public static int countType(String type, SortedListSetInterface<SelectedItem> selectedItemList, SortedListSetInterface<Item> items) {
-        int count = 0;
-        Iterator<SelectedItem> iterator = selectedItemList.getIterator();
-        do {
-            SelectedItem selectedItem = iterator.next();
-            String id = selectedItem.getItemId();
-            Item item = findItem(id, items);
-            if (item.getType().equalsIgnoreCase(type)) {
-                count++;
-            }
-        } while (iterator.hasNext());
-        return count;
+   public static int countType(String type, SortedListSetInterface<SelectedItem> selectedItemList, SortedListSetInterface<Item> items) {
+    int count = 0;
+    Iterator<SelectedItem> iterator = selectedItemList.getIterator();
+    
+    while (iterator.hasNext()) {
+        SelectedItem selectedItem = iterator.next();
+        String id = selectedItem.getItemId();
+        Item item = findItem(id, items);
+        
+        if (item == null) {
+            System.out.println("Error: Item with ID " + id + " not found.It may be removed.");
+            break;
+        }
+        else if (item.getType().equalsIgnoreCase(type)) {
+            count++;
+        }
     }
+    return count;
+}
+
 
     public static Donor findDonor(String contact, SortedListSetInterface<Donor> donors) {
         Iterator<Donor> iterator = donors.getIterator();

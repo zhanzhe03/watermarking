@@ -1026,7 +1026,7 @@ public class DistributionManager {
     public void GenerateSummaryReport(SortedListSetInterface<Distribution> distributions,
             SortedListSetInterface<Item> donatedItemList) {
         // Display results for the local year first
-        displayReportForYear(distributions, localYear);
+        displayReportForYear(distributions, localYear, donatedItemList);
 
         // Prompt user if they want to filter by a date range
         if (distributionUI.promptForDateRangeFilter()) {
@@ -1036,7 +1036,7 @@ public class DistributionManager {
         }
     }
 
-  private void displayReportForYear(SortedListSetInterface<Distribution> distributions, int year) {
+    private void displayReportForYear(SortedListSetInterface<Distribution> distributions, int year, SortedListSetInterface<Item> donatedItemList) {
     System.out.println(String.format("%50s Distributions Summary Report for " + year, ""));
     distributionUI.printDistributionTitleHeader();
 
@@ -1044,53 +1044,86 @@ public class DistributionManager {
     String mostDistributedItem = null;
     int maxCount = 0;
 
+    // Track occurrences of each item type
+    int monetaryCount = 0;
+    int householdCount = 0;
+    int electronicCount = 0;
+    int fnbCount = 0;
+    int cnaCount = 0;
+    int eduCount = 0;
+    int medCount = 0;
+
+    // Track counts for each item type
     Iterator<Distribution> distIterator = distributions.getIterator();
     while (distIterator.hasNext()) {
         Distribution currentDist = distIterator.next();
         if (currentDist.getDistributionDate().getYear() == year) {
             distFound++;
             distributionUI.displayMessage("" + currentDist);
-            
+
+            // Iterate over items in the current distribution
             Iterator<SelectedItem> selectedItemIterator = currentDist.getDistributedItemList().getIterator();
             while (selectedItemIterator.hasNext()) {
                 SelectedItem currentItem = selectedItemIterator.next();
-                String itemName = currentItem.getItemId(); // Assuming there's a method to get the item name
-                int itemCount = currentItem.getSelectedQuantity(); // Get the quantity of the current item
+                String itemId = currentItem.getItemId();
 
-                // Count occurrences of the current item across all distributions
-                int totalCount = itemCount; // Start with the current item's quantity
-                Iterator<Distribution> innerDistIterator = distributions.getIterator();
-                while (innerDistIterator.hasNext()) {
-                    Distribution innerDist = innerDistIterator.next();
-                    if (innerDist != currentDist && innerDist.getDistributionDate().getYear() == year) {
-                        Iterator<SelectedItem> innerItemIterator = innerDist.getDistributedItemList().getIterator();
-                        while (innerItemIterator.hasNext()) {
-                            SelectedItem innerItem = innerItemIterator.next();
-                            if (innerItem.getItemId().equals(itemName)) {
-                                totalCount += innerItem.getSelectedQuantity();
-                            }
-                        }
+                String itemType = "";
+                Iterator<Item> itemIterator = donatedItemList.getIterator();
+                while (itemIterator.hasNext()) {
+                    Item item = itemIterator.next();
+                    if (item.getItemId().equalsIgnoreCase(itemId)) {
+                        itemType = item.getType();
+                        break; // Exit the loop once the item is found
                     }
                 }
 
-                // Update the most distributed item if the current item's total count is higher
-                if (totalCount > maxCount) {
-                    maxCount = totalCount;
-                    mostDistributedItem = itemName;
+                if (itemType.isEmpty()) {
+                    System.out.println("Error: Item with ID " + itemId + " not found in the donated list.");
+                    continue;
+                }
+
+                // Update counts based on item type
+                if (itemType.equalsIgnoreCase("Monetary")) {
+                    monetaryCount++;
+                } else if (itemType.equalsIgnoreCase("Household Items")) {
+                    householdCount++;
+                } else if (itemType.equalsIgnoreCase("Electronic")) {
+                    electronicCount++;
+                } else if (itemType.equalsIgnoreCase("Food and Beverage")) {
+                    fnbCount++;
+                } else if (itemType.equalsIgnoreCase("Clothing and Apparel")) {
+                    cnaCount++;
+                } else if (itemType.equalsIgnoreCase("Educational Materials")) {
+                    eduCount++;
+                } else if (itemType.equalsIgnoreCase("Medical")) {
+                    medCount++;
                 }
             }
         }
     }
 
-    distributionUI.displayMessage("Total distributions : " + distFound);
-    double rate = (double) distFound / distributions.getNumberOfEntries() * 100;
-    distributionUI.displayMessage("Distributions found in " + year + " : " + distFound + String.format(" ( %.2f%% )", rate));
+    // Determine the most distributed item type
+    int[] counts = {monetaryCount, householdCount, electronicCount, fnbCount, cnaCount, eduCount, medCount};
+    String[] itemTypes = {"Monetary", "Household Items", "Electronic", "Food and Beverage", "Clothing and Apparel", "Educational Materials", "Medical"};
 
-    if (mostDistributedItem != null) {
-        distributionUI.displayMessage("Most Distributed Item in " + year + " : " + mostDistributedItem + " with " + maxCount + " units.");
-    } else {
-        distributionUI.displayMessage("No items distributed in " + year);
+    for (int i = 0; i < counts.length; i++) {
+        if (counts[i] > maxCount) {
+            maxCount = counts[i];
+            mostDistributedItem = itemTypes[i];
+        }
     }
+
+    // Print all item type counts
+    System.out.println("Monetary Count: " + monetaryCount);
+    System.out.println("Household Items Count: " + householdCount);
+    System.out.println("Electronic Count: " + electronicCount);
+    System.out.println("Food and Beverage Count: " + fnbCount);
+    System.out.println("Clothing and Apparel Count: " + cnaCount);
+    System.out.println("Educational Materials Count: " + eduCount);
+    System.out.println("Medical Count: " + medCount);
+
+    // Print most distributed item and its count
+    System.out.println("Most Distributed Item Type: " + mostDistributedItem + " with count: " + maxCount);
 }
 
 
