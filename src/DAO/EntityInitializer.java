@@ -20,6 +20,12 @@ public class EntityInitializer {
     private SortedListSetInterface<Distribution> distributions = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Item> items = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<SelectedItem> distributedItem = new SortedDoublyLinkedListSet<>();
+    private SortedListSetInterface<Request> request = new SortedDoublyLinkedListSet<>();
+
+    public SortedListSetInterface<Request> getRequest() {
+        return request;
+    }
+
 
     public SortedListSetInterface<Donation> getDonations() {
         return donations;
