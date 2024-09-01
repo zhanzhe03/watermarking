@@ -121,54 +121,53 @@ public class DistributionManager {
         listDistribution(distributions);
     }
 
-   public void listDistribution(SortedListSetInterface<Distribution> distributions) {
-    // Ask the user if they want to sort the list
-    boolean sortList = distributionUI.askIfSort(); // Assuming askIfSort() returns a boolean
-    
-    if (sortList) {
-        int opt;
-        do {
-            opt = distributionUI.displaySortingMenu(); // Display the menu and get the user's choice
-            switch (opt) {
-                case 1:
-                    ClearScreen.clearJavaConsoleScreen();
-                    distributionUI.displayMessage("All Distribution Records sorted by Distribution ID in Ascending Order");
-                    Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INASC);
-                    break;
-                case 2:
-                    ClearScreen.clearJavaConsoleScreen();
-                    distributionUI.displayMessage("All Distribution Records sorted by Distribution ID in Descending Order");
-                    Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INDESC);
-                    break;
-                case 3:
-                    ClearScreen.clearJavaConsoleScreen();
-                    distributionUI.displayMessage("All Distribution Records sorted by Distribution Date in Ascending Order");
-                    Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTRIBUTIONDATE_INASC);
-                    break;
-                case 4:
-                    ClearScreen.clearJavaConsoleScreen();
-                    distributionUI.displayMessage("All Distribution Records sorted by Distribution Date in Descending Order");
-                    Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTRIBUTIONDATE_INDESC);
-                    break;
-                case 9:
-                    ClearScreen.clearJavaConsoleScreen();
-                    distributionUI.displayMessage("Exiting...");
-                    break;
-                default:
-                    MessageUI.displayInvalidOptionMessage();
-                    break;
-            }
+    public void listDistribution(SortedListSetInterface<Distribution> distributions) {
+        // Ask the user if they want to sort the list
+        boolean sortList = distributionUI.askIfSort(); // Assuming askIfSort() returns a boolean
 
-            if (opt >= 1 && opt <= 4) {
-                distributions.reSort();
-                distributionUI.listAllDistributions(distributions);
-            }
-        } while (opt != 9);
-    } else {
-        distributionUI.displayMessage("No sorting applied. Exiting...");
+        if (sortList) {
+            int opt;
+            do {
+                opt = distributionUI.displaySortingMenu(); // Display the menu and get the user's choice
+                switch (opt) {
+                    case 1:
+                        ClearScreen.clearJavaConsoleScreen();
+                        distributionUI.displayMessage("All Distribution Records sorted by Distribution ID in Ascending Order");
+                        Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INASC);
+                        break;
+                    case 2:
+                        ClearScreen.clearJavaConsoleScreen();
+                        distributionUI.displayMessage("All Distribution Records sorted by Distribution ID in Descending Order");
+                        Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INDESC);
+                        break;
+                    case 3:
+                        ClearScreen.clearJavaConsoleScreen();
+                        distributionUI.displayMessage("All Distribution Records sorted by Distribution Date in Ascending Order");
+                        Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTRIBUTIONDATE_INASC);
+                        break;
+                    case 4:
+                        ClearScreen.clearJavaConsoleScreen();
+                        distributionUI.displayMessage("All Distribution Records sorted by Distribution Date in Descending Order");
+                        Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTRIBUTIONDATE_INDESC);
+                        break;
+                    case 9:
+                        ClearScreen.clearJavaConsoleScreen();
+                        distributionUI.displayMessage("Exiting...");
+                        break;
+                    default:
+                        MessageUI.displayInvalidOptionMessage();
+                        break;
+                }
+
+                if (opt >= 1 && opt <= 4) {
+                    distributions.reSort();
+                    distributionUI.listAllDistributions(distributions);
+                }
+            } while (opt != 9);
+        } else {
+            distributionUI.displayMessage("No sorting applied. Exiting...");
+        }
     }
-}
-
 
 //**** Adding purpose  //done ask whether add other items into same distribution
     //done ask add another distribution?   distribute according request and remove request
@@ -1158,6 +1157,8 @@ public class DistributionManager {
         int distFound = 0;
         SortedListSetInterface<Distribution> foundDistribution = new SortedDoublyLinkedListSet<>();
         ClearScreen.clearJavaConsoleScreen();
+        CommonUse.getLogo();
+
         System.out.println(String.format("\n%40s Distributions Summary Report from " + startDate + " to " + endDate, ""));
         distributionUI.printDistributionTitleHeader();
 

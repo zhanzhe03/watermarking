@@ -25,7 +25,7 @@ public class DistributionUI {
     public String getDistributionMenu() {
         System.out.println(""
                 + "\nDISTRIBUTION MANAGEMENT"
-                + "\n 1. List all donation distributions (sort by distributeditem(type) / distributeddate"
+                + "\n 1. List all donation distributions "
                 + "\n 2. Add new donation distribution"
                 + "\n 3. Update donation distribution details"
                 + "\n 4. Search donation distribution details "
