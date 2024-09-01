@@ -33,6 +33,7 @@ public class DonationMaintenance {
         SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
         SortedListSetInterface<Donor> donors = entityInitialize.getDonors();
         SortedListSetInterface<Item> items = entityInitialize.getItems();
+        SortedListSetInterface<Donation> donationsHistory = entityInitialize.getDonationsHistory();
 
         int opt;
         do {
@@ -45,7 +46,7 @@ public class DonationMaintenance {
                     break;
                 case 2:
                     ClearScreen.clearJavaConsoleScreen();
-                    AddDonation(donations, donors, items);
+                    AddDonation(donations, donors, items, donationsHistory);
                     break;
                 case 3:
                     ClearScreen.clearJavaConsoleScreen();
@@ -614,7 +615,7 @@ public class DonationMaintenance {
     }
 
     //2. add
-    public void AddDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
+    public void AddDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items, SortedListSetInterface<Donation> donationsHistory) {
         donationUI.printTitle("Add donation in different method");
         int opt;
         do {
@@ -623,7 +624,7 @@ public class DonationMaintenance {
             switch (opt) {
                 case 1:
                     ClearScreen.clearJavaConsoleScreen();
-                    AddNewDonation(donations, donors, items);
+                    AddNewDonation(donations, donors, items, donationsHistory);
                     break;
                 case 2:
                     ClearScreen.clearJavaConsoleScreen();
@@ -687,7 +688,7 @@ public class DonationMaintenance {
         } while (keepDonate == 'Y' && !isDiscontinue);
     }
 
-    public void AddNewDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
+    public void AddNewDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items, SortedListSetInterface<Donation> donationsHistory) {
         donationUI.printTitle("Add New Donation");
         SortedListSetInterface<Item> newDonatedItems = new SortedDoublyLinkedListSet<>();
         processDonation(newDonatedItems, items);
@@ -711,6 +712,7 @@ public class DonationMaintenance {
                         MessageUI.displaySuccessfulMessage();
                         Donation clonedDonation = newDonation.clone();
                         donor.addDonationToList(clonedDonation);
+                        donationsHistory.add(clonedDonation);
                     } else {
                         MessageUI.displayDonorStatusUnsuccessfulMessage();
                     }
@@ -723,6 +725,7 @@ public class DonationMaintenance {
                     MessageUI.displaySuccessfulMessage();
                     Donation clonedDonation = newDonation.clone();
                     donor.addDonationToList(clonedDonation);
+                    donationsHistory.add(clonedDonation);
                 }
             } else {
                 MessageUI.displayUnsuccessfulMessage();
