@@ -46,7 +46,7 @@ public class StockUI {
             case "Monetary":
                 return 1000; //10000
             case "Clothing and Apparel":
-                return 50;  //300
+                return 30;  //300
             case "Food and Beverage":
                 return 50;  //500
             case "Household Items":
@@ -54,7 +54,7 @@ public class StockUI {
             case "Educational Materials":
                 return 15;  //300
             case "Electronic":
-                return 5;  //50
+                return 3;  //50
             case "Medical":
                 return 5; //100
             default:
