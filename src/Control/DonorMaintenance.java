@@ -400,7 +400,7 @@ public class DonorMaintenance {
             categorizedDonors.intersect(categorizedStatus);
             donorUI.printText("Filter Result :");
             donorUI.printDonorTitle();
-            MessageUI.diplayEnDash();
+            donorUI.printDonorEnDash();
             donorUI.printText(categorizedDonors.toString());
             
         }while(opt > 6 || opt < 1);
@@ -416,11 +416,11 @@ public class DonorMaintenance {
         String contact = "";
         do{
         contact = donorUI.getDonorContact();
-         if (contact.length() > 11 || !contact.startsWith("0") || !contact.matches("\\d+")) {
+         if (contact.length() > 12 || !contact.startsWith("0") || !contact.matches("\\d+")) {
                 MessageUI.displayInvalidContactMessage();  // Display an error message if invalid
                 
             }
-        }while(contact.length() > 11 || !contact.startsWith("0") || !contact.matches("\\d+"));
+        }while(contact.length() > 12 || !contact.startsWith("0") || !contact.matches("\\d+"));
         return contact;
     }
     
@@ -430,7 +430,7 @@ public class DonorMaintenance {
              email = donorUI.getDonorEmail();
             if(email.contains("@"))
                 MessageUI.displayInvalidEmailMessage();
-        }while(email.contains("@"));
+        }while(!email.contains("@"));
         return email;
     }
     
@@ -446,9 +446,9 @@ public class DonorMaintenance {
                 foundDonor = donor;
                 donorUI.printText("Search Result :");
                 donorUI.printDonorTitle();
-                MessageUI.diplayEnDash();
+                donorUI.printDonorEnDash();
                 donorUI.printText(donor.toString());
-                MessageUI.diplayEnDash(); 
+                donorUI.printDonorEnDash(); 
                 break;
             }
         }
@@ -472,9 +472,9 @@ public class DonorMaintenance {
                 foundDonor = donor;
                 donorUI.printText("Search Result : ");
                 donorUI.printDonorTitle();
-                MessageUI.diplayEnDash(); 
+                donorUI.printDonorEnDash(); 
                 donorUI.printText(donor.toString());
-                MessageUI.diplayEnDash(); 
+                donorUI.printDonorEnDash(); 
                 break;
             }
         }
@@ -496,9 +496,9 @@ public class DonorMaintenance {
                foundDonor = donor;
                donorUI.printText("Search Result : ");
                donorUI.printDonorTitle();
-               MessageUI.diplayEnDash();              
+               donorUI.printDonorEnDash();              
                donorUI.printText(donor.toString());
-               MessageUI.diplayEnDash(); 
+               donorUI.printDonorEnDash(); 
                break;
            }
        }
@@ -534,9 +534,9 @@ public class DonorMaintenance {
        if(foundDonors != null){
            donorUI.printText("Search Result : ");
                donorUI.printDonorTitle();
-               MessageUI.diplayEnDash();              
+               donorUI.printDonorEnDash();              
                donorUI.printText(foundDonors.toString());
-               MessageUI.diplayEnDash();
+               donorUI.printDonorEnDash();
                donorUI.printNumberOfEntries(donors);
                
                 String YesNo = donorUI.getConfirmation("remove");
@@ -555,9 +555,9 @@ public class DonorMaintenance {
    private void updatedDonorInfo(Donor foundDonor){
        donorUI.printText("After Update :");
        donorUI.printDonorTitle();
-       MessageUI.diplayEnDash();
+       donorUI.printDonorEnDash();
        donorUI.printText(foundDonor.toString());
-       MessageUI.diplayEnDash();
+       donorUI.printDonorEnDash();
    }
      
    private String setDonorCategory(){
@@ -690,10 +690,10 @@ public class DonorMaintenance {
                 Donation lastDonation = donor.getDonationList().getLastEntries();
                 Date lastDonationDate = lastDonation.getDonationDate();
 
-                if (lastDonationDate.withinPassWeek(currentDate) && !donor.getStatus().equals("active")) {
-                    donor.setStatus("active");
-                } else if (lastDonationDate.moreThanThreeMonthsAgo(currentDate) &&donor.getStatus() .equals("active")) {
-                    donor.setStatus("inactive");
+                if (lastDonationDate.withinPassWeek(currentDate) && !donor.getStatus().equals("Active")) {
+                    donor.setStatus("Active");
+                } else if (lastDonationDate.moreThanThreeMonthsAgo(currentDate) &&donor.getStatus() .equals("Active")) {
+                    donor.setStatus("Inactive");
                 }
             }
         }
