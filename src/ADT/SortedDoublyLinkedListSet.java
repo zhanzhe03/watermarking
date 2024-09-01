@@ -171,40 +171,6 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
     }
 
     @Override
-    public int indexOf(T entry) {
-        Node currentNode = firstNode;
-        int position = 1; // Start with 1-based index
-
-        while (currentNode != null) {
-            if (currentNode.data.equals(entry)) {
-                return position; // Item found, return the current position
-            }
-            currentNode = currentNode.next;
-            position++;
-        }
-
-        return -1; // Item not found, return -1
-    }
-
-
-    @Override
-    public T setIndex(int givenPosition, T newEntry) {
-        if (givenPosition < 1 || givenPosition > getNumberOfEntries()) {
-            throw new IndexOutOfBoundsException("Invalid position");
-        }
-
-        Node currentNode = firstNode;
-        for (int counter = 1; counter < givenPosition; counter++) {
-            currentNode = currentNode.next;
-        }
-
-        T oldData = currentNode.data;
-        currentNode.data = newEntry; // Set the new entry at the given position
-
-        return oldData; // Return the old entry
-    }
-
-    @Override
     public int getNumberOfEntries() {
         return numberOfEntries;
     }

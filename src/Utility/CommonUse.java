@@ -9,13 +9,39 @@ import Entity.Donation;
 import Entity.Donor;
 import Entity.Item;
 import Entity.Donee;
+import Entity.Distribution;
+import Entity.SelectedItem;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author szewen
  */
 public class CommonUse {
+
+    public static int countType(String type, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> items) {
+        int count = 0;
+        Iterator<Distribution> iterator = distributions.getIterator();
+        do {
+            Distribution distribution = iterator.next();
+            Iterator<SelectedItem> i = distribution.getDistributedItemList().getIterator();
+            do {
+                SelectedItem selectedItem = i.next();
+                String id = selectedItem.getItemId();
+                Item item = findItem(id, items);
+                if (item.getType().equalsIgnoreCase(type)) {
+                    count++;
+                }
+            } while (i.hasNext());
+        } while (iterator.hasNext());
+        return count;
+    }
+    
+   
+    
+  
 
     public static Donor findDonor(String contact, SortedListSetInterface<Donor> donors) {
         Iterator<Donor> iterator = donors.getIterator();
@@ -49,6 +75,17 @@ public class CommonUse {
         } while (iterator.hasNext());
         return null;
     }
+    
+    public static Donation findDonationByItem(Item item, SortedListSetInterface<Donation> donations) {
+        Iterator<Donation> iterator = donations.getIterator();
+        do {
+            Donation donation = iterator.next();
+            if (donation.getDonatedItemList().contains(item)) {
+                return donation;
+            }
+        } while (iterator.hasNext());
+        return null;
+    }
 
     public static Item findItem(String id, SortedListSetInterface<Item> items) {
         Iterator<Item> iterator = items.getIterator();
@@ -76,4 +113,12 @@ public class CommonUse {
         printItemTitle();
         printItemEnDash();
     }
+
+    public static boolean validateDateFormat(String date) {
+        String regex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(date);
+        return matcher.matches();
+    }
+
 }
