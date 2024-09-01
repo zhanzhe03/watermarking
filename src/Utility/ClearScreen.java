@@ -21,7 +21,7 @@ public class ClearScreen {
                 rob.keyPress(KeyEvent.VK_L); // press "L"
                 rob.keyRelease(KeyEvent.VK_L); // unpress "L"
                 rob.keyRelease(KeyEvent.VK_CONTROL); // unpress "CTRL"
-                Thread.sleep(10); // add delay in milisecond, if not there will automatically stop after clear
+                Thread.sleep(1000); // add delay in milisecond, if not there will automatically stop after clear
             } catch (InterruptedException e) {
                 //;e.printStackTrace();
             }
