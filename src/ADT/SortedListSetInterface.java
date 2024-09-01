@@ -35,5 +35,8 @@ public interface SortedListSetInterface<T extends Comparable<T>> {
 
     public void clear();
 
-    public Iterator<T> getIterator(); 
+    public Iterator<T> getIterator();
+    
+    public boolean intersect(SortedListSetInterface<T> anotherSet);
+
 }

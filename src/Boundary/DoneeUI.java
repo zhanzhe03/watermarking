@@ -25,6 +25,10 @@ public class DoneeUI {
         }
     }
 
+    public LocalDate getLocalDate() {
+        return LocalDate.now();
+    }
+
     public String getDoneeMenu() {
         System.out.println(""
                 + "\nDONEE MANAGEMENT"
@@ -130,8 +134,8 @@ public class DoneeUI {
     public String getFilterMenu() {
         System.out.println(""
                 + "\nDONEE FILTER MANAGEMENT"
-                + "\n 1. Filter donee from date to date that receive item (Sort By DoneeID ASC)"
-                + "\n 2. Filter donee based on item receive (Sort By DoneeID ASC)"
+                + "\n 1. Filter donee from date to date that receive item"
+                + "\n 2. Filter donee based on item receive"
                 + "\n 3. Back to Donee MENU");
         System.out.print("\nopt > ");
         String opt = scanner.nextLine();
@@ -152,29 +156,33 @@ public class DoneeUI {
     public void printText(String text) {
         System.out.println(text);
     }
-    
+
     public void printSummaryHeader(Date startDate, Date endDate) {
-        System.out.printf("\n%-40s %-20s %-20s", "", "Summary Report", "");
-        System.out.printf("\n%-40s The date start :%-12s to end :%-12s\n", "",startDate,endDate);
+        System.out.printf("\n%-55s %-20s %-20s", "", "Summary Report", "");
+        System.out.printf("\n%-40s The date start :%-12s to end :%-12s\n", "", startDate, endDate);
     }
 
     public void printDoneeTitle() {
         System.out.printf("\n%-15s %-20s %-20s %-25s %-20s %-30s %-14s %-20s %-20s %-20s\n", "Donee ID", "Donee Type", "Donee Name", "Email", "Contact", "Address", "Location", "Register Date", "Request Date", "Request Item");
     }
+    
+    public void printRegisterDoneeTitle() {
+    System.out.printf("\n|%-15s | %-20s | %-20s | %-30s |\n", "Donee ID", "Donee Type", "Register Date", "Request Item");
+}
 
     public void donationTitle() {
         System.out.printf("\n%-15s %-30s %-20s %-20s %-10s\n", "Donee ID", "Receive Item", "Recevice Date", "Item ID", "Quantity/Amount");
     }
-    
-    public void filterByItemHeader(){
+
+    public void filterByItemHeader() {
         System.out.printf("\n%-15s %-30s %-20s\n", "Donee ID", "Receive Item", "Receive Date");
     }
 
     public void printAllDonees(SortedListSetInterface<Donee> donees) {
         System.out.println(donees);
     }
-    
-    public void requestReceiveTitle(){
+
+    public void requestReceiveTitle() {
         System.out.println("                                      Report of Donee with Requst & Receive item");
     }
 
@@ -216,19 +224,9 @@ public class DoneeUI {
         return address;
     }
 
-    public Date getRequestDate() {
-        int day, month, year;
-
-        System.out.print("Enter day (1-31): ");
-        day = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Enter month (1-12): ");
-        month = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Enter year (e.g., 2024): ");
-        year = Integer.parseInt(scanner.nextLine());
-
-        return new Date(day, month, year);
+    public String getInputString(String desc) {
+        System.out.print(desc);
+        return scanner.nextLine();
     }
 
     public String confirmOperation() {

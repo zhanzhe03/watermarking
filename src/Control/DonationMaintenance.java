@@ -397,9 +397,9 @@ public class DonationMaintenance {
                     String email = getValidEmail();
                     String address = donationUI.getInputString("Address: ");
                     String category = donationUI.getInputString("Category: ");
-                    return new Donor(newDonorId, name, name, contact, email, address, category, "active");
+                    return new Donor(newDonorId, name, name, contact, email, address, category, getCurrentDate());
                 case 2:
-                    return new Donor(newDonorId, "Anonymous", "Anonymous", contact, "Anonymous", "Anonymous", "Anonymous", "active");
+                   return new Donor(newDonorId, "Anonymous", "Anonymous", contact, "Anonymous", "Anonymous", "Anonymous",getCurrentDate());
                 default:
                     MessageUI.displayInvalidOptionMessage();
                     break;

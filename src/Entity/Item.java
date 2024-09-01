@@ -8,7 +8,7 @@ package Entity;
  *
  * @author USER
  */
-public class Item implements Comparable<Item> {
+public class Item implements Comparable<Item>, Cloneable {
 
     private String itemId;
     private String type;
@@ -156,6 +156,15 @@ public class Item implements Comparable<Item> {
 
     private double calculateTotalAmount() {
         return (double) this.quantity * this.valuePerItem;
+    }
+    
+    @Override
+    public Item clone() {
+        try {
+            return (Item) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Should never happen
+        }
     }
 
 //    @Override
