@@ -1091,9 +1091,8 @@ public class DistributionManager {
         if (monetaryCount > 0) {
             distributionUI.displayMessage("Monetary Count: " + monetaryCount);
 
-         uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Monetary");
-                        printUniqueSLID(uniqueSelected);
-
+            uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Monetary");
+            printUniqueSLID(uniqueSelected);
 
         }
 
@@ -1105,7 +1104,7 @@ public class DistributionManager {
 
         if (fnbCount > 0) {
             distributionUI.displayMessage("Food and Beverage Count: " + fnbCount);
-             uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Food and Beverage");
+            uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Food and Beverage");
             printUniqueSLID(uniqueSelected);
         }
 
@@ -1117,70 +1116,84 @@ public class DistributionManager {
 
         if (eduCount > 0) {
             distributionUI.displayMessage("Educational Materials Count: " + eduCount);
-             uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Educational Materials");
+            uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Educational Materials");
             printUniqueSLID(uniqueSelected);
         }
 
         if (elecCount > 0) {
             distributionUI.displayMessage("Electronic Count: " + elecCount);
-             uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Electronic");
+            uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Electronic");
             printUniqueSLID(uniqueSelected);
         }
 
         if (medCount > 0) {
             distributionUI.displayMessage("Medical Count: " + medCount);
-             uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Medical");
+            uniqueSelected = getItemUniquely(distRecords, donatedItemList, "Medical");
             printUniqueSLID(uniqueSelected);
         }
 
     }
 
-    private SortedListSetInterface<SelectedItem> getItemUniquely(SortedListSetInterface<Distribution> distRecords, 
-                                                             SortedListSetInterface<Item> donatedItemList, 
-                                                             String type) {
-    SortedListSetInterface<SelectedItem> uniqueSelected = new SortedDoublyLinkedListSet<>();
+    private SortedListSetInterface<SelectedItem> getItemUniquely(SortedListSetInterface<Distribution> distRecords,
+            SortedListSetInterface<Item> donatedItemList,
+            String type) {
+        SortedListSetInterface<SelectedItem> uniqueSelected = new SortedDoublyLinkedListSet<>();
 
-    // Iterate over each distribution record
-    Iterator<Distribution> distIterator = distRecords.getIterator();
-    while (distIterator.hasNext()) {
-        Distribution currentDist = distIterator.next();
+        // Iterate over each distribution record
+        Iterator<Distribution> distIterator = distRecords.getIterator();
+        while (distIterator.hasNext()) {
+            Distribution currentDist = distIterator.next();
 
-        // Iterate over each selected item in the current distribution
-        Iterator<SelectedItem> slIterator = currentDist.getDistributedItemList().getIterator();
-        while (slIterator.hasNext()) {
-            SelectedItem currentSL = slIterator.next();
-            String currentItemId = currentSL.getItemId();
+            // Iterate over each selected item in the current distribution
+            Iterator<SelectedItem> slIterator = currentDist.getDistributedItemList().getIterator();
+            while (slIterator.hasNext()) {
+                SelectedItem currentSL = slIterator.next();
+                String currentItemId = currentSL.getItemId();
 
-            // Check if the selected item matches the required type
-            Iterator<Item> itemIterator = donatedItemList.getIterator();
-            while (itemIterator.hasNext()) {
-                Item currentItem = itemIterator.next();
-                if (currentItem.getItemId().equalsIgnoreCase(currentItemId) && 
-                    currentItem.getType().equalsIgnoreCase(type)) {
+                // Check if the selected item matches the required type
+                Iterator<Item> itemIterator = donatedItemList.getIterator();
+                while (itemIterator.hasNext()) {
+                    Item currentItem = itemIterator.next();
+                    if (currentItem.getItemId().equalsIgnoreCase(currentItemId)
+                            && currentItem.getType().equalsIgnoreCase(type)) {
 
-                    // Add to the set if it's not already present
-                    if (uniqueSelected.indexOf(currentSL) == -1) {
-                        uniqueSelected.add(currentSL);
+                        // Add to the set if it's not already present
+//                    if (uniqueSelected.indexOf(currentSL) == -1) {
+//                        uniqueSelected.add(currentSL);
+//                    }
+                        //if(uniqueSelected.contains(currentSL))
+                        //break; // Exit the loop once the matching item is found
+                          Iterator<SelectedItem> uniqueIterator = uniqueSelected.getIterator();
+                          boolean alreadyExists=false;
+                        while (uniqueIterator.hasNext()) {
+                            SelectedItem uniqueItem = uniqueIterator.next();
+                            if (uniqueItem.getItemId().equalsIgnoreCase(currentItemId)) {
+                                alreadyExists = true;
+                                break; // Stop checking once a match is found
+                            }
+                        }
+
+                        // If the item ID doesn't exist, add the currentSL to the uniqueSelected list
+                        if (!alreadyExists) {
+                            uniqueSelected.add(currentSL);
+                        }
                     }
-                    break; // Exit the loop once the matching item is found
                 }
             }
         }
+
+        return uniqueSelected;
     }
 
-    return uniqueSelected;
-}
-    
-    private void printUniqueSLID( SortedListSetInterface<SelectedItem> uniqueSelected ){
+    private void printUniqueSLID(SortedListSetInterface<SelectedItem> uniqueSelected) {
         Iterator<SelectedItem> slIterator = uniqueSelected.getIterator();
-        
-        while(slIterator.hasNext()){
+
+        while (slIterator.hasNext()) {
             SelectedItem currentSL = slIterator.next();
             distributionUI.displayMessage("" + currentSL.getItemId());
         }
-    
-    }
 
+    }
 
     private boolean validateDate(int day, int month, int year) {
 
