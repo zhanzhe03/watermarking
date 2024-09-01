@@ -20,17 +20,19 @@ public class Donation implements Comparable<Donation> {
     private String status;
     private Donor donor;
 
-    public Donation(String donationId, Date donationDate, Donor donor) {
+    public Donation(String donationId, Date donationDate, String status,Donor donor) {
         this.donationId = donationId;
         this.donationDate = donationDate;
         this.donatedItemList = new SortedDoublyLinkedListSet<>();
+        this.status = status;
         this.donor = donor;
     }
 
-    public Donation(String donationId, Date donationDate) {
+    public Donation(String donationId, Date donationDate, String status) {
         this.donationId = donationId;
         this.donationDate = donationDate;
         this.donatedItemList = new SortedDoublyLinkedListSet<>();
+        this.status = status;
     }
 
     //get the identifier field for sorting, start
@@ -96,6 +98,14 @@ public class Donation implements Comparable<Donation> {
     public void setDonatedItemList(SortedListSetInterface<Item> donatedItemList) {
         this.donatedItemList = donatedItemList;
     }
+    
+    public String getStatus(){
+        return status;
+    }
+    
+    public void setStatus(String status){
+        this.status = status;
+    }
 
     public Donor getDonor() {
         return donor;
@@ -111,18 +121,15 @@ public class Donation implements Comparable<Donation> {
 
     @Override
     public String toString() {
-        String outputStr = String.format("\n%-14s  %-16s  ", donationId, donationDate);
+        String outputStr = String.format("\n%-14s  %-16s  %-19s  ", donationId, donationDate, status);
         Iterator<Item> iterator = donatedItemList.getIterator();
         Item item = iterator.next();
         outputStr += String.format(item + "");
         while (iterator.hasNext()) {
             item = iterator.next();
-            outputStr += String.format("\n%-14s  %-16s  ", "", "");
+            outputStr += String.format("\n%-14s  %-16s  %-19s  ","", "", "");
             outputStr += String.format(item + "");
         }
-//        if(donor != null){
-//            outputStr += String.format(donor.getDonorId() + "  " + donor.getName() + "  " + donor.getContact());
-//        }
         return outputStr;
     }
 

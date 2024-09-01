@@ -40,30 +40,35 @@ public class Date {
         this.year = year;
     }
 
-    public boolean beforeDate(Date otherDate) {
-        if (this.year < otherDate.year) {
-            return true;
-        } else if (this.year == otherDate.year) {
-            if (this.month < otherDate.month) {
-                return true;
-            } else if (this.month == otherDate.month) {
-                return this.day < otherDate.day;
-            }
+    public int compareTo(Date otherDate) {
+        if (this.year != otherDate.year) {
+            return Integer.compare(this.year, otherDate.year);
+        } else if (this.month != otherDate.month) {
+            return Integer.compare(this.month, otherDate.month);
+        } else {
+            return Integer.compare(this.day, otherDate.day);
         }
-        return false;
+    }
+    
+    public boolean afterDate(Date otherDate) {
+        return this.compareTo(otherDate) > 0;
     }
 
-    public boolean afterDate(Date otherDate) {
-        if (this.year > otherDate.year) {
-            return true;
-        } else if (this.year == otherDate.year) {
-            if (this.month > otherDate.month) {
-                return true;
-            } else if (this.month == otherDate.month) {
-                return this.day > otherDate.day;
+    public boolean beforeDate(Date otherDate) {
+        return this.compareTo(otherDate) < 0;
+    }
+    
+    public boolean overTwoDays(Date otherDate){
+        int numberOfDays = 0;
+        if(this.year + 1 == otherDate.year){
+            if(this.month == 12 && otherDate.month == 1){
+                numberOfDays = (31 - this.day) + otherDate.day;
             }
+        }else if(this.year == otherDate.year){
+            numberOfDays = otherDate.convertToDays() - this.convertToDays();
         }
-        return false;
+        
+        return numberOfDays > 2;
     }
 
     //check within pass week
@@ -232,15 +237,5 @@ public class Date {
     public int hashCode() {
         int hash = 7;
         return hash;
-    }
-
-    public int compareTo(Date other) {
-        if (this.year != other.year) {
-            return Integer.compare(this.year, other.year);
-        }
-        if (this.month != other.month) {
-            return Integer.compare(this.month, other.month);
-        }
-        return Integer.compare(this.day, other.day);
     }
 }

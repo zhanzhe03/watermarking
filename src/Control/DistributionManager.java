@@ -32,6 +32,7 @@ public class DistributionManager {
         SortedListSetInterface<Item> donatedItemList = entityInitialize.getItems();
         SortedListSetInterface<Donee> donees = entityInitialize.getDonees();
         SortedListSetInterface<SelectedItem> distributedItemList = entityInitialize.getDistributedItem();
+        SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
 
         updateDistributionStatus(distributions);
 
@@ -47,7 +48,7 @@ public class DistributionManager {
                         break;
                     case 2:
                         //ClearScreen.clearJavaConsoleScreen();
-                        AddNewDistribution(donatedItemList, distributions, donees);
+                        AddNewDistribution(donatedItemList, distributions, donees, donations);
                         break;
                     case 3:
                         // ClearScreen.clearJavaConsoleScreen();
@@ -105,7 +106,7 @@ public class DistributionManager {
 
 //**** Adding purpose  //done ask whether add other items into same distribution
     //done ask add another distribution?   distribute according request and remove request
-    public void AddNewDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees) {
+    public void AddNewDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees, SortedListSetInterface<Donation> donations) {
         String input;
         boolean isContinue = false;
         boolean foundType;
@@ -209,7 +210,7 @@ public class DistributionManager {
                     Item inputItem = checkItemExist(donatedItemList, input); // Check if the item exists              
                     if (inputItem != null) { // If item is found
                         if (inputItem.getType().equalsIgnoreCase("Monetary")) {
-                            if (StockUI.checkMonetary("Monetary", donatedItemList)) {
+                            if (StockUI.checkMonetary("Monetary", donations)) {
                                 isContinue = handleMonetaryItem(inputItem, newDistribution, distributions, minttlAmt, selectedDonee);
                                 isDistributionMatchingRequest(newDistribution, selectedDonee, donatedItemList);
 
@@ -218,7 +219,7 @@ public class DistributionManager {
                                 isContinue = false;
                             }
                         } else {
-                            if (StockUI.checkInventory(inputItem.getType(), donatedItemList)) {
+                            if (StockUI.checkInventory(inputItem.getType(), donations)) {
                                 isContinue = handleNonMonetaryItem(inputItem, newDistribution, distributions);
                                 isDistributionMatchingRequest(newDistribution, selectedDonee, donatedItemList);
 

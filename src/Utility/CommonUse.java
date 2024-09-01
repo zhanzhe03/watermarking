@@ -75,6 +75,17 @@ public class CommonUse {
         } while (iterator.hasNext());
         return null;
     }
+    
+    public static Donation findDonationByItem(Item item, SortedListSetInterface<Donation> donations) {
+        Iterator<Donation> iterator = donations.getIterator();
+        do {
+            Donation donation = iterator.next();
+            if (donation.getDonatedItemList().contains(item)) {
+                return donation;
+            }
+        } while (iterator.hasNext());
+        return null;
+    }
 
     public static Item findItem(String id, SortedListSetInterface<Item> items) {
         Iterator<Item> iterator = items.getIterator();

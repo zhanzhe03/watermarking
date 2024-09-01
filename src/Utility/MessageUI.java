@@ -4,6 +4,8 @@
  */
 package Utility;
 
+import Entity.Item;
+
 /**
  *
  * @author USER
@@ -17,6 +19,19 @@ public class MessageUI {
      private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_BLACK = "\u001B[0m";
     
+    public static void displayTextColorExplanation(){
+        System.out.println("*Donated items in pending status or expired items are not included in Available inventory.");
+        System.out.println(ANSI_BLUE + "Blue Color Record > " + ANSI_BLACK + "Pending Status");
+        System.out.println(ANSI_RED + "RED Color Record > " + ANSI_BLACK + "Expired Item");
+    }
+    
+    public static void displayPendingItemInBlueColor(Item item){
+        System.out.println(ANSI_BLUE + item + ANSI_BLACK);
+    }
+    
+    public static void displayExpiredItemInRedColor(Item item){
+        System.out.println(ANSI_RED + item + ANSI_BLACK);
+    }
     
     public static void diplayEnDash(){
         for (int i = 0; i < 140; i++) 
