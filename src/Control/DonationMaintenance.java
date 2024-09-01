@@ -387,7 +387,7 @@ public class DonationMaintenance {
     private boolean checkDonorStatus(Donor donor) {
         return !donor.getStatus().equalsIgnoreCase("Banned");
     }
-    
+
     //donor details on hold
     private Donor registeredNewDonor(String contact, SortedListSetInterface<Donor> donors) {
         int lastDonorId = Integer.parseInt(donors.getLastEntries().getDonorId().substring(2)) + 1;
@@ -401,9 +401,9 @@ public class DonationMaintenance {
                     String email = getValidEmail();
                     String address = donationUI.getInputString("Address: ");
                     String category = donationUI.getInputString("Category: ");
-                    //return new Donor(newDonorId, name, name, contact, email, address, category, "active");
+                //return new Donor(newDonorId, name, name, contact, email, address, category, "active");
                 case 2:
-                    //return new Donor(newDonorId, "Anonymous", "Anonymous", contact, "Anonymous", "Anonymous", "Anonymous", "active");
+                //return new Donor(newDonorId, "Anonymous", "Anonymous", contact, "Anonymous", "Anonymous", "Anonymous", "active");
                 default:
                     MessageUI.displayInvalidOptionMessage();
                     break;
@@ -447,19 +447,19 @@ public class DonationMaintenance {
             boolean isFullyDistributed = checkDonationFullyDistributed(donation);
             if (donation.getStatus().equalsIgnoreCase("Pending") && !donation.getDonationDate().withinTwoDays(getCurrentDate())) {
                 donation.setStatus("Processing");
-            }else if(!donation.getStatus().equalsIgnoreCase("Fully Distributed") && isFullyDistributed){
+            } else if (!donation.getStatus().equalsIgnoreCase("Fully Distributed") && isFullyDistributed) {
                 donation.setStatus("Fully Distributed");
             }
         } while (iterator.hasNext());
     }
-    
-    private boolean checkDonationFullyDistributed(Donation donation){
+
+    private boolean checkDonationFullyDistributed(Donation donation) {
         double ttlAmount = 0;
         Iterator<Item> iterator = donation.getDonatedItemList().getIterator();
-        do{
+        do {
             Item item = iterator.next();
             ttlAmount += item.getTotalAmount();
-        }while(iterator.hasNext());
+        } while (iterator.hasNext());
         return ttlAmount == 0;
     }
 
@@ -696,6 +696,8 @@ public class DonationMaintenance {
                         donations.add(newDonation);
                         items.merge(newDonatedItems);
                         MessageUI.displaySuccessfulMessage();
+                        Donation clonedDonation = newDonation.clone();
+                        donor.addDonationToList(clonedDonation);
                     } else {
                         MessageUI.displayDonorStatusUnsuccessfulMessage();
                     }
@@ -706,6 +708,8 @@ public class DonationMaintenance {
                     donations.add(newDonation);
                     items.merge(newDonatedItems);
                     MessageUI.displaySuccessfulMessage();
+                    Donation clonedDonation = newDonation.clone();
+                    donor.addDonationToList(clonedDonation);
                 }
             } else {
                 MessageUI.displayUnsuccessfulMessage();
