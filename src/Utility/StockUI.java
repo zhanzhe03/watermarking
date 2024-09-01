@@ -4,6 +4,7 @@
  */
 package Utility;
 
+import ADT.SortedDoublyLinkedListSet;
 import ADT.SortedListSetInterface;
 import Entity.Date;
 import Entity.Item;
@@ -132,5 +133,30 @@ public class StockUI {
 
     public static boolean checkMonetary(String type, SortedListSetInterface<Donation> donations) {
         return getTotalAmount(type, donations) >= minimunInventory(type);
+    }
+    
+    public static SortedListSetInterface<Item> getAvailableItemList(SortedDoublyLinkedListSet<Donation> donations){
+        SortedListSetInterface<Item> availableItemList = new SortedDoublyLinkedListSet<>();
+        Iterator<Donation> iterator = donations.getIterator();
+        do{
+            Donation donation = iterator.next();
+            if(donation.getStatus().equalsIgnoreCase("Distributing") && donation.getStatus().equalsIgnoreCase("Processing")){
+                availableItemList.merge(donation.getDonatedItemList());
+            }
+        }while(iterator.hasNext());
+        
+        
+        return filterOutExpiredItem(availableItemList);
+    } 
+    
+    public static SortedListSetInterface<Item> filterOutExpiredItem(SortedListSetInterface<Item> items){
+        Iterator<Item> iterator = items.getIterator();
+        do{
+            Item item = iterator.next();
+            if(item.getExpiryDate().beforeDate(getCurrentDate())){
+                items.remove(item);
+            }
+        }while(iterator.hasNext());
+        return items;
     }
 }

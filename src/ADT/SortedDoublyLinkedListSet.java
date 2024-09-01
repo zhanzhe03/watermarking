@@ -141,9 +141,9 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
     public boolean contains(T anEntry) {
         boolean found = false;
         Node currentNode = firstNode;
-
+        
         while (!found && currentNode != null) {
-            if (anEntry.compareTo(currentNode.data) == 0) {
+            if (anEntry.equals(currentNode.data)) {
                 found = true;
             } else {
                 currentNode = currentNode.next;
