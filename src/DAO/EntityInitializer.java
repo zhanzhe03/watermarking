@@ -31,7 +31,7 @@ public class EntityInitializer {
     public SortedListSetInterface<Donation> getDonations() {
         return donations;
     }
-    
+
     public SortedListSetInterface<Donation> getDonationsHistory() {
         return donationsHistory;
     }
@@ -57,9 +57,9 @@ public class EntityInitializer {
     }
 
     public void entityEnitialize() {
-        Donor donor1 = new Donor("DR001","Public Organisation", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
-        Donor donor2 = new Donor("DR002", "Private Organisation","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
-        Donor donor3 = new Donor("DR003", "Government Organisation","Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur",new Date(21, 5, 2022), "Active");
+        Donor donor1 = new Donor("DR001", "Public Organisation", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
+        Donor donor2 = new Donor("DR002", "Private Organisation", "Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
+        Donor donor3 = new Donor("DR003", "Government Organisation", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", new Date(21, 5, 2022), "Active");
 
         Donee donee1 = new Donee("DE001", "INDIVIDUAL", "TAN JIAN QUAN", "jianquan@gmail.com", "0125030510", "No80 Taman Gembira", "Location A", new Date(10, 2, 2022));
         Donee donee2 = new Donee("DE002", "ORGANIZATION", "TARUMT FOOD BANK", "tarumtoffice@gmail.com", "0125558888", "JALAN TUNKU ABDUL RAHMAN", "Location B", new Date(2, 3, 2022));
@@ -111,12 +111,12 @@ public class EntityInitializer {
         Item item18 = new Item("I018", "Medical", "First and Kit", 3, 50);
         Item item19 = new Item("I019", "Monetary", "Cash", 10000);
 
-        Donation donation1 = new Donation("D001", new Date(22, 7, 2024), "Distributing",donor1);
-        Donation donation2 = new Donation("D002", new Date(28, 7, 2024), "Processing",donor2);
-        Donation donation3 = new Donation("D003", new Date(3, 8, 2024), "Fully Distributed",donor3);
-        Donation donation4 = new Donation("D004", new Date(19, 8, 2024), "Distributing",donor1);
-        Donation donation5 = new Donation("D005", new Date(30, 8, 2024), "Pending",donor2);
-        Donation donation6 = new Donation("D006", new Date(1, 9, 2024), "Pending",donor1);
+        Donation donation1 = new Donation("D001", new Date(22, 7, 2024), "Distributing", donor1);
+        Donation donation2 = new Donation("D002", new Date(28, 7, 2024), "Processing", donor2);
+        Donation donation3 = new Donation("D003", new Date(3, 8, 2024), "Fully Distributed", donor3);
+        Donation donation4 = new Donation("D004", new Date(19, 8, 2024), "Distributing", donor1);
+        Donation donation5 = new Donation("D005", new Date(30, 8, 2024), "Pending", donor2);
+        Donation donation6 = new Donation("D006", new Date(1, 9, 2024), "Pending", donor1);
 
         donation1.assignItems(item1);
         donation1.assignItems(item2);
@@ -145,6 +145,10 @@ public class EntityInitializer {
         Distribution distribution5 = new Distribution("DIST005", new Date(1, 9, 2024));
         Distribution distribution6 = new Distribution("DIST006", new Date(1, 9, 2024));
 
+        SortedDoublyLinkedListSet<Donee> doneeList1 = new SortedDoublyLinkedListSet<>();
+        doneeList1.add(donee1);
+        doneeList1.add(donee4);
+        Distribution distribution7 = new Distribution("DIST007", new Date(1, 8, 2024), doneeList1);
         // Create a selected item
         SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
         SelectedItem selectedItem2 = new SelectedItem("I002", 50);
@@ -173,6 +177,8 @@ public class EntityInitializer {
 
         distribution6.addDonee(donee1);
         distribution6.addSelectedItem(selectedItem6);
+        
+        distribution7.addSelectedItem(selectedItem6);
 
         distributions.add(distribution1);
         distributions.add(distribution2);
@@ -180,6 +186,7 @@ public class EntityInitializer {
         distributions.add(distribution4);
         distributions.add(distribution5);
         distributions.add(distribution6);
+        distributions.add(distribution7);
 
         donors.add(donor1);
         donors.add(donor2);
@@ -226,15 +233,13 @@ public class EntityInitializer {
         donees.add(donee3);
         donees.add(donee4);
         donees.add(donee5);
-          
+
 //        donor1.addDonationToList(donation1.clone());
 //        donor2.addDonationToList(donation2.clone());
 //        donor3.addDonationToList(donation3.clone());
 //        donor2.addDonationToList(donation4.clone());
 //        donor3.addDonationToList(donation5.clone());
 //        donor2.addDonationToList(donation6.clone());
-        
-        
         Iterator<Donation> donationIterator = donations.getIterator();
         while (donationIterator.hasNext()) {
             Donation donation = donationIterator.next();
@@ -252,6 +257,6 @@ public class EntityInitializer {
                     break;
                 }
             }
-    }
+        }
     }
 }

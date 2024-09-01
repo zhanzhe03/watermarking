@@ -44,6 +44,18 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         this.status = "PENDING";
     }
 
+    public Distribution(String distributionId, Date distributionDate, SortedListSetInterface<Donee> distributedDoneeList) {
+        this.distributionId = distributionId;
+        this.distributionDate = distributionDate;
+        this.distributedItemList = new SortedDoublyLinkedListSet<>();
+        this.distributedDoneeList = distributedDoneeList;
+        this.status="MERGED";
+    }
+    
+    
+    
+    
+
     public void addSelectedItem(SelectedItem selectedItem) {
         distributedItemList.add(selectedItem);
     }
@@ -96,10 +108,40 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         this.status = status;
     }
 
+    
+        //get the identifier field for sorting, start
+    public static void setSortByCriteria(SortByCriteria criteria) {
+        sortByCriteria = criteria;
+    }
+
+    public static SortByCriteria sortByCriteria = SortByCriteria.DISTID_INASC;
+
+    public enum SortByCriteria {
+        DISTID_INASC,
+        DISTID_INDESC,
+        DISTRIBUTIONDATE_INASC,
+        DISTRIBUTIONDATE_INDESC;
+    }
+
     @Override
     public int compareTo(Distribution other) {
-        return this.distributionId.compareTo(other.distributionId);
+        if (other == null) {
+            throw new NullPointerException("Cannot compare to a null object");
+        }
+        switch (sortByCriteria) {
+            case DISTID_INASC:
+                return this.distributionId.compareTo(other.distributionId);
+            case DISTID_INDESC:
+                return other.distributionId.compareTo(this.distributionId);
+            case DISTRIBUTIONDATE_INASC:
+                return this.distributionDate.compareTo(other.distributionDate);
+            case DISTRIBUTIONDATE_INDESC:
+                return other.distributionDate.compareTo(this.distributionDate);
+            default:
+                return this.distributionId.compareTo(other.distributionId);
+        }
     }
+
 
     @Override
     public String toString() {

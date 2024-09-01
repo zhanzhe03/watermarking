@@ -46,7 +46,7 @@ public class DistributionManager {
                 switch (opt) {
                     case 1:
                         //ClearScreen.clearJavaConsoleScreen();
-                        ListAllDistributions(distributions, availableItemList, donees);
+                        ListAllDistributions(distributions);
                         break;
                     case 2:
                         //ClearScreen.clearJavaConsoleScreen();
@@ -84,27 +84,91 @@ public class DistributionManager {
     }
 
     private void updateDistributionStatus(SortedListSetInterface<Distribution> distributions) {
-        Date currentDate = new Date(localDay, localMonth, localYear);
+        Date currentDate = new Date(localDay, localMonth, localYear); // Assume localDay, localMonth, and localYear are properly initialized
         Iterator<Distribution> iterator = distributions.getIterator();
+
         while (iterator.hasNext()) {
             Distribution currentRecord = iterator.next();
             Date distributedDate = currentRecord.getDistributionDate();
             int daysBetween = currentDate.daysBetween(distributedDate);
-            if (daysBetween >= 2) {
-                currentRecord.setStatus("DISTRIBUTED");
-            } else if (daysBetween == 1) {
-                currentRecord.setStatus("SHIPPED");
-            } else {
-                currentRecord.setStatus("PENDING"); // Or another default status if needed
+
+            // Update status based on the number of days and the current status
+            if (currentRecord.getStatus().equalsIgnoreCase("MERGED")) {
+                if (daysBetween >= 2) {
+                    currentRecord.setStatus("DISTRIBUTED");
+                } else if (daysBetween == 1) {
+                    currentRecord.setStatus("SHIPPED");
+                }
+            } else { // For records that are not "MERGED"
+                if (daysBetween >= 2) {
+                    currentRecord.setStatus("DISTRIBUTED");
+                } else if (daysBetween == 1) {
+                    currentRecord.setStatus("SHIPPED");
+                } else {
+                    currentRecord.setStatus("PENDING"); // Or another default status if needed
+                }
             }
         }
-
     }
 
-    public void ListAllDistributions(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> availableItemList,
-            SortedListSetInterface<Donee> donees) {
+    public void ListAllDistributions(SortedListSetInterface<Distribution> distributions) {
+        // Default: List all distributions sorted by Distribution ID in ascending order
+        Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INASC);
+        distributions.reSort();
         distributionUI.listAllDistributions(distributions);
+
+        // Ask user if they want to list distributions with a different sorting method
+        listDistribution(distributions);
     }
+
+   public void listDistribution(SortedListSetInterface<Distribution> distributions) {
+    // Ask the user if they want to sort the list
+    boolean sortList = distributionUI.askIfSort(); // Assuming askIfSort() returns a boolean
+    
+    if (sortList) {
+        int opt;
+        do {
+            opt = distributionUI.displaySortingMenu(); // Display the menu and get the user's choice
+            switch (opt) {
+                case 1:
+                    ClearScreen.clearJavaConsoleScreen();
+                    distributionUI.displayMessage("All Distribution Records sorted by Distribution ID in Ascending Order");
+                    Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INASC);
+                    break;
+                case 2:
+                    ClearScreen.clearJavaConsoleScreen();
+                    distributionUI.displayMessage("All Distribution Records sorted by Distribution ID in Descending Order");
+                    Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INDESC);
+                    break;
+                case 3:
+                    ClearScreen.clearJavaConsoleScreen();
+                    distributionUI.displayMessage("All Distribution Records sorted by Distribution Date in Ascending Order");
+                    Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTRIBUTIONDATE_INASC);
+                    break;
+                case 4:
+                    ClearScreen.clearJavaConsoleScreen();
+                    distributionUI.displayMessage("All Distribution Records sorted by Distribution Date in Descending Order");
+                    Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTRIBUTIONDATE_INDESC);
+                    break;
+                case 9:
+                    ClearScreen.clearJavaConsoleScreen();
+                    distributionUI.displayMessage("Exiting...");
+                    break;
+                default:
+                    MessageUI.displayInvalidOptionMessage();
+                    break;
+            }
+
+            if (opt >= 1 && opt <= 4) {
+                distributions.reSort();
+                distributionUI.listAllDistributions(distributions);
+            }
+        } while (opt != 9);
+    } else {
+        distributionUI.displayMessage("No sorting applied. Exiting...");
+    }
+}
+
 
 //**** Adding purpose  //done ask whether add other items into same distribution
     //done ask add another distribution?   distribute according request and remove request
@@ -475,7 +539,7 @@ public class DistributionManager {
     //record cant be changed after 2 days from distributed date done
     public void UpdateDonationDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees) {
         // List all distributions and get the distribution ID to update
-        ListAllDistributions(distributions, donatedItemList, donees);
+        ListAllDistributions(distributions);
         String updateDistID = distributionUI.getInputString("\nPlease enter the distribution ID that you would like to update ('Q' quit ) > ");
         if (updateDistID.equalsIgnoreCase("Q")) {
             return;
@@ -1058,6 +1122,7 @@ public class DistributionManager {
                                     MessageUI.displayMagentaPreviewMsg("Shipped On: ");
                                     MessageUI.displayMagentaPreviewMsg(currentDistribution.getDistributionDate().addDays(1) + "\n");
                                 }
+
                             }
                         }
                     }
