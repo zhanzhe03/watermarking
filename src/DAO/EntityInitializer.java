@@ -136,13 +136,13 @@ public class EntityInitializer {
         Distribution distribution2 = new Distribution("DIST002", new Date(1, 8, 2024));
         Distribution distribution3 = new Distribution("DIST003", new Date(11, 8, 2024));
         Distribution distribution4 = new Distribution("DIST004", new Date(25, 8, 2024));
-        Distribution distribution5 = new Distribution("DIST005", new Date(30, 6, 2024));
-        Distribution distribution6 = new Distribution("DIST006", new Date(31, 8, 2024));
+        Distribution distribution5 = new Distribution("DIST005", new Date(1, 9, 2024));
+        Distribution distribution6 = new Distribution("DIST006", new Date(1, 9, 2024));
 
         // Create a selected item
-        SelectedItem selectedItem1 = new SelectedItem(item1.getItemId(), 20.22);
-        SelectedItem selectedItem2 = new SelectedItem(item2.getItemId(), 50);
-        SelectedItem selectedItem3 = new SelectedItem(item3.getItemId(), 1);
+        SelectedItem selectedItem1 = new SelectedItem("I001", 20.22);
+        SelectedItem selectedItem2 = new SelectedItem("I002", 50);
+        SelectedItem selectedItem3 = new SelectedItem("I003", 1);
         SelectedItem selectedItem4 = new SelectedItem(item4.getItemId(), 10);
         SelectedItem selectedItem5 = new SelectedItem(item5.getItemId(), 3);
         SelectedItem selectedItem6 = new SelectedItem(item6.getItemId(), 2);
@@ -151,25 +151,25 @@ public class EntityInitializer {
 
         // Add selected item to the distribution
         distribution1.addDonee(donee1);
-        distribution1.addSelectedItem(new SelectedItem(item1.getItemId(), 20.00));
+        distribution1.addSelectedItem(selectedItem1);
         distribution1.addSelectedItem(selectedItem2);
 
         distribution2.addDonee(donee2);
-        distribution2.addSelectedItem(new SelectedItem(item2.getItemId(), 10));
+        distribution2.addSelectedItem(selectedItem3);
 
         distribution3.addDonee(donee3);
-        distribution3.addSelectedItem(new SelectedItem(item3.getItemId(), 1));
+        distribution3.addSelectedItem(selectedItem3);
 
         distribution4.addDonee(donee4);
-        distribution4.addSelectedItem(new SelectedItem(item3.getItemId(), 100.00));
-        distribution4.addSelectedItem(new SelectedItem(item4.getItemId(), 2));
+        distribution4.addSelectedItem(selectedItem4);
+        distribution4.addSelectedItem(selectedItem5);
         
 
         distribution5.addDonee(donee1);
-        distribution5.addSelectedItem(new SelectedItem(item4.getItemId(), 5));
+        distribution5.addSelectedItem(selectedItem1);
 
-        distribution6.addDonee(donee4);
-        distribution6.addSelectedItem(new SelectedItem(item6.getItemId(), 1));
+        distribution6.addDonee(donee1);
+        distribution6.addSelectedItem(selectedItem6);
 
         distributions.add(distribution1);
        distributions.add(distribution2);

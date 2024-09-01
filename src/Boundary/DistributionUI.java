@@ -48,23 +48,22 @@ public class DistributionUI {
         }
     }
 
-    private void printCategoryCountTitleDash() {
-        for (int i = 0; i < 45; i++) {
-            System.out.printf("-");
-        }
-    }
-
-    private void printCategoryCountTitle() {
-        System.out.println(String.format("\n  Category %12s Distribution Count", ""));
+    public void printCategoryCountTableHeader() {
+        System.out.println("+------------------------+----------------+--------------------+");
+        System.out.println("| Category               | Category Count | Items              |");
+        System.out.println("+------------------------+----------------+--------------------+");
 
     }
 
-    public void printCategoryCountTitleHeader() {
-        printCategoryCountTitleDash();
-        printCategoryCountTitle();
-        printCategoryCountTitleDash();
-
+    public void printCategoryCountTableContent(String type,int itemCount,StringBuilder items) {
+        System.out.printf("| %-22s | %-14d | %-18s |\n", type, itemCount, items.toString());
     }
+    
+    public void printCategoryCountTableFooter(){
+        System.out.println("+------------------------+----------------+--------------------+");
+}
+
+
 
     private void printDistributionTitle() {
         System.out.printf("\n%-20s  %-15s  %-15s  %-15s  %-12s  %-14s  %-15s  %-15s\n", "Distribution ID", "Assigned Date", "Donee", "Destination", "Item", "Quantity", "Amount(RM)", "Status");
@@ -74,12 +73,6 @@ public class DistributionUI {
         printDistributionTitleDash();
         printDistributionTitle();
         printDistributionTitleDash();
-    }
-
-    private void printSelectedItemDash() {
-        for (int i = 0; i < 125; i++) {
-            System.out.print("-");
-        }
     }
 
     public LocalDate getLocalDate() {
@@ -112,11 +105,6 @@ public class DistributionUI {
         scanner.nextLine();  // Clear the newline character left by nextDouble()
         return input;
     }
-    
-
-
-
-
 
     public void listAllDistributions(SortedListSetInterface<Distribution> distributions) {
         printDistributionTitleHeader();
@@ -136,14 +124,16 @@ public class DistributionUI {
         System.out.println(msg);
 
     }
-    
+
+    public void displayMessageNotInLine(String msg) {
+        System.out.printf(msg);
+
+    }
+
     public boolean promptForDateRangeFilter() {
-    System.out.print("\nWould you like to filter the report by a date range? (Y/N): ");
-    String response = scanner.nextLine().trim().toUpperCase();
-    return response.equals("Y");
-}
-
-    
-
+        System.out.print("\nDo you want to filter the report by date range? (Y/N): ");
+        String response = scanner.nextLine().trim().toUpperCase();
+        return response.equals("Y");
+    }
 
 }

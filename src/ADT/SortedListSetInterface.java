@@ -37,9 +37,5 @@ public interface SortedListSetInterface<T extends Comparable<T>> {
 
     public Iterator<T> getIterator();
 
-    public T getEntry(int givenPosition);   //szewen
-
-    public int indexOf(T anEntry);           // Get index of an entry
-
-    public T setIndex(int index, T newEntry); // Set entry at a specific index
+    public T getEntry(int givenPosition);  
 }
