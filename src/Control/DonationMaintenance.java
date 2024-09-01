@@ -392,23 +392,36 @@ public class DonationMaintenance {
     private Donor registeredNewDonor(String contact, SortedListSetInterface<Donor> donors) {
         int lastDonorId = Integer.parseInt(donors.getLastEntries().getDonorId().substring(2)) + 1;
         String newDonorId = "DR" + String.format("%03d", lastDonorId);
+        String category = setDonorCategoty();
+        String name = donationUI.getInputString("Name: ");
+        String contactName;
+        if (!category.equalsIgnoreCase("Individual")) {
+            contactName = donationUI.getInputString("Contact Name: ");
+        } else {
+            contactName = "-";
+        }
+        String email = getValidEmail();
+        String address = donationUI.getInputString("Address: ");
+        return new Donor(newDonorId, category, name, contactName, contact, email, address, getCurrentDate());
+    }
+
+    private String setDonorCategoty() {
         int opt;
         do {
-            opt = validateMenuNumberFormatInput(donationUI.getRegisteredMenu());
+            opt = validateMenuNumberFormatInput(donationUI.getDonorCategory());
             switch (opt) {
                 case 1:
-                    String name = donationUI.getInputString("Name: ");
-                    String email = getValidEmail();
-                    String address = donationUI.getInputString("Address: ");
-                    String category = donationUI.getInputString("Category: ");
-                //return new Donor(newDonorId, name, name, contact, email, address, category, "active");
+                    return "Individual";
                 case 2:
-                //return new Donor(newDonorId, "Anonymous", "Anonymous", contact, "Anonymous", "Anonymous", "Anonymous", "active");
+                    return "Public Organisation";
+                case 3:
+                    return "Private Organisation";
+                case 4:
+                    return "Government Organisation";
                 default:
                     MessageUI.displayInvalidOptionMessage();
-                    break;
             }
-        } while (opt < 1 || opt > 2);
+        } while (opt < 1 || opt > 4);
         return null;
     }
 
