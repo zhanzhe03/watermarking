@@ -60,7 +60,7 @@ public class Charity {
 
         } while (opt != 9);
     }
-
+    
     public static void main(String[] args) {
         Charity charityProgram = new Charity();
         charityProgram.runCharityProgram();
