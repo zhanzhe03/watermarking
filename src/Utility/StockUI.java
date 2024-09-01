@@ -134,29 +134,30 @@ public class StockUI {
     public static boolean checkMonetary(String type, SortedListSetInterface<Donation> donations) {
         return getTotalAmount(type, donations) >= minimunInventory(type);
     }
-    
-    public static SortedListSetInterface<Item> getAvailableItemList(SortedDoublyLinkedListSet<Donation> donations){
+
+    public static SortedListSetInterface<Item> getAvailableItemList(SortedListSetInterface<Donation> donations) {
         SortedListSetInterface<Item> availableItemList = new SortedDoublyLinkedListSet<>();
         Iterator<Donation> iterator = donations.getIterator();
-        do{
+        do {
             Donation donation = iterator.next();
-            if(donation.getStatus().equalsIgnoreCase("Distributing") && donation.getStatus().equalsIgnoreCase("Processing")){
+            if (donation.getStatus().equalsIgnoreCase("Distributing") && donation.getStatus().equalsIgnoreCase("Processing")) {
                 availableItemList.merge(donation.getDonatedItemList());
             }
-        }while(iterator.hasNext());
-        
-        
+        } while (iterator.hasNext());
+
         return filterOutExpiredItem(availableItemList);
-    } 
-    
-    public static SortedListSetInterface<Item> filterOutExpiredItem(SortedListSetInterface<Item> items){
+    }
+
+    public static SortedListSetInterface<Item> filterOutExpiredItem(SortedListSetInterface<Item> items) {
         Iterator<Item> iterator = items.getIterator();
-        do{
+        do {
             Item item = iterator.next();
-            if(item.getExpiryDate().beforeDate(getCurrentDate())){
-                items.remove(item);
+            if (item.getType().equalsIgnoreCase("Food and Beverage")) {
+                if (item.getExpiryDate().beforeDate(getCurrentDate())) {
+                    items.remove(item);
+                }
             }
-        }while(iterator.hasNext());
+        } while (iterator.hasNext());
         return items;
     }
 }
