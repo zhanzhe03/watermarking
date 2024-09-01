@@ -40,6 +40,9 @@ public class DoneeMaintenance {
     //private method
     private DoneeUI doneeUI = new DoneeUI();
     private DonationUI donationUI = new DonationUI();
+    private int localDay = doneeUI.getLocalDate().getDayOfMonth();
+    private int localMonth = doneeUI.getLocalDate().getMonthValue();
+    private int localYear = doneeUI.getLocalDate().getYear();
 
     private String generateNewDoneeId(SortedListSetInterface<Donee> donees) {
         String lastId = donees.isEmpty() ? "DE000" : donees.getLastEntries().getDoneeId();
@@ -56,6 +59,49 @@ public class DoneeMaintenance {
 
     private boolean confirmUpdate() {
         return doneeUI.confirmOperation().equalsIgnoreCase("Y");
+    }
+
+    private boolean validateDate(int day, int month, int year) {
+
+        if (year < 2000 || year > localYear) {
+            return false;
+        } else if (year == localYear && month > localMonth) {
+            return false;
+        } else if (year == localYear && month == localMonth && day > localDay) {
+            return false;
+        } else if ((month == 4 || month == 6 || month == 9 || month == 11) && (day == 31)) {
+            return false;
+        } else if (month == 2 && day > 29 && (year % 4 == 0)) {
+            return false;
+        } else if (month == 2 && day > 28 && (year % 4 != 0)) {
+            return false;
+        }
+        return true;
+    }
+
+    private Date getValidDate(String desc) {
+        String date;
+        boolean isValid = false;
+        int day = 0;
+        int month = 0;
+        int year = 0;
+        do {
+            date = doneeUI.getInputString(desc);
+            if (!CommonUse.validateDateFormat(date)) {
+                MessageUI.displayInvalidDateFormatMessage();
+            } else {
+                day = Integer.parseInt(date.substring(0, 2));
+                month = Integer.parseInt(date.substring(3, 5));
+                year = Integer.parseInt(date.substring(6));
+                if (!validateDate(day, month, year)) {
+                    MessageUI.displayInvalidDateMessage();
+                } else {
+                    isValid = true;
+                }
+            }
+        } while (!isValid);
+
+        return new Date(day, month, year);
     }
 
     private String inputName() {
@@ -444,36 +490,60 @@ public class DoneeMaintenance {
                 && (date.beforeDate(endDate) || date.equals(endDate));
     }
 
-    private void listDoneesByDate(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> items) {
-
+    private void listDoneesByDate(SortedListSetInterface<Donee> donees) {
         // Totals
         int totalRequests = 0;
         int totalIndividual = 0;
         int totalOrganization = 0;
         int totalFamily = 0;
 
-        doneeUI.printText("Please enter the range of date");
-        doneeUI.printText("Start Date (dd-mm-yyyy):");
-        Date startDate = doneeUI.getRequestDate();
-        doneeUI.displayEnDash();
-        doneeUI.printText("End Date (dd-mm-yyyy):");
-        Date endDate = doneeUI.getRequestDate();
+        Date startDate = getValidDate("Enter start date (DD-MM-YYYY): ");
+        Date endDate = getValidDate("Enter end date (DD-MM-YYYY): ");
         SortedListSetInterface<Donee> foundDonees = findDoneesDateInRange(donees, startDate, endDate);
 
         if (foundDonees != null && foundDonees.getNumberOfEntries() > 0) {
             doneeUI.printText("Donees registered between " + startDate + " and " + endDate + ":");
-            doneeUI.printDoneeTitle();
+            doneeUI.printRegisterDoneeTitle();
             doneeUI.displayEnDash();
 
             // Iterate through the found donees
             Iterator<Donee> doneeIterator = foundDonees.getIterator();
             while (doneeIterator.hasNext()) {
                 Donee donee = doneeIterator.next();
-                doneeUI.printText(donee.toString());
-
-                // Count total requests
-                totalRequests += donee.getRequests().getNumberOfEntries();
+                String doneeId = donee.getDoneeId();
+                Date registerDate = donee.getRegisterDate();
                 String doneeType = donee.getDoneeType();
+
+                // Get the donee's requests
+                SortedListSetInterface<Request> doneeRequests = donee.getRequests(); 
+                Iterator<Request> requestIterator = doneeRequests.getIterator();
+
+                // Start building the output string for this donee
+                StringBuilder outputStr = new StringBuilder();
+                boolean firstRequest = true;
+
+                while (requestIterator.hasNext()) {
+                    Request request = requestIterator.next();
+                    String requestItem = request.getRequestItems(); 
+
+                    if (firstRequest) {
+                        // Print Donee ID, Register Date, and first request item
+                        outputStr.append(String.format("\n|%-15s | %-20s | %-20s | %-30s |\n", doneeId, doneeType, registerDate, requestItem));
+                        firstRequest = false;
+                    } else {
+                        // Align subsequent request items
+                        outputStr.append(String.format("|%-15s | %-20s | %-20s | %-30s |\n", "", "", "",requestItem));
+                    }
+
+                    // Increase the request count
+                    totalRequests++;
+                }
+
+                // Print the accumulated string for this donee
+                doneeUI.printText(outputStr.toString());
+
+                // Determine donee type and update counts
+                doneeType = donee.getDoneeType();
                 totalIndividual = updateDoneeTypeCounts(doneeType, totalIndividual, "INDIVIDUAL");
                 totalOrganization = updateDoneeTypeCounts(doneeType, totalOrganization, "ORGANIZATION");
                 totalFamily = updateDoneeTypeCounts(doneeType, totalFamily, "FAMILY");
@@ -483,18 +553,22 @@ public class DoneeMaintenance {
             // Print the summary
             doneeUI.printSummaryHeader(startDate, endDate);
             doneeUI.displayEnDash();
-            doneeUI.printText(String.format("\n%-20s %d", "Total Donees:", foundDonees.getNumberOfEntries()));
-            doneeUI.printText(String.format("\n%-20s %d", "Total Requests:", totalRequests));
+            doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Total Donees:", foundDonees.getNumberOfEntries()));
+            doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Total Requests:", totalRequests));
             doneeUI.displayEnDash();
 
             // Print donee types and their totals
-            doneeUI.printText("\nDonee Types and Their Counts:");
-            doneeUI.printText(String.format("\n%-30s %d", "Individual:", totalIndividual));
-            doneeUI.printText(String.format("\n%-30s %d", "Organization:", totalOrganization));
-            doneeUI.printText(String.format("\n%-30s %d", "Family:", totalFamily));
+            doneeUI.printText("\n                                         Donee Types and Their Counts:");
+            doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Individual:", totalIndividual));
+            doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Organization:", totalOrganization));
+            doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Family:", totalFamily));
         } else {
             doneeUI.printText("No donees found within the specified date range.");
         }
+    }
+
+    public void printRegisterDoneeTitle() {
+        System.out.printf("\n%-15s  | %-20s | %-30s\n", "Donee ID", "Register Date", "Request Item");
     }
 
     public void ListAllDonee(SortedListSetInterface<Donee> donees) {
@@ -957,12 +1031,8 @@ public class DoneeMaintenance {
         switch (option) {
             case "1":
                 // Filter donees by date range who have received items
-                doneeUI.printText("\nPlease enter the range of date");
-                doneeUI.printText("Start Date (dd-mm-yyyy):");
-                Date startDate = doneeUI.getRequestDate();
-                doneeUI.displayEnDash();
-                doneeUI.printText("\nEnd Date (dd-mm-yyyy):");
-                Date endDate = doneeUI.getRequestDate();
+                Date startDate = getValidDate("Enter start date (DD-MM-YYYY): ");
+                Date endDate = getValidDate("Enter end date (DD-MM-YYYY): ");
                 filterDoneesByDate(distribution, Item, startDate, endDate);
                 break;
 
@@ -991,7 +1061,7 @@ public class DoneeMaintenance {
 
             switch (option) {
                 case "1":
-                    listDoneesByDate(donees, distributions, items);
+                    listDoneesByDate(donees);
                     break;
                 case "2":
                     listDoneeRequestReceive(donees, distributions, items);
