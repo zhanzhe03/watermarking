@@ -135,12 +135,12 @@ public class StockUI {
         return getTotalAmount(type, donations) >= minimunInventory(type);
     }
 
-    public static SortedListSetInterface<Item> getAvailableItemList(SortedListSetInterface<Donation> donations) {
+   public static SortedListSetInterface<Item> getAvailableItemList(SortedListSetInterface<Donation> donations) {
         SortedListSetInterface<Item> availableItemList = new SortedDoublyLinkedListSet<>();
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
-            if (donation.getStatus().equalsIgnoreCase("Distributing") && donation.getStatus().equalsIgnoreCase("Processing")) {
+            if (donation.getStatus().equalsIgnoreCase("Distributing") || donation.getStatus().equalsIgnoreCase("Processing")) {
                 availableItemList.merge(donation.getDonatedItemList());
             }
         } while (iterator.hasNext());
@@ -160,4 +160,6 @@ public class StockUI {
         } while (iterator.hasNext());
         return items;
     }
+    
+   
 }

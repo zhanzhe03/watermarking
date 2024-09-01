@@ -30,9 +30,11 @@ public class DistributionManager {
 
         SortedListSetInterface<Distribution> distributions = entityInitialize.getDistributions();
         SortedListSetInterface<Item> donatedItemList = entityInitialize.getItems();
+
         SortedListSetInterface<Donee> donees = entityInitialize.getDonees();
-        SortedListSetInterface<SelectedItem> distributedItemList = entityInitialize.getDistributedItem();
         SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
+
+        SortedListSetInterface<Item> availableItemList = StockUI.getAvailableItemList(donations);
 
         updateDistributionStatus(distributions);
 
@@ -44,11 +46,11 @@ public class DistributionManager {
                 switch (opt) {
                     case 1:
                         //ClearScreen.clearJavaConsoleScreen();
-                        ListAllDistributions(distributions, donatedItemList, donees);
+                        ListAllDistributions(distributions, availableItemList, donees);
                         break;
                     case 2:
                         //ClearScreen.clearJavaConsoleScreen();
-                        AddNewDistribution(donatedItemList, distributions, donees, donations);
+                        AddNewDistribution(donatedItemList, distributions, donees, donations, availableItemList);
                         break;
                     case 3:
                         // ClearScreen.clearJavaConsoleScreen();
@@ -99,14 +101,15 @@ public class DistributionManager {
 
     }
 
-    public void ListAllDistributions(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList,
+    public void ListAllDistributions(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> availableItemList,
             SortedListSetInterface<Donee> donees) {
         distributionUI.listAllDistributions(distributions);
     }
 
 //**** Adding purpose  //done ask whether add other items into same distribution
     //done ask add another distribution?   distribute according request and remove request
-    public void AddNewDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees, SortedListSetInterface<Donation> donations) {
+    public void AddNewDistribution(SortedListSetInterface<Item> donatedItemList, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees, SortedListSetInterface<Donation> donations,
+            SortedListSetInterface<Item> availableItemList) {
         String input;
         boolean isContinue = false;
         boolean foundType;
@@ -166,7 +169,7 @@ public class DistributionManager {
 
                     CommonUse.printItemHeader();
                     distributionUI.displayMessage("\n");
-                    distributionUI.PrintDonatedItemList(donatedItemList);
+                    distributionUI.displayMessage("" + availableItemList);
                     input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit; 'S' sort By Category ; F' filter By Category ) > ");
 
                     if (input.equalsIgnoreCase("Q")) {  // Quit the loop
@@ -177,7 +180,7 @@ public class DistributionManager {
                     if (input.equalsIgnoreCase("F")) { // Filter items
 
                         String inputType = distributionUI.getInputString("Please enter the type you would like to show > ");
-                        foundType = filterItemByType(donatedItemList, inputType, selectedDonee);
+                        foundType = filterItemByType(availableItemList, inputType, selectedDonee);
 
                         if (!foundType) {
                             return;
@@ -195,10 +198,10 @@ public class DistributionManager {
                         CommonUse.printItemHeader();
                         distributionUI.displayMessage("\n");
                         Item.setSortByCriteria(Item.SortByCriteria.TYPE_INASC);
-                        donatedItemList.reSort();
-                        distributionUI.displayMessage("" + donatedItemList);
+                        availableItemList.reSort();
+                        distributionUI.displayMessage("" + availableItemList);
                         Item.setSortByCriteria(Item.SortByCriteria.ITEMID_INASC);
-                        donatedItemList.reSort();
+                        availableItemList.reSort();
 
                         input = distributionUI.getInputString("Please enter the Item ID that you would like to distribute ('Q' quit) > ");
                         if (input.equalsIgnoreCase("Q")) { // Quit the loop
@@ -207,32 +210,36 @@ public class DistributionManager {
                         }
                     }
 
-                    Item inputItem = checkItemExist(donatedItemList, input); // Check if the item exists              
+                    Item inputItem = checkItemExist(donatedItemList, input); // Check if the item exists in donated list
                     if (inputItem != null) { // If item is found
-                        if (inputItem.getType().equalsIgnoreCase("Monetary")) {
-                            if (StockUI.checkMonetary("Monetary", donations)) {
-                                isContinue = handleMonetaryItem(inputItem, newDistribution, distributions, minttlAmt, selectedDonee);
-                                isDistributionMatchingRequest(newDistribution, selectedDonee, donatedItemList);
-
+                        Item availableItem = checkItemAvailable(availableItemList, input); // Check if the item is available for distribution
+                        if (availableItem != null) { // If the item is available
+                            if (inputItem.getType().equalsIgnoreCase("Monetary")) {
+                                if (StockUI.checkMonetary("Monetary", donations)) {
+                                    isContinue = handleMonetaryItem(inputItem, newDistribution, distributions, minttlAmt, selectedDonee);
+                                    isDistributionMatchingRequest(newDistribution, selectedDonee, availableItemList);
+                                } else {
+                                    MessageUI.displayInsufficientMessage();
+                                    isContinue = false;
+                                }
                             } else {
-                                MessageUI.displayInsufficientMessage();
-                                isContinue = false;
+                                if (StockUI.checkInventory(inputItem.getType(), donations)) {
+                                    isContinue = handleNonMonetaryItem(inputItem, newDistribution, distributions);
+                                    isDistributionMatchingRequest(newDistribution, selectedDonee, availableItemList);
+                                } else {
+                                    MessageUI.displayInsufficientMessage();
+                                    isContinue = true; // Allow user to enter a new item
+                                }
                             }
                         } else {
-                            if (StockUI.checkInventory(inputItem.getType(), donations)) {
-                                isContinue = handleNonMonetaryItem(inputItem, newDistribution, distributions);
-                                isDistributionMatchingRequest(newDistribution, selectedDonee, donatedItemList);
-
-                            } else {
-                                MessageUI.displayInsufficientMessage();
-                                isContinue = true; // Allow user to enter a new item
-                            }
+                            MessageUI.displayRed("Item exist in donated Item List, but its currently not available for distribution.");// Display message if item is not available for distribution
+                            isContinue = true; // Allow user to enter a new item
                         }
-
                     } else {
                         MessageUI.displayInvalidItemMessage();
                         isContinue = true; // Allow user to enter a new item
                     }
+
                 } catch (Exception e) {
                     distributionUI.displayMessage("An error occurred: " + e.getMessage());
                     isContinue = true; // Allow user to enter a new item
@@ -299,6 +306,17 @@ public class DistributionManager {
 
     private Item checkItemExist(SortedListSetInterface<Item> donatedItemList, String input) {
         Iterator<Item> iterator = donatedItemList.getIterator();
+        while (iterator.hasNext()) {
+            Item currentItem = iterator.next(); // Get the current item
+            if (currentItem.getItemId().equalsIgnoreCase(input)) { // Check if item ID matches the input
+                return currentItem; // Return the item if found
+            }
+        }
+        return null; // Return null if the item is not found
+    }
+
+    private Item checkItemAvailable(SortedListSetInterface<Item> availabletemList, String input) {
+        Iterator<Item> iterator = availabletemList.getIterator();
         while (iterator.hasNext()) {
             Item currentItem = iterator.next(); // Get the current item
             if (currentItem.getItemId().equalsIgnoreCase(input)) { // Check if item ID matches the input
