@@ -33,6 +33,7 @@ public class DonationMaintenance {
         SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
         SortedListSetInterface<Donor> donors = entityInitialize.getDonors();
         SortedListSetInterface<Item> items = entityInitialize.getItems();
+        SortedListSetInterface<Donation> donationsHistory = entityInitialize.getDonationsHistory();
 
         int opt;
         do {
@@ -45,7 +46,7 @@ public class DonationMaintenance {
                     break;
                 case 2:
                     ClearScreen.clearJavaConsoleScreen();
-                    AddDonation(donations, donors, items);
+                    AddDonation(donations, donors, items, donationsHistory);
                     break;
                 case 3:
                     ClearScreen.clearJavaConsoleScreen();
@@ -387,28 +388,41 @@ public class DonationMaintenance {
     private boolean checkDonorStatus(Donor donor) {
         return !donor.getStatus().equalsIgnoreCase("Banned");
     }
-    
+
     //donor details on hold
     private Donor registeredNewDonor(String contact, SortedListSetInterface<Donor> donors) {
         int lastDonorId = Integer.parseInt(donors.getLastEntries().getDonorId().substring(2)) + 1;
         String newDonorId = "DR" + String.format("%03d", lastDonorId);
+        String category = setDonorCategoty();
+        String name = donationUI.getInputString("Name: ");
+        String contactName;
+        if (!category.equalsIgnoreCase("Individual")) {
+            contactName = donationUI.getInputString("Contact Name: ");
+        } else {
+            contactName = "-";
+        }
+        String email = getValidEmail();
+        String address = donationUI.getInputString("Address: ");
+        return new Donor(newDonorId, category, name, contactName, contact, email, address, getCurrentDate());
+    }
+
+    private String setDonorCategoty() {
         int opt;
         do {
-            opt = validateMenuNumberFormatInput(donationUI.getRegisteredMenu());
+            opt = validateMenuNumberFormatInput(donationUI.getDonorCategory());
             switch (opt) {
                 case 1:
-                    String name = donationUI.getInputString("Name: ");
-                    String email = getValidEmail();
-                    String address = donationUI.getInputString("Address: ");
-                    String category = donationUI.getInputString("Category: ");
-                    //return new Donor(newDonorId, name, name, contact, email, address, category, "active");
+                    return "Individual";
                 case 2:
-                    //return new Donor(newDonorId, "Anonymous", "Anonymous", contact, "Anonymous", "Anonymous", "Anonymous", "active");
+                    return "Public Organisation";
+                case 3:
+                    return "Private Organisation";
+                case 4:
+                    return "Government Organisation";
                 default:
                     MessageUI.displayInvalidOptionMessage();
-                    break;
             }
-        } while (opt < 1 || opt > 2);
+        } while (opt < 1 || opt > 4);
         return null;
     }
 
@@ -447,19 +461,19 @@ public class DonationMaintenance {
             boolean isFullyDistributed = checkDonationFullyDistributed(donation);
             if (donation.getStatus().equalsIgnoreCase("Pending") && !donation.getDonationDate().withinTwoDays(getCurrentDate())) {
                 donation.setStatus("Processing");
-            }else if(!donation.getStatus().equalsIgnoreCase("Fully Distributed") && isFullyDistributed){
+            } else if (!donation.getStatus().equalsIgnoreCase("Fully Distributed") && isFullyDistributed) {
                 donation.setStatus("Fully Distributed");
             }
         } while (iterator.hasNext());
     }
-    
-    private boolean checkDonationFullyDistributed(Donation donation){
+
+    private boolean checkDonationFullyDistributed(Donation donation) {
         double ttlAmount = 0;
         Iterator<Item> iterator = donation.getDonatedItemList().getIterator();
-        do{
+        do {
             Item item = iterator.next();
             ttlAmount += item.getTotalAmount();
-        }while(iterator.hasNext());
+        } while (iterator.hasNext());
         return ttlAmount == 0;
     }
 
@@ -601,7 +615,7 @@ public class DonationMaintenance {
     }
 
     //2. add
-    public void AddDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
+    public void AddDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items, SortedListSetInterface<Donation> donationsHistory) {
         donationUI.printTitle("Add donation in different method");
         int opt;
         do {
@@ -610,7 +624,7 @@ public class DonationMaintenance {
             switch (opt) {
                 case 1:
                     ClearScreen.clearJavaConsoleScreen();
-                    AddNewDonation(donations, donors, items);
+                    AddNewDonation(donations, donors, items, donationsHistory);
                     break;
                 case 2:
                     ClearScreen.clearJavaConsoleScreen();
@@ -674,7 +688,7 @@ public class DonationMaintenance {
         } while (keepDonate == 'Y' && !isDiscontinue);
     }
 
-    public void AddNewDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
+    public void AddNewDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items, SortedListSetInterface<Donation> donationsHistory) {
         donationUI.printTitle("Add New Donation");
         SortedListSetInterface<Item> newDonatedItems = new SortedDoublyLinkedListSet<>();
         processDonation(newDonatedItems, items);
@@ -696,6 +710,9 @@ public class DonationMaintenance {
                         donations.add(newDonation);
                         items.merge(newDonatedItems);
                         MessageUI.displaySuccessfulMessage();
+                        Donation clonedDonation = newDonation.clone();
+                        donor.addDonationToList(clonedDonation);
+                        donationsHistory.add(clonedDonation);
                     } else {
                         MessageUI.displayDonorStatusUnsuccessfulMessage();
                     }
@@ -706,6 +723,9 @@ public class DonationMaintenance {
                     donations.add(newDonation);
                     items.merge(newDonatedItems);
                     MessageUI.displaySuccessfulMessage();
+                    Donation clonedDonation = newDonation.clone();
+                    donor.addDonationToList(clonedDonation);
+                    donationsHistory.add(clonedDonation);
                 }
             } else {
                 MessageUI.displayUnsuccessfulMessage();

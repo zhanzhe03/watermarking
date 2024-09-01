@@ -125,15 +125,6 @@ public class DonationUI {
         return scanner.nextLine();
     }
     
-    public String getRegisteredMenu() {
-        System.out.println(""
-                + "\nThis Contact Number has not been registered. Find a solution"
-                + "\n 1. Registered a new donor"
-                + "\n 2. Donate anonymously");
-        System.out.print("\nopt > ");
-        return scanner.nextLine();
-    }
-    
     //4. Amend
     public String getDonationAmendedMenu() {
         System.out.println(""
@@ -282,5 +273,19 @@ public class DonationUI {
         System.out.println("Name : " + donation.getDonor().getName());
         System.out.println("Contact : " + donation.getDonor().getContact());
         System.out.println("Email : " + donation.getDonor().getEmail());
+    }
+    
+    public String getDonorCategory(){
+        System.out.println(""
+                + "\n----------------------------------------------------"
+                + "\nDonor Category"
+                + "\n----------------------------------------------------"
+                + "\n 1. Individual"
+                + "\n 2. Public Organisation"
+                + "\n 3. Private Organisation"
+                + "\n 4. Government Organisation"
+                + "\n----------------------------------------------------");
+        System.out.print("\nopt > ");
+        return scanner.nextLine();
     }
 }
