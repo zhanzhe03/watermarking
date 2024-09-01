@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author USER
  */
-public class Donation implements Comparable<Donation> {
+public class Donation implements Comparable<Donation>, Cloneable {
 
     private String donationId;
     private Date donationDate;
@@ -162,4 +162,33 @@ public class Donation implements Comparable<Donation> {
         }
         return Objects.equals(this.donor, other.donor);
     }
+    
+    @Override
+    public Donation clone() {
+        try {
+            Donation clonedDonation = (Donation) super.clone();
+
+            // Deep copy of donationDate
+            clonedDonation.donationDate = this.donationDate.clone();
+
+            // Deep copy of donor, if donor is not null
+            if (this.donor != null) {
+                clonedDonation.donor = this.donor.clone(); // Assuming Donor has a clone method
+            }
+
+            // Deep copy of donatedItemList
+            clonedDonation.donatedItemList = new SortedDoublyLinkedListSet<>();
+            Iterator<Item> iterator = this.donatedItemList.getIterator();
+            while (iterator.hasNext()) {
+                Item item = iterator.next();
+                clonedDonation.donatedItemList.add(item.clone()); // Assuming Item has a clone method
+            }
+
+            return clonedDonation;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Should never happen
+        }
+    }
+
+
 }

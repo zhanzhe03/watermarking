@@ -38,6 +38,28 @@ public class SortedDoublyLinkedListSet<T extends Comparable<T>> implements Sorte
         } while (iterator.hasNext());
         return true;
     }
+    
+    @Override
+    public boolean intersect(SortedListSetInterface<T> otherListSet) {
+        Iterator<T> iterator = this.getIterator();
+        SortedListSetInterface<T> toRemove = new SortedDoublyLinkedListSet<>();
+
+      
+        while (iterator.hasNext()) {
+            T anEntry = iterator.next();
+
+            if (!otherListSet.contains(anEntry)) {
+                toRemove.add(anEntry);
+            }
+        }
+
+        iterator = toRemove.getIterator();
+        while (iterator.hasNext()) {
+            this.remove(iterator.next());
+        }
+
+        return (!this.isEmpty());
+    }
 
     @Override
     public boolean relativeComplement(SortedListSetInterface<T> otherListSet) {

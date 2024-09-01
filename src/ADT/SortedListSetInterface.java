@@ -42,4 +42,6 @@ public interface SortedListSetInterface<T extends Comparable<T>> {
     public int indexOf(T anEntry);           // Get index of an entry
 
     public T setIndex(int index, T newEntry); // Set entry at a specific index
+    
+    public boolean intersect(SortedListSetInterface<T> anotherSet);
 }

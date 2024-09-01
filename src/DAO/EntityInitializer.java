@@ -6,6 +6,7 @@ package DAO;
 
 import ADT.*;
 import Entity.*;
+import java.util.Iterator;
 
 /**
  *
@@ -14,6 +15,7 @@ import Entity.*;
 public class EntityInitializer {
 
     private SortedListSetInterface<Donation> donations = new SortedDoublyLinkedListSet<>();
+    private SortedListSetInterface<Donation> donationsHistory = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donor> donors = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donee> donees = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Distribution> distributions = new SortedDoublyLinkedListSet<>();
@@ -22,6 +24,10 @@ public class EntityInitializer {
 
     public SortedListSetInterface<Donation> getDonations() {
         return donations;
+    }
+    
+    public SortedListSetInterface<Donation> getDonationsHistory() {
+        return donationsHistory;
     }
 
     public SortedListSetInterface<Donor> getDonors() {
@@ -45,9 +51,9 @@ public class EntityInitializer {
     }
 
     public void entityEnitialize() {
-        Donor donor1 = new Donor("DR001", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", "Public", "Prospect");
-        Donor donor2 = new Donor("DR002", "Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", "Private", "Inactive");
-        Donor donor3 = new Donor("DR003", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", "Government", "Active");
+        Donor donor1 = new Donor("DR001","Public Organisation", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
+        Donor donor2 = new Donor("DR002", "Private Organisation","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 5, 2022), "Inactive");
+        Donor donor3 = new Donor("DR003", "Government Organisation","Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur",new Date(21, 8, 2022), "Active");
 
         Donee donee1 = new Donee("DE001", "INDIVIDUAL", "TAN JIAN QUAN", "jianquan@gmail.com", "0125030510", "No80 Taman Gembira", "Location A", new Date(10, 2, 2022));
         Donee donee2 = new Donee("DE002", "ORGANIZATION", "TARUMT FOOD BANK", "tarumtoffice@gmail.com", "0125558888", "JALAN TUNKU ABDUL RAHMAN", "Location B", new Date(2, 3, 2022));
@@ -215,5 +221,32 @@ public class EntityInitializer {
         donees.add(donee3);
         donees.add(donee4);
         donees.add(donee5);
+          
+//        donor1.addDonationToList(donation1.clone());
+//        donor2.addDonationToList(donation2.clone());
+//        donor3.addDonationToList(donation3.clone());
+//        donor2.addDonationToList(donation4.clone());
+//        donor3.addDonationToList(donation5.clone());
+//        donor2.addDonationToList(donation6.clone());
+        
+        
+        Iterator<Donation> donationIterator = donations.getIterator();
+        while (donationIterator.hasNext()) {
+            Donation donation = donationIterator.next();
+            Donation clonedDonation = donation.clone();
+            donationsHistory.add(clonedDonation);
+
+            Donor donor = clonedDonation.getDonor(); // Get the donor associated with the donation
+
+            // Find the corresponding donor in the donors list and set their DonationList
+            Iterator<Donor> donorIterator = donors.getIterator();
+            while (donorIterator.hasNext()) {
+                Donor d = donorIterator.next();
+                if (d.equals(donor)) {
+                    d.addDonationToList(clonedDonation); // Add the cloned donation to the donor's donation list
+                    break;
+                }
+            }
+    }
     }
 }

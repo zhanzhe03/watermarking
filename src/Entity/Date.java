@@ -4,7 +4,7 @@
  */
 package Entity;
 
-public class Date {
+public class Date  implements Cloneable {
 
     private int day;
     private int month;
@@ -92,6 +92,11 @@ public class Date {
         }
 
         return numberOfDays <= 31;
+    }
+    
+    public boolean moreThanThreeMonthsAgo(Date otherDate) {
+        int daysDifference = otherDate.daysBetween(this);
+        return daysDifference > 90;
     }
 
     //check within next 15 days
@@ -226,6 +231,15 @@ public class Date {
             return false;
         }
         return this.year == other.year;
+    }
+    
+    @Override
+    public Date clone() {
+        try {
+            return (Date) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Should never happen
+        }
     }
 
     @Override
