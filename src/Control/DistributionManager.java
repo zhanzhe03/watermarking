@@ -162,7 +162,7 @@ public class DistributionManager {
             do {
                 try {
                     // Display Donee request each time before prompting for item input
-                    displayDoneeRequest(selectedDonee);
+                  //  displayDoneeRequest(selectedDonee);
 
                     CommonUse.printItemHeader();
                     distributionUI.displayMessage("\n");
@@ -420,9 +420,9 @@ public class DistributionManager {
                 if (!foundType) {
                     // Print the item header only once, before the first matching item is displayed
 
-                    distributionUI.displayMessage("Item List filtered by " + type + " : \n");
+                    distributionUI.displayMessage("Item List filtered by " + type + " : ");
                     CommonUse.printItemHeader();
-                    distributionUI.displayMessage("\n");
+                    distributionUI.displayMessage("");
                     foundType = true;
                 }
                 distributionUI.displayMessage("" + currentItem);
