@@ -19,6 +19,10 @@ public class MessageUI {
      private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_BLACK = "\u001B[0m";
     
+    public static void displayDonorStatusUnsuccessfulMessage(){
+        System.out.println(ANSI_RED + "\nOperation Cancelled. This contact number has been banned." + ANSI_BLACK);
+    }
+    
     public static void displayTextColorExplanation(){
         System.out.println("*Donated items in pending status or expired items are not included in Available inventory.");
         System.out.println(ANSI_BLUE + "Blue Color Record > " + ANSI_BLACK + "Pending Status");
