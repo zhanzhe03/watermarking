@@ -25,12 +25,13 @@ public class Charity {
 
     public void runCharityProgram() {
         entityInitialize.entityEnitialize();
-
+    
         int opt = 0;
 
         do {
             ClearScreen.clearJavaConsoleScreen();
             try {
+                charityUI.getLogo();
                 opt = Integer.parseInt(charityUI.getMenu());
 
                 switch (opt) {
