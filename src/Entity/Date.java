@@ -58,8 +58,8 @@ public class Date {
         return this.compareTo(otherDate) < 0;
     }
     
-    public boolean overTwoDays(Date otherDate){
-        int numberOfDays = 0;
+    public boolean withinTwoDays(Date otherDate){
+        int numberOfDays = 3;
         if(this.year + 1 == otherDate.year){
             if(this.month == 12 && otherDate.month == 1){
                 numberOfDays = (31 - this.day) + otherDate.day;
@@ -68,7 +68,7 @@ public class Date {
             numberOfDays = otherDate.convertToDays() - this.convertToDays();
         }
         
-        return numberOfDays > 2;
+        return numberOfDays <= 2;
     }
 
     //check within pass week

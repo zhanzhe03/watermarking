@@ -440,7 +440,7 @@ public class DonationMaintenance {
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
-            if (donation.getStatus().equalsIgnoreCase("Pending") && donation.getDonationDate().overTwoDays(getCurrentDate())) {
+            if (donation.getStatus().equalsIgnoreCase("Pending") && !donation.getDonationDate().withinTwoDays(getCurrentDate())) {
                 donation.setStatus("Processing");
             }
         } while (iterator.hasNext());
