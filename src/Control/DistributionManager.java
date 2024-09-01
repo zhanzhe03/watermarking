@@ -162,7 +162,7 @@ public class DistributionManager {
             do {
                 try {
                     // Display Donee request each time before prompting for item input
-                  //  displayDoneeRequest(selectedDonee);
+                    //  displayDoneeRequest(selectedDonee);
 
                     CommonUse.printItemHeader();
                     distributionUI.displayMessage("\n");
@@ -317,8 +317,14 @@ public class DistributionManager {
             try {
                 // Get and validate the desired amount
                 MessageUI.displayCyanNote("***Please note that the donee type is " + donee.getDoneeType()
-                        + " , suggested minimum distributed amount is  RM " + minAmt);
-                inputAmt = distributionUI.getInputDouble("\nPlease enter the desired amount (RM) > ");
+                        + " , suggested minimum distributed amount is RM " + minAmt);
+
+                inputAmt = Double.parseDouble(distributionUI.getInputString("\nPlease enter the desired amount (RM) > "));
+                if (inputAmt <= 0) {
+                    MessageUI.displayRed("Invalid amount entered. Amount must be greater than 0. Please try again.");
+                    continue; // Prompt user again
+                }
+
                 if (inputItem.getTotalAmount() >= inputAmt) {
                     SelectedItem selectedItem = new SelectedItem(inputItem.getItemId(), inputAmt);
 
@@ -347,11 +353,11 @@ public class DistributionManager {
                         return true; // Return true to continue the outer loop to allow re-entry of item ID
                     }
                 } else {
-                    MessageUI.displayRed("Your input amount has exceed the in-stock amount. Please try again.");
-                    distributionUI.displayMessage("In-stock amount : " + inputItem.getTotalAmount());
+                    MessageUI.displayRed("Your input amount exceeds the in-stock amount. Please try again.");
+                    distributionUI.displayMessage("In-stock amount: " + inputItem.getTotalAmount());
                 }
             } catch (NumberFormatException e) {
-                MessageUI.displayInvalidAmountMessage();
+                MessageUI.displayRed("Invalid input. Please enter a valid numeric amount.");
             }
         }
 
@@ -365,7 +371,13 @@ public class DistributionManager {
 
         while (!isValidQty) { // Loop until a valid quantity is entered
             try {
-                inputQty = distributionUI.getInputQty("Please enter the desired quantity > ");
+                inputQty = Integer.parseInt(distributionUI.getInputString("Please enter the desired quantity > "));
+
+                if (inputQty <= 0) {
+                    MessageUI.displayRed("Invalid amount entered. Amount must be greater than 0. Please try again.");
+                    continue; // Prompt user again
+                }
+
                 if (inputItem.getQuantity() >= inputQty) {
                     SelectedItem selectedItem = new SelectedItem(inputItem.getItemId(), inputQty);
 
@@ -516,63 +528,76 @@ public class DistributionManager {
 
     private void updateItemDetails(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList, Distribution updateDist) {
         boolean continueUpdating = true;
+        boolean isUpdated = false;  // Flag to track if any updates were made
 
         while (continueUpdating) {
-
+            // Display the current list of distributed items
             distributionUI.printDistriburedItemList(updateDist.getDistributedItemList());
 
             if (updateDist.getDistributedItemList().getNumberOfEntries() >= 1) {
                 SelectedItem selectedItemToUpdate;
                 String input;
 
-                // If there's more than one item, ask for the Item ID
+                // Prompt the user for the ItemId if there's more than one item
                 if (updateDist.getDistributedItemList().getNumberOfEntries() > 1) {
-                    input = distributionUI.getInputString("Enter ItemId that you would like to update ( 'Q' quit ) > ");
+                    input = distributionUI.getInputString("Enter ItemId that you would like to update ('Q' to quit) > ");
                     if (input.equalsIgnoreCase("q")) {
-                        return;
+                        return;  // Exit the update process if the user enters 'Q'
                     }
                     selectedItemToUpdate = findSelectedItem(updateDist, input);
                 } else {
-                    // If only one item, select it directly
-                    selectedItemToUpdate = updateDist.getDistributedItemList().getLastEntries();    //lastentry = firstentry when there is only one entry
+                    // Automatically select the item if there's only one
+                    selectedItemToUpdate = updateDist.getDistributedItemList().getLastEntries();
                 }
 
                 if (selectedItemToUpdate != null) {
+                    // Check if the item exists in the donated item list
                     Item itemToUpdate = checkItemExist(donatedItemList, selectedItemToUpdate.getItemId());
 
                     if (itemToUpdate != null) {
+                        // Update based on the item's type
                         if (itemToUpdate.getType().equalsIgnoreCase("Monetary")) {
-                            updateMonetaryItem(distributions, selectedItemToUpdate, itemToUpdate, updateDist);
+                            isUpdated = updateMonetaryItem(distributions, selectedItemToUpdate, itemToUpdate, updateDist) || isUpdated;
                         } else {
-                            updateNonMonetaryItem(distributions, selectedItemToUpdate, itemToUpdate, updateDist);
+                            isUpdated = updateNonMonetaryItem(distributions, selectedItemToUpdate, itemToUpdate, updateDist) || isUpdated;
                         }
                     } else {
                         MessageUI.displayRed("Corresponding donated item not found. \n"
-                                + "It may be removed hence this item record is not allowed to amend or update.");
+                                + "It may have been removed, hence this item record cannot be amended or updated.");
                     }
                 } else {
                     MessageUI.displayInvalidItemMessage();
                 }
 
-                if (updateDist.getDistributedItemList().getNumberOfEntries() >= 1) {
+                // Ask the user if they want to continue updating
+                if (updateDist.getDistributedItemList().getNumberOfEntries() > 1) {
                     try {
                         String continueInput = distributionUI.getInputString("Do you want to update another item? (Y/N) > ");
                         if (!continueInput.equalsIgnoreCase("Y")) {
-                            continueUpdating = false;
-                            distributionUI.displayMessage("\n\nUpdated distribution record : " + updateDist);
+                            continueUpdating = false;  // Stop if the user enters 'N'
+                            if (isUpdated) {
+                                distributionUI.displayMessage("");
+                                MessageUI.displayMagentaPreviewMsg("Updated distribution record: " + updateDist);
+                                distributionUI.displayMessage("");
+                            }
                         }
                     } catch (Exception ex) {
                         MessageUI.displayInvalidOptionMessage();
                     }
+                } else {
+                    // If only one item was updated, exit the loop after the update
+                    continueUpdating = false;
+                    if (isUpdated) {
+                        distributionUI.displayMessage("");
+                        MessageUI.displayMagentaPreviewMsg("Updated distribution record: " + updateDist);
+                        distributionUI.displayMessage("");
+                    }
                 }
-
-                return;
-
             }
         }
     }
 
-    private void updateMonetaryItem(SortedListSetInterface<Distribution> distributions, SelectedItem selectedItemToUpdate, Item itemToUpdate, Distribution updateDist) {
+    private boolean updateMonetaryItem(SortedListSetInterface<Distribution> distributions, SelectedItem selectedItemToUpdate, Item itemToUpdate, Distribution updateDist) {
         double oriAmt = selectedItemToUpdate.getAmount();
         distributionUI.displayMessage("Original amount: " + oriAmt);
 
@@ -580,12 +605,18 @@ public class DistributionManager {
         distributionUI.displayMessage("In stock amount: " + instockAmt);
 
         double updatedAmt = 0.0;
+        boolean isUpdated = false;
 
         do {
             try {
                 distributionUI.displayMessage("Please enter your desired amount to update ");
                 MessageUI.displayRed("*** Enter 0 = cancel item from this distribution record. ");
                 updatedAmt = Double.parseDouble(distributionUI.getInputString("> "));
+
+                if (updatedAmt < 0) {
+                    MessageUI.displayRed("Invalid amount entered. Amount must be greater than 0. Cancelled update.");
+                    continue; // Prompt user again
+                }
 
                 if (updatedAmt == 0) {
                     String confirmRemoval = distributionUI.getInputString("You are about to remove the item from the distribution record. Confirm? (Y/N) > ");
@@ -594,17 +625,17 @@ public class DistributionManager {
                         itemToUpdate.setTotalAmount(instockAmt + oriAmt);
                         distributionUI.displayMessage("Item has been removed from the distribution record.");
                         if (updateDist.getDistributedItemList().getNumberOfEntries() == 0) {
-                            distributionUI.displayMessage("Since there are no item in this distribution record, < "
+                            distributionUI.displayMessage("Since there are no items in this distribution record, < "
                                     + updateDist.getDistributionId() + " > will be removed.");
                             distributions.remove(updateDist);
-                            distributionUI.displayMessage("This record have been removed from the distribution list.");
-                            break;
+                            distributionUI.displayMessage("This record has been removed from the distribution list.");
                         }
-                        return;
+                        isUpdated = true;
+                        break;
                     } else {
                         MessageUI.displayRed("Item removal canceled.");
                     }
-                    return;
+                    return isUpdated;
                 }
 
                 if (updatedAmt > instockAmt + oriAmt) {
@@ -615,6 +646,7 @@ public class DistributionManager {
                         selectedItemToUpdate.setAmount(updatedAmt);
                         itemToUpdate.setTotalAmount(instockAmt - (updatedAmt - oriAmt));
                         distributionUI.displayMessage("The amount has been updated from " + oriAmt + " to " + updatedAmt);
+                        isUpdated = true;
                     } else {
                         MessageUI.displayRed("Amount update canceled.");
                     }
@@ -625,9 +657,11 @@ public class DistributionManager {
                 distributionUI.displayMessage(ex.getMessage());
             }
         } while (updatedAmt > instockAmt + oriAmt);
+
+        return isUpdated;
     }
 
-    private void updateNonMonetaryItem(SortedListSetInterface<Distribution> distributions, SelectedItem selectedItemToUpdate, Item itemToUpdate, Distribution updateDist) {
+    private boolean updateNonMonetaryItem(SortedListSetInterface<Distribution> distributions, SelectedItem selectedItemToUpdate, Item itemToUpdate, Distribution updateDist) {
         int oriQty = selectedItemToUpdate.getSelectedQuantity();
         distributionUI.displayMessage("Original quantity: " + oriQty);
 
@@ -635,57 +669,60 @@ public class DistributionManager {
         distributionUI.displayMessage("In stock quantity: " + instockQty);
 
         int updatedQty = 0;
+        boolean isUpdated = false;
 
         do {
             try {
                 distributionUI.displayMessage("Please enter your desired quantity to update ");
                 MessageUI.displayRed("*** Enter 0 = cancel item from this distribution record. ");
-                updatedQty = distributionUI.getInputQty("> ");
+                updatedQty = Integer.parseInt(distributionUI.getInputString("> "));
+
+                if (updatedQty < 0) {
+                    MessageUI.displayRed("Invalid quantity entered. Quantity must be greater than 0. Cancelled update.");
+                    continue; // Prompt user again
+                }
 
                 if (updatedQty == 0) {
-                    // Ask for confirmation before removing the item
                     String confirmRemoval = distributionUI.getInputString("You are about to remove the item from the distribution record. Confirm? (Y/N) > ");
                     if (confirmRemoval.equalsIgnoreCase("Y")) {
                         updateDist.getDistributedItemList().remove(selectedItemToUpdate);
                         itemToUpdate.setQuantity(instockQty + oriQty);
-                        MessageUI.displayGreenSuccessfulMsg("Item has been removed from the distribution record.");
-
-                        // Check if the distribution record is now empty
+                        distributionUI.displayMessage("Item has been removed from the distribution record.");
                         if (updateDist.getDistributedItemList().getNumberOfEntries() == 0) {
-                            MessageUI.displayBlueRemindMsg("Since there are no items in this distribution record, < "
+                            distributionUI.displayMessage("Since there are no items in this distribution record, < "
                                     + updateDist.getDistributionId() + " > will be removed.");
                             distributions.remove(updateDist);
-                            MessageUI.displayBlueRemindMsg("This record has been removed from the distribution list.");
-                            break; // Exit the loop if the distribution record is removed
+                            distributionUI.displayMessage("This record has been removed from the distribution list.");
                         }
-                        return; // Exit the method if the item was removed
+                        isUpdated = true;
+                        break;
                     } else {
                         MessageUI.displayRed("Item removal canceled.");
                     }
-                    return; // Exit the method if no removal occurred
+                    return isUpdated;
                 }
 
                 if (updatedQty > instockQty + oriQty) {
                     MessageUI.displayRed("The quantity entered exceeds the in-stock quantity. Please try again.\n\n");
                 } else {
-                    // Ask for confirmation before applying the quantity update
                     String confirmQtyUpdate = distributionUI.getInputString("You are about to update the quantity from " + oriQty + " to " + updatedQty + ". Confirm? (Y/N) > ");
                     if (confirmQtyUpdate.equalsIgnoreCase("Y")) {
-                        // Update the quantity in both the selected item and the donated item
                         selectedItemToUpdate.setSelectedQuantity(updatedQty);
                         itemToUpdate.setQuantity(instockQty - (updatedQty - oriQty));
-                        MessageUI.displayGreenSuccessfulMsg("The quantity has been updated from " + oriQty + " to " + updatedQty);
+                        distributionUI.displayMessage("The quantity has been updated from " + oriQty + " to " + updatedQty);
+                        isUpdated = true;
                     } else {
-                        MessageUI.displayBlueRemindMsg("Quantity update canceled.");
+                        MessageUI.displayRed("Quantity update canceled.");
                     }
                 }
             } catch (NumberFormatException ex) {
                 MessageUI.displayRed("Invalid input. Please enter a numeric value.\n\n");
-
             } catch (Exception ex) {
-                MessageUI.displayInvalidIntegerMessage();
+                distributionUI.displayMessage(ex.getMessage());
             }
         } while (updatedQty > instockQty + oriQty);
+
+        return isUpdated;
     }
 
     private SelectedItem findSelectedItem(Distribution updateDist, String itemId) {
@@ -1013,7 +1050,7 @@ public class DistributionManager {
                     if (!distributionFound) {
                         MessageUI.displayBlueRemindMsg("No distribution records found for this item.\n");
                     }
-                    break;  
+                    break;
                 }
             }
             if (!itemFound) {
