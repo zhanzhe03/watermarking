@@ -34,7 +34,7 @@ public class Donor implements Comparable<Donor> , Cloneable{
         this.contact = "";
         this.email = "";
         this.address = "";
-        this.donationList = null;
+        this.donationList = new SortedDoublyLinkedListSet<>();
         this.status = "";
     }
 
@@ -208,6 +208,7 @@ public class Donor implements Comparable<Donor> , Cloneable{
         String outputStr = String.format("\n%-10s %-30s %-40s %-30s %-15s %-30s %-70s %-20s %-10s",
                 donorId, category, name, contactPerson, contact, email, address, registeredDate, status);
 
+        if(!donationList.isEmpty()){
         Iterator<Donation> iterator = donationList.getIterator();
         Donation donation = iterator.next();
         outputStr += String.format(" %-15s %-20s", donation.getDonationId(), donation.getDonationDate());
@@ -216,7 +217,9 @@ public class Donor implements Comparable<Donor> , Cloneable{
             outputStr += String.format("\n\n%-10s %-30s %-40s %-30s %-15s %-30s %-70s %-20s %-10s", "", "", "", "", "", "", "", "", "");
             outputStr += String.format(" %-15s %-20s", donation.getDonationId(), donation.getDonationDate());
         }
-
+        }else{
+            outputStr += String.format(" %-15s %-20s", "-", "-");
+        }
         // Return the formatted string
         return outputStr.toString();
     }

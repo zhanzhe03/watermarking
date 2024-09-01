@@ -25,7 +25,6 @@ public class Charity {
 
     public void runCharityProgram() {
         entityInitialize.entityEnitialize();
-        
     
         int opt = 0;
 
@@ -56,12 +55,12 @@ public class Charity {
                 }
             } catch (NumberFormatException ex) {
                 System.out.println("1");
-                    MessageUI.displayInvalidIntegerMessage();
+                MessageUI.displayInvalidIntegerMessage();
             }
 
         } while (opt != 9);
     }
-    
+
     public static void main(String[] args) {
         Charity charityProgram = new Charity();
         charityProgram.runCharityProgram();
