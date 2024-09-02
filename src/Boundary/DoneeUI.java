@@ -61,7 +61,7 @@ public class DoneeUI {
     public String getDoneeType() {
         System.out.println("\nPlease select the type of Donee:");
         System.out.println(String.format("%-5s %-15s", "1 = ", "INDIVIDUAL"));
-        System.out.println(String.format("%-5s %-15s", "2 = ", "ORGANIZATION"));
+        System.out.println(String.format("%-5s %-15s", "2 = ", "ORGANISATION"));
         System.out.println(String.format("%-5s %-15s", "3 = ", "FAMILY"));
         System.out.print("\nopt > ");
         String opt = scanner.nextLine();
