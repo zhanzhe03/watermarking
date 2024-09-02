@@ -12,6 +12,7 @@ import DAO.EntityInitializer;
 import Entity.Date;
 import Entity.Donation;
 import Entity.Donor;
+import Entity.Item;
 import Utility.ClearScreen;
 import Utility.MessageUI;
 import java.time.LocalDate;
@@ -27,45 +28,48 @@ public class DonorMaintenance {
         
         public void donorManagement(EntityInitializer entityInitialize) {
         SortedListSetInterface<Donor> donors = entityInitialize.getDonors();
-        SortedListSetInterface<Donation> donationHistory = entityInitialize.getDonationsHistory();
+        SortedListSetInterface<Donor> updatedDonors;
+        Donor foundDonor = null;
         int opt = 0;
         do {
-            checkAndUpdateStatus(donors);
+            updatedDonors = checkAndUpdateStatus(donors);
             try {
                 opt = donorUI.getDonorMenu();
 
                 switch (opt) {
                     case 1:
                         ClearScreen.clearJavaConsoleScreen();
-                        ListAllDonor(donors);                      
+                        ListAllDonor(updatedDonors);                      
                         break;
                     case 2:
                         ClearScreen.clearJavaConsoleScreen();
-                        AddNewDonor(donors);
+                        AddNewDonor(updatedDonors);
                         break;
                     case 3:
                         ClearScreen.clearJavaConsoleScreen();
-                        RemoveDonor(donors);
+                        RemoveDonor(updatedDonors);
                         break;
                     case 4:
                         ClearScreen.clearJavaConsoleScreen();
-                        UpdateDonor(donors);
+                        UpdateDonor(updatedDonors);
                         break;
                     case 5:
                         ClearScreen.clearJavaConsoleScreen();
-                        SearchDonor(donors);
+                        SearchDonor(updatedDonors);
                         break;
                     case 6:
                         ClearScreen.clearJavaConsoleScreen();
-                        FilterDonor(donors);
+                        FilterDonor(updatedDonors);
                         break;  
                     case 7:
                         ClearScreen.clearJavaConsoleScreen();
-                        listAllDonation(donationHistory);
+                        foundDonor = searchDonorID(updatedDonors);  
+                        if(foundDonor != null)
+                        listAllDonation(foundDonor.getDonationList());
                         break;                  
                     case 8:
                         ClearScreen.clearJavaConsoleScreen();
-                        DonorReports(donors);
+                        DonorReports(updatedDonors);
                         break;
                     case 9:
                         break;
@@ -98,18 +102,20 @@ public class DonorMaintenance {
         
         String category = setDonorCategory();
 
-        String name = donorUI.getDonorName();
+        String name = getName();
         
-        String contactName = "-";
+        String contactName = "";
         if(category.contains("Organisation")){
-            contactName = donorUI.getDonorContactPerson();
+            contactName = getContactName();
+        }else{
+            contactName = "-";
         }
         
         String contact = getContact();
         
         String email = getEmail();
         
-        String address = donorUI.getDonorAddress();
+        String address = getAddress();
         
         Date registedDate = getCurrentDate();
         Donor newDonor = new Donor(donorId, category,name, contactName, contact, email, address,registedDate);
@@ -132,42 +138,44 @@ public class DonorMaintenance {
         
         Donor foundDonor = null;
         int opt = 0;
-        do {
-            try {
-                MessageUI.diplayEnDash();
+                   try {
+            do {
+
                 opt = donorUI.getDonorSearchMenu();
-                MessageUI.diplayEnDash();
                 switch (opt) {
                     case 1:
                         ClearScreen.clearJavaConsoleScreen();
-                        foundDonor = searchDonorID(donors);  
-                        if(foundDonor != null)
-                        listAllDonation(foundDonor.getDonationList());
-             
+                        foundDonor = searchDonorID(donors);
+                        if (foundDonor != null) {
+                            listAllDonation(foundDonor.getDonationList());
+                        }
+
                         break;
                     case 2:
                         ClearScreen.clearJavaConsoleScreen();
                         foundDonor = searchDonorName(donors);
-                        if(foundDonor != null)
-                        listAllDonation(foundDonor.getDonationList());
+                        if (foundDonor != null) {
+                            listAllDonation(foundDonor.getDonationList());
+                        }
                         break;
                     case 3:
                         ClearScreen.clearJavaConsoleScreen();
                         foundDonor = searchContact(donors);
-                        if(foundDonor != null)
-                        listAllDonation(foundDonor.getDonationList());
+                        if (foundDonor != null) {
+                            listAllDonation(foundDonor.getDonationList());
+                        }
                         break;
-                    case 4: 
+                    case 4:
                         ClearScreen.clearJavaConsoleScreen();
                         break;
                     default:
                         MessageUI.displayInvalidOptionMessage();
                         break;
                 }
-            }catch(NumberFormatException ex){
-                MessageUI.displayInvalidIntegerMessage();
-            }
-        }while(opt != 4);
+            } while (opt != 4);
+        } catch (NumberFormatException ex) {
+            MessageUI.displayInvalidIntegerMessage();
+        }
     }
 
     private void RemoveDonor(SortedListSetInterface<Donor> donors) {
@@ -249,7 +257,7 @@ public class DonorMaintenance {
 
                 case 2: 
                     
-                    newContactPerson = donorUI.getDonorContactPerson();
+                    newContactPerson = getContactName();
                     
                     YesNo = donorUI.getConfirmation("update");
                     if (YesNo.equalsIgnoreCase("y")) {
@@ -288,7 +296,7 @@ public class DonorMaintenance {
                     
                 case 5:
                     
-                    newAddress = donorUI.getDonorAddress();
+                    newAddress = getAddress();
 
                     YesNo = donorUI.getConfirmation("update");
                     if (YesNo.equalsIgnoreCase("y")) {
@@ -398,18 +406,314 @@ public class DonorMaintenance {
             }
             
             categorizedDonors.intersect(categorizedStatus);
-            donorUI.printText("Filter Result :");
-            donorUI.printDonorTitle();
-            donorUI.printDonorEnDash();
-            donorUI.printText(categorizedDonors.toString());
+            if(!categorizedDonors.isEmpty()){
+                donorUI.printText("Filter Result :");
+                donorUI.printDonorEnDash();
+                donorUI.printDonorTitle();
+                donorUI.printDonorEnDash();
+                donorUI.printText(categorizedDonors.toString());
+                donorUI.printDonorEnDash();
+                donorUI.printNumberOfEntries(categorizedDonors);
+            }else{
+                donorUI.printText("No results found for the filter, please try again ! ");
+            }
             
-        }while(opt > 6 || opt < 1);
+            
+        }while(choice > 6 || choice < 1);
         }while(opt > 7 || opt < 1);
         
         
     }
     private void DonorReports(SortedListSetInterface<Donor> donors) {
+        int opt = 0;
+
+        try{
+        do{
+        opt = donorUI.getReportOption();
+        switch(opt){
+            case 1:
+                getTopFiveHighestDonatedValue(donors, "Individual");
+                break;
+            case 2:
+                getTopFiveHighestDonatedValue(donors, "Organisation");
+                break;
+            case 3:
+                showReportforNumberOfDonorAndTotalDonatedValuePerCategory(donors);
+                break;
+            case 4:
+                showNewRegisteredDonorReport(donors);
+                break;
+            case 5:
+                showActiveDonorPercentageReport(donors);
+                break;
+            case 6:
+                ClearScreen.clearJavaConsoleScreen();
+                return;
+           default:
+                MessageUI.displayInvalidOptionMessage();
+                continue;
+        }
         
+        }while(opt != 6);
+
+        }catch(NumberFormatException ex){
+            MessageUI.displayInvalidOptionMessage();
+        }
+    }
+    
+    private void getTopFiveHighestDonatedValue(SortedListSetInterface<Donor> donors, String category) {
+        SortedListSetInterface<Donor> clonedDonors = new SortedDoublyLinkedListSet<>();
+        SortedListSetInterface<Donor> selectedDonors = new SortedDoublyLinkedListSet<>();
+
+        while (selectedDonors.getNumberOfEntries() < 5) {
+            Donor highestDonor = null;
+            double highestTotalDonatedAmount = 0;
+
+            Iterator<Donor> donorIterator = donors.getIterator();
+
+            while (donorIterator.hasNext()) {
+                Donor donor = donorIterator.next();
+                if (donor.getCategory().contains(category) && !selectedDonors.contains(donor)) {
+                    double totalDonatedAmount = getTotalDonatedAmountforDonor(donor);
+
+                    if (totalDonatedAmount > highestTotalDonatedAmount) {
+                        highestTotalDonatedAmount = totalDonatedAmount;
+                        highestDonor = donor;
+                    }
+                }
+            }
+
+            if (highestDonor != null) {
+                selectedDonors.add(highestDonor);
+            } else {
+                break;
+            }
+        }
+
+        if (category.equals("Individual")) {
+            donorUI.printText("\n[Summary Report]");
+            donorUI.printEqualsDash();
+            donorUI.printText(String.format("%-7s | %-10s | %-20s | %-20s | %-20s", "Rank", "Donor ID", "Donor Name", "Category", "Total Donation Value"));
+            donorUI.printEqualsDash();
+        } else {
+            donorUI.printText("\n[Summary Report]");
+            donorUI.printEqualsDash();
+            donorUI.printText(String.format("%-7s | %-10s | %-40s | %-30s | %-20s", "Rank", "Donor ID", "Donor Name", "Category", "Total Donation Value"));
+            donorUI.printEqualsDash();
+        }
+
+        int rank = 1;
+        Iterator<Donor> selectedDonorIterator = selectedDonors.getIterator();
+        while (selectedDonorIterator.hasNext()) {
+            Donor donor = selectedDonorIterator.next();
+            double totalDonatedAmount = getTotalDonatedAmountforDonor(donor);
+            if (category.equals("Individual")) {
+                donorUI.printText(String.format("[Top %d] : %-10s | %-20s | %-20s | RM%-20.2f",
+                        rank,
+                        donor.getDonorId(),
+                        donor.getName(),
+                        donor.getCategory(),
+                        totalDonatedAmount));
+
+            } else {
+                donorUI.printText(String.format("[Top %d] : %-10s | %-40s | %-30s | RM%-20.2f",
+                        rank,
+                        donor.getDonorId(),
+                        donor.getName(),
+                        donor.getCategory(),
+                        totalDonatedAmount));
+            }
+            rank++;
+        }
+
+        donorUI.printEqualsDash();
+
+    }
+    
+    private void showReportforNumberOfDonorAndTotalDonatedValuePerCategory(SortedListSetInterface<Donor> donors) {
+        String[] categories = {"Public Organisation", "Private Organisation", "Government Organisation", "Individual"};
+
+        donorUI.printText("\n[Summary Report]");
+        donorUI.printEqualsDash();
+        donorUI.printText(String.format("%-40s | %-30s | %-30s", "Category", "Total Number of Donors", "Total Donated Amount"));
+        donorUI.printEqualsDash();
+
+        for (String category : categories) {
+            int numberOfDonors = getNumberOfDonorPerCategory(donors, category);
+            double totalDonationValue = getTotalDonationValuePerCategory(donors,category);
+            donorUI.printText(String.format("%-40s | %-30d | %-30.2f", category, numberOfDonors, totalDonationValue));
+        }
+
+        donorUI.printEqualsDash();
+        donorUI.printNumberOfEntries(donors);
+    }
+    
+    
+    private int getNumberOfDonorPerCategory(SortedListSetInterface<Donor> donors, String category){
+        
+        SortedListSetInterface<Donor> selectedDonors = new SortedDoublyLinkedListSet<>();;
+        Iterator<Donor> donorIterator = donors.getIterator();
+        donorIterator = donors.getIterator();
+        int totalNumberOfDonors = 0;
+        while (donorIterator.hasNext()) {
+                Donor donor = donorIterator.next();
+                if (donor.getCategory().contains(category)) {
+                    selectedDonors.add(donor);
+                }
+        }
+        
+        totalNumberOfDonors = selectedDonors.getNumberOfEntries();
+        return totalNumberOfDonors;
+    }
+    
+    private double getTotalDonatedAmountforDonor (Donor donor){
+        double totalDonatedAmount = 0;
+        Iterator<Donation> donationIterator = donor.getDonationList().getIterator();
+        donationIterator = donor.getDonationList().getIterator();
+
+        while (donationIterator.hasNext()) {
+            Donation donation = donationIterator.next();
+            Iterator<Item> itemIterator = donation.getDonatedItemList().getIterator();
+            itemIterator = donation.getDonatedItemList().getIterator();
+
+            while (itemIterator.hasNext()) {
+                Item donatedItem = itemIterator.next();
+                totalDonatedAmount += donatedItem.getTotalAmount();
+            }
+        }
+      
+        return totalDonatedAmount;
+    }
+    
+    private double getTotalDonationValuePerCategory(SortedListSetInterface<Donor> donors, String category) {
+
+        Iterator<Donor> donorIterator = donors.getIterator();
+        donorIterator = donors.getIterator();
+        double totalDonatedAmount = 0;
+
+        while (donorIterator.hasNext()) {
+            Donor donor = donorIterator.next();
+            if (donor.getCategory().contains(category)) {
+
+               totalDonatedAmount += getTotalDonatedAmountforDonor(donor);
+            }
+        }
+
+        return totalDonatedAmount;
+    }
+    
+    private void showActiveDonorPercentageReport(SortedListSetInterface<Donor> donors) {
+        SortedListSetInterface<Donor> categorizedStatusDonors = getCategorizedStatusSet(donors, "Active");
+        SortedListSetInterface<Donor> categorizedDonors;
+        
+        String[] categories = {"Public Organisation", "Private Organisation", "Government Organisation", "Individual"};
+
+        donorUI.printText("\n[Summary Report]");
+        donorUI.printEqualsDash();
+        donorUI.printText(String.format("%-30s | %-20s | %-20s | %-15s", "Category", "Active Donors", "Total Donors", "Active  ( % )"));
+        donorUI.printEqualsDash();
+
+        // Calculate for each category
+        for (String category : categories) {
+            int totalDonors = getNumberOfDonorPerCategory(donors, category);
+            double activePercentage = calculateActiveDonorPercentagePerCategory(donors, category);
+            categorizedDonors = getCategorizedDonorSet(donors,category);
+            categorizedDonors.intersect(categorizedStatusDonors);
+            int activeDonors = categorizedDonors.getNumberOfEntries();
+
+            donorUI.printText(String.format("%-30s | %-20d | %-20d | %-10.2f%%", category, activeDonors, totalDonors, activePercentage));
+        }
+
+        // Calculate overall
+        int totalDonorsOverall = donors.getNumberOfEntries();
+        double activePercentageOverall = calculateActiveDonorPercentage(donors);
+        int activeDonorsOverall = categorizedStatusDonors.getNumberOfEntries();
+
+        donorUI.printEqualsDash();
+        donorUI.printText(String.format("%-30s | %-20d | %-20d | %-10.2f%%", "All", activeDonorsOverall, totalDonorsOverall, activePercentageOverall));
+        donorUI.printEqualsDash();
+    }
+
+    
+    private double calculateActiveDonorPercentage(SortedListSetInterface<Donor> donors) {
+
+        int activeDonors = 0;
+        int totalDonors = donors.getNumberOfEntries();
+
+        Iterator<Donor> donorIterator = donors.getIterator();
+
+        while (donorIterator.hasNext()) {
+            Donor donor = donorIterator.next();
+
+            if (donor.getStatus().equalsIgnoreCase("Active")) {
+                activeDonors++;
+            }
+        }
+
+        // Calculate percentage
+        return (totalDonors > 0) ? ((double) activeDonors / totalDonors) * 100 : 0;
+    }
+    
+    private double calculateActiveDonorPercentagePerCategory(SortedListSetInterface<Donor> donors, String category) {
+
+        int activeDonors = 0;
+        int categorizedDonors = 0;
+
+        Iterator<Donor> donorIterator = donors.getIterator();
+
+        while (donorIterator.hasNext()) {
+            Donor donor = donorIterator.next();
+
+            if(donor.getCategory().equals(category)){
+                categorizedDonors++;
+                if (donor.getStatus().equalsIgnoreCase("Active")) {
+                activeDonors++;
+              }
+            }
+            
+        }
+
+        return (categorizedDonors > 0) ? ((double) activeDonors / categorizedDonors) * 100 : 0;
+
+    }
+
+    private void showNewRegisteredDonorReport(SortedListSetInterface<Donor> donors) {
+        SortedListSetInterface<Donor> newDonors = getNumberOfNewRegisteredDonorWithinMonth(donors);
+
+        if(!newDonors.isEmpty()){
+        donorUI.printEqualsDash();
+        donorUI.printText(String.format("%-10s | %-30s | %-30s | %-20s | %-10s", "Donor ID", "Name", "Category", "Registered Date", "Status"));
+        donorUI.printEqualsDash();
+
+        Iterator<Donor> donorIterator = newDonors.getIterator();
+        while (donorIterator.hasNext()) {
+            Donor donor = donorIterator.next();
+            donorUI.printText(String.format("%-10s | %-30s | %-30s | %-20s | %-10s",
+                    donor.getDonorId(),
+                    donor.getName(),
+                    donor.getCategory(),
+                    donor.getRegisteredDate().toString(), 
+                    donor.getStatus()));
+        }
+
+        donorUI.printEqualsDash();
+        }else{
+            donorUI.printText("No new registered donor in this month !");
+        }
+    }
+    private SortedListSetInterface<Donor> getNumberOfNewRegisteredDonorWithinMonth(SortedListSetInterface<Donor> donors){
+        SortedListSetInterface<Donor> selectedDonors = new SortedDoublyLinkedListSet<>();;
+        Iterator<Donor> donorIterator = donors.getIterator();
+        donorIterator = donors.getIterator();
+
+        while (donorIterator.hasNext()) {
+                Donor donor = donorIterator.next();
+                if (donor.getRegisteredDate().withinPassMonth(getCurrentDate())) {
+                    selectedDonors.add(donor);
+                }
+        }
+        
+        return selectedDonors;
     }
     
     private String getContact(){
@@ -445,6 +749,7 @@ public class DonorMaintenance {
                 
                 foundDonor = donor;
                 donorUI.printText("Search Result :");
+                donorUI.printDonorEnDash();
                 donorUI.printDonorTitle();
                 donorUI.printDonorEnDash();
                 donorUI.printText(donor.toString());
@@ -471,6 +776,7 @@ public class DonorMaintenance {
 
                 foundDonor = donor;
                 donorUI.printText("Search Result : ");
+                donorUI.printDonorEnDash();
                 donorUI.printDonorTitle();
                 donorUI.printDonorEnDash(); 
                 donorUI.printText(donor.toString());
@@ -495,6 +801,7 @@ public class DonorMaintenance {
 
                foundDonor = donor;
                donorUI.printText("Search Result : ");
+               donorUI.printDonorEnDash();
                donorUI.printDonorTitle();
                donorUI.printDonorEnDash();              
                donorUI.printText(donor.toString());
@@ -652,7 +959,7 @@ public class DonorMaintenance {
        iterator = donors.getIterator();
        while (iterator.hasNext()) {
            Donor donor = iterator.next();
-           if (donor.getStatus().equals(status)) {
+           if (donor.getStatus().equalsIgnoreCase(status)) {
                categorizedDonors.add(donor);             
            }
        }
@@ -678,7 +985,7 @@ public class DonorMaintenance {
         return new Date(localDay, localMonth, localYear);
     }
    
-   private void checkAndUpdateStatus(SortedListSetInterface<Donor> donors) {
+   private  SortedListSetInterface<Donor> checkAndUpdateStatus(SortedListSetInterface<Donor> donors) {
         Iterator<Donor> donorIterator = donors.getIterator();
         Date currentDate = getCurrentDate();
 
@@ -697,5 +1004,40 @@ public class DonorMaintenance {
                 }
             }
         }
+        
+        return donors;
     }
+   
+   private String getAddress(){
+        String address = "";
+        do{
+        address = donorUI.getDonorAddress();
+         if (address.length() > 70) {
+                MessageUI.displayInvalidAddressMessage();  // Display an error message if invalid 
+            }
+        }while(address.length() > 70);
+        return address;
+   }
+   
+   private String getName(){
+        String name = "";
+        do{
+        name = donorUI.getDonorName();
+         if (name.length() > 40) {
+                MessageUI.displayInvalidDonorNameMessage();  // Display an error message if invalid 
+            }
+        }while(name.length() > 40);
+        return name;
+   }
+   
+   private String getContactName(){
+        String contactName = "";
+        do{
+        contactName = donorUI.getDonorContactPerson();
+         if (contactName.length() > 30) {
+                MessageUI.displayInvalidDonorContactNameMessage();  // Display an error message if invalid 
+            }
+        }while(contactName.length() > 30);
+        return contactName;
+   }
 }
