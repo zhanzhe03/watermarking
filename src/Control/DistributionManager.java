@@ -99,7 +99,7 @@ public class DistributionManager {
                 } else if (daysBetween == 1) {
                     currentRecord.setStatus("SHIPPED");
                 }
-            } else { // For records that are not "MERGED"
+            } else if (currentRecord.getStatus().equalsIgnoreCase("PENDING")) { // For records that are not "MERGED"
                 if (daysBetween >= 2) {
                     currentRecord.setStatus("DISTRIBUTED");
                 } else if (daysBetween == 1) {
