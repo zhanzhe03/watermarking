@@ -226,7 +226,7 @@ public class DonorUI {
     
     public void printEqualsDash(){
         for (int i = 0; i < 120; i++) 
-            System.out.print("=");
+            System.out.print("-");
         System.out.print("\n");
     }
     
