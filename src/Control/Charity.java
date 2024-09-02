@@ -31,7 +31,7 @@ public class Charity {
         do {
             ClearScreen.clearJavaConsoleScreen();
             try {
-                charityUI.getLogo();
+                CommonUse.getLogo();
                 opt = Integer.parseInt(charityUI.getMenu());
 
                 switch (opt) {
