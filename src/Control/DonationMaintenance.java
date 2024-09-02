@@ -1408,7 +1408,7 @@ public class DonationMaintenance {
         } while (opt != 9);
     }
 
-    //2. Item Type reception
+    //Item Type reception
     public void itemTypeReceivedSummary(SortedListSetInterface<Donation> donationHistory) {
         SortedListSetInterface<Item> itemHistory = new SortedDoublyLinkedListSet<>();
         getAllItemHistory(itemHistory, donationHistory);
@@ -1592,7 +1592,7 @@ public class DonationMaintenance {
         } while (iterator.hasNext());
     }
 
-    //1. donation status
+    //donation status
     public void donationStatusSummary(SortedListSetInterface<Donation> donations) {
         for (int i = 0; i < 100; i++) {
             donationUI.printTextWithoutNextLine("=");
