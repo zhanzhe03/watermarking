@@ -4,13 +4,14 @@
  */
 package Entity;
 
-import ADT.*;
+import ADT.SortedDoublyLinkedListSet;
+import ADT.SortedListSetInterface;
 import java.util.Iterator;
 import java.util.Objects;
 
 /**
  *
- * @author USER
+ * @author Chew Zhan Zhe
  */
 public class Donation implements Comparable<Donation>, Cloneable {
 
@@ -114,7 +115,7 @@ public class Donation implements Comparable<Donation>, Cloneable {
     public void setDonor(Donor donor) {
         this.donor = donor;
     }
-
+    
     public void assignItems(Item item) {
         donatedItemList.add(item);
     }

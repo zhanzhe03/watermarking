@@ -84,19 +84,6 @@ public class DonationUI {
     }
 
     //2. Add
-    public String getAddDonationMenu() {
-        System.out.println(""
-                + "\n----------------------------------------------------"
-                + "\nDonation Added Method"
-                + "\n----------------------------------------------------"
-                + "\n 1. Add a New Donation"
-                + "\n 2. Add Items in Existing Donation Records"
-                + "\n----------------------------------------------------"
-                + "\n 9. Return");
-        System.out.print("\nopt > ");
-        return scanner.nextLine();
-    }
-
     public String getItemTypeMenu() {
         System.out.println(""
                 + "\n----------------------------------------------------"
@@ -206,6 +193,19 @@ public class DonationUI {
         System.out.print("\nopt > ");
         return scanner.nextLine();
     }
+    
+    public String getSummaryReport(){
+        System.out.println(""
+                + "\n----------------------------------------------------"
+                + "\nDONATION MANAGEMENT SUMMARY REPORT"
+                + "\n----------------------------------------------------"
+                + "\n 1. Donation Status"
+                + "\n 2. Donation Item Type Received"
+                + "\n----------------------------------------------------"
+                + "\n 9. Return");
+        System.out.print("\nopt > ");
+        return scanner.nextLine();
+    }
 
     public String getInputString(String desc) {
         System.out.print(desc);
@@ -223,6 +223,10 @@ public class DonationUI {
 
     public void printText(String text) {
         System.out.println(text);
+    }
+    
+    public void printTextWithoutNextLine(String text){
+        System.out.print(text);
     }
     
     public void printItemTitle() {
@@ -287,5 +291,37 @@ public class DonationUI {
                 + "\n----------------------------------------------------");
         System.out.print("\nopt > ");
         return scanner.nextLine();
+    }
+    
+    public void sentence1(){
+        System.out.printf("\t\t|  %-5s  |  %-21s  |  %-19s  |  %-10s  |\n", "Index", "Item Type", "Number of Reception", "Propostion");
+    }
+    
+    public void sentence2(int index,String type,int num, double percentage){
+        System.out.printf("\t\t|  %-5d  |  %-21s  |  %19d  |  %10.2f  |\n", index, type, num, percentage);
+    }
+    
+    public void sentence3(int y){
+        System.out.printf("    %02d | ", y);
+    }
+    
+    public void sentence4(String first){
+        System.out.printf("\t                             %-25s\n", first);
+    }
+    
+    public void sentence5(String second, String third){
+        System.out.printf("\t%25s |            | %-25s              \n", second, third);
+    }
+    
+    public void sentence6(){
+        System.out.printf("\t\t|  %-5s  |  %-17s  |  %-18s  |  %-10s  |\n", "Index", "Donation Status", "Number of Donation", "Percentage");
+    }
+    
+    public void sentence7(int index, String status, int num, double percentage){
+        System.out.printf("\t\t|  %-5d  |  %-17s  |  %18d  |  %10.2f  |\n", index, status, num, percentage);
+    }
+    
+    public void sentence8(int y){
+        System.out.printf("    %02d |   ", y);
     }
 }
