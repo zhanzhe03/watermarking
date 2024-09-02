@@ -8,11 +8,21 @@ package Control;
  *
  * @author szewen
  */
-import Boundary.*;
-import Utility.*;
+import Boundary.DonationUI;
+import Boundary.DistributionUI;
+import Utility.ClearScreen;
+import Utility.CommonUse;
+import Utility.MessageUI;
+import Utility.StockUI;
 import ADT.SortedDoublyLinkedListSet;
 import ADT.SortedListSetInterface;
-import Entity.*;
+import Entity.Date;
+import Entity.Distribution;
+import Entity.Donation;
+import Entity.Donee;
+import Entity.Item;
+import Entity.SelectedItem;
+import Entity.Request;
 import java.util.Iterator;
 import DAO.EntityInitializer;
 
@@ -45,29 +55,29 @@ public class DistributionManager {
 
                 switch (opt) {
                     case 1:
-                        //ClearScreen.clearJavaConsoleScreen();
+                        ClearScreen.clearJavaConsoleScreen();
                         ListAllDistributions(distributions);
                         break;
                     case 2:
-                        //ClearScreen.clearJavaConsoleScreen();
+                        ClearScreen.clearJavaConsoleScreen();
                         AddNewDistribution(donatedItemList, distributions, donees, donations, availableItemList);
                         break;
                     case 3:
-                        // ClearScreen.clearJavaConsoleScreen();
+                        ClearScreen.clearJavaConsoleScreen();
                         UpdateDonationDistribution(donatedItemList, distributions, donees);
                         break;
                     case 4:
-                        //ClearScreen.clearJavaConsoleScreen();
                         SearchDonationDistribution(distributions, donatedItemList);
                         break;
                     case 5:
-                        //ClearScreen.clearJavaConsoleScreen();
+                        ClearScreen.clearJavaConsoleScreen();
                         RemoveDonationDistribution(distributions);
                         break;
                     case 6:
                         TrackDistributedItems(distributions, donatedItemList);
                         break;
                     case 7:
+                        ClearScreen.clearJavaConsoleScreen();
                         GenerateSummaryReport(distributions, donatedItemList);
                         break;
                     case 9:
@@ -115,6 +125,7 @@ public class DistributionManager {
         // Default: List all distributions sorted by Distribution ID in ascending order
         Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INASC);
         distributions.reSort();
+        distributionUI.displayMessage("\nAll Distribution Records : ");
         distributionUI.listAllDistributions(distributions);
 
         // Ask user if they want to list distributions with a different sorting method
@@ -556,6 +567,11 @@ public class DistributionManager {
             } else if (updateDist.getStatus().equalsIgnoreCase("Shipped")) {
 
                 MessageUI.displayBlueRemindMsg("The distribution record with ID < " + updateDistID + " > is already shipped and cannot be updated.");
+                return;
+            }
+            else if (updateDist.getStatus().equalsIgnoreCase("MERGED")) {
+
+                MessageUI.displayBlueRemindMsg("The distribution record with ID < " + updateDistID + " > is merged and not allowed to update.");
                 return;
             }
 
