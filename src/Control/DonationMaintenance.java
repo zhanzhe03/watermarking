@@ -1310,7 +1310,7 @@ public class DonationMaintenance {
                 } else {
                     int ttlQty = StockUI.getTotalInventory(typeOpt, donations);
                     donationUI.printText("Total Number of Available Quantity > " + ttlQty);
-                    donationUI.printText("Distribution Open Minimum Available Quantity > " + min);
+                    donationUI.printText("Distribution Open Minimum Available Quantity: " + min);
                     if (ttlQty < min) {
                         MessageUI.displayNotEnoughStockMessage(typeOpt);
                     } else {

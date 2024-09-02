@@ -51,13 +51,13 @@ public class StockUI {
             case "Food and Beverage":
                 return 500;  //500
             case "Household Items":
-                return 50;  //50
+                return 300;  //50
             case "Educational Materials":
                 return 300;  //300
             case "Electronic":
-                return 50;  //50
+                return 300;  //50
             case "Medical":
-                return 100; //100
+                return 300; //100
             default:
                 return 0;
         }
