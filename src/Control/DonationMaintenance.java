@@ -1040,6 +1040,7 @@ public class DonationMaintenance {
         SortedListSetInterface<Item> expiredItems = new SortedDoublyLinkedListSet<>();
         filterByExpiredItem(items, expiredItems);
         if (!expiredItems.isEmpty()) {
+            listAllItem(expiredItems);
             if (validateYesNoOption("\nRemoved All Expired Items Confirmation (Y = yes, N = No)? ") == 'Y') {
                 Iterator<Donation> iterator = donations.getIterator();
                 do {
