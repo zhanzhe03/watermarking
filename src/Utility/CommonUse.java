@@ -115,7 +115,7 @@ public class CommonUse {
     }
 
     private static void printItemTitle() {
-        System.out.printf("\n%-10s  %-24s  %-19s  %-11s  %-17s  %-15s  %-14s\n", "Item ID", "Type", "Description", "Quantity", "Value Per Item", "Total Amount", "Expiry Date");
+        System.out.printf("\n%-10s  %-24s  %-19s  %-11s  %-17s  %-15s  %-14s\n", "Item ID", "Type", "Description", "Quantity", "Value Per Item", "Total Amount (RM)", "Expiry Date");
     }
 
     public static void printItemHeader() {

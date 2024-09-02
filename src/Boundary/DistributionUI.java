@@ -20,7 +20,6 @@ import java.util.Scanner;
 public class DistributionUI {
 
     Scanner scanner = new Scanner(System.in);
-    private SortedListSetInterface<Item> donatedItemList = new SortedDoublyLinkedListSet<>();
 
     public String getDistributionMenu() {
         System.out.println(""
@@ -31,10 +30,7 @@ public class DistributionUI {
                 + "\n 4. Search donation distribution details "
                 + "\n 5. Remove donation distribution"
                 + "\n 6. Monitor/track distributed items"
-                + "\n 7. Generate summary reports"
-                //   + "\n 7. remove donation"
-                //   + "\n 8. Filter donation based on criteria"
-                // + "\n 9. Generate summary reports"
+                + "\n 7. Generate summary reports\n"
                 + "\n 9. Back to MAIN MENU");
         System.out.print("\nopt > ");
         String opt = scanner.nextLine();
