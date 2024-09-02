@@ -1241,7 +1241,6 @@ public class DoneeMaintenance {
         }
 
         // Print total counts for all donees
-        doneeUI.displayEnDash();
         doneeUI.printText(String.format("\n%-15s :", "Total"));
 
         doneeUI.printText(String.format("%-15s : %-12d | %-12d | %-12d | %-12d | %-12d | %-12d | %-12d",

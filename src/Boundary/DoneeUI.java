@@ -183,7 +183,7 @@ public class DoneeUI {
     }
 
     public void requestReceiveTitle() {
-        System.out.println("                                      Report of Donee with Requst & Receive item");
+        System.out.println("\n\n                                      Report of Donee with Requst & Receive item");
     }
 
     public void printRequest(SortedListSetInterface<Request> request) {
