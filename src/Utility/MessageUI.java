@@ -132,7 +132,7 @@ public class MessageUI {
     }
     
     public static void displayInsufficientMessage(){
-        System.out.println(ANSI_RED + "Sumimasih, this category is currently not sufficient for distribution:(\n" + ANSI_BLACK);
+        System.out.println(ANSI_RED + "Sorry, this category is currently not sufficient for distribution:(\n" + ANSI_BLACK);
     }  
     
     public static void displayInvalidDonee(){

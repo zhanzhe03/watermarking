@@ -370,8 +370,8 @@ public class EntityInitializer {
         
         distribution10.addDonee(donee11);
         distribution10.addSelectedItem(new SelectedItem("I014", 5));
-        distribution12.addSelectedItem(new SelectedItem("I016", 10));
-        distribution9.addSelectedItem(new SelectedItem("I023", 3));
+        distribution10.addSelectedItem(new SelectedItem("I016", 10));
+        distribution10.addSelectedItem(new SelectedItem("I023", 3));
         
         distribution11.addDonee(donee12);
         distribution11.addSelectedItem(new SelectedItem("I016", 1));
@@ -379,7 +379,7 @@ public class EntityInitializer {
         
         distribution12.addDonee(donee13);
         distribution12.addSelectedItem(new SelectedItem("I016", 10));
-        distribution9.addSelectedItem(new SelectedItem("I023", 2));
+        distribution12.addSelectedItem(new SelectedItem("I023", 2));
         distribution13.addDonee(donee14);
         distribution13.addSelectedItem(new SelectedItem("I017", 4));
         distribution13.addSelectedItem(new SelectedItem("I048", 400.00));
@@ -389,7 +389,7 @@ public class EntityInitializer {
         
         distribution15.addDonee(donee1);
         distribution15.addSelectedItem(new SelectedItem("I019", 200.00));
-        distribution9.addSelectedItem(new SelectedItem("I022", 5));
+        distribution15.addSelectedItem(new SelectedItem("I022", 5));
         
         distribution16.addDonee(donee19);
         distribution16.addSelectedItem(new SelectedItem("I020", 350.00));

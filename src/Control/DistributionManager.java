@@ -845,8 +845,14 @@ public class DistributionManager {
 
     private void updateDoneeDetails(Distribution updateDist, SortedListSetInterface<Donee> donees) {
 
-        distributionUI.displayMessage("\nDistribution Details: " + updateDist + "\n");
-        MessageUI.displayMagentaPreviewMsg("Current Donee Details: " + updateDist.getDistributedDoneeList());
+        distributionUI.displayMessage("\nDistribution Details: " );
+        distributionUI.printDistributionTitleHeader();
+        distributionUI.displayMessage(""+ updateDist + "\n");
+        MessageUI.displayMagentaPreviewMsg("Current Donee Details: \n");
+        doneeUI.displayEnDash();
+                    doneeUI.printDoneeTitle();
+                     doneeUI.displayEnDash();
+        distributionUI.displayMessage("" + updateDist.getDistributedDoneeList());
 
         String yesNo;
         Donee foundDonee;
