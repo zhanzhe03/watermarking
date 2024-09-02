@@ -1236,6 +1236,11 @@ public class DistributionManager {
             }
         }
         distributionUI.printCategoryCountTableFooter();
+        
+        distributionUI.displayMessage("");
+        
+        CommonUse.printSummaryReportFooter();
+        distributionUI.displayMessage("");
 
     }
 
