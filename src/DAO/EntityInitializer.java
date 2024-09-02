@@ -58,6 +58,10 @@ public class EntityInitializer {
 
     public void entityEnitialize() {
 
+        Donor donor1 = new Donor("DR001", "Public Organisation", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
+        Donor donor2 = new Donor("DR002", "Private Organisation","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
+        Donor donor3 = new Donor("DR003", "Government Organisation", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", new Date(21, 5, 2022), "Active");
+        
         donors.add(new Donor("DR004", "Individual", "Zhang Wei", "-", "012-6754321", "zhangwei@gmail.com", "Jalan SS 7/3, SS 7, 47301 Petaling Jaya, Selangor", new Date(18, 6, 2022), "Prospect"));
         donors.add(new Donor("DR005", "Private Organisation", "ABC Pvt Ltd", "John Lee", "012-6837281", "johnlee@abc.com", "20, Jalan Tun Razak, 50400 Kuala Lumpur", new Date(25, 6, 2022), "Active"));
         donors.add(new Donor("DR006", "Public Organisation", "XYZ Foundation", "Wong Mei", "012-6472819", "wongmei@xyz.org", "15, Jalan Bukit Bintang, 55100 Kuala Lumpur", new Date(5, 7, 2022), "Inactive"));
