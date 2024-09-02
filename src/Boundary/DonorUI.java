@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class DonorUI {
      Scanner scanner = new Scanner(System.in);
 
-    public int getDonorMenu() {
+    public String getDonorMenu() {
         System.out.println(""
                 + "\n DONOR MANAGEMENT"
                 + "\n 1. Display all donor"
@@ -28,8 +28,8 @@ public class DonorUI {
                 + "\n 8. Generate summary reports"
                 + "\n 9. Back to MAIN MENU");
         System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
+        
         return opt;
     }
 
@@ -49,24 +49,22 @@ public class DonorUI {
         System.out.println("\nTotal Number of Donors > " + donors.getNumberOfEntries());
     }
     
-    public int getDonorType(){
+    public String getDonorType(){
         System.out.println("Please select the type of donor:");
         System.out.println(String.format("%-5s %-15s", "1 = ", "Individual"));
-        System.out.println(String.format("%-5s %-15s", "2 = ", "Organisation"));
+        System.out.println(String.format("%-5s %-15s", "2 = ", "Organization"));
         System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine(); 
         return opt;
     }
     
-    public int getOrganisationCategory() {
-        System.out.println("Please select the category of Organisation:");
+    public String getOrganizationCategory() {
+        System.out.println("Please select the category of Organization:");
         System.out.println(String.format("%-5s %-15s", "1 = ", "Public"));
         System.out.println(String.format("%-5s %-15s", "2 = ", "Private"));
         System.out.println(String.format("%-5s %-15s", "3 = ", "Government"));
         System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
     
@@ -89,7 +87,7 @@ public class DonorUI {
     }
 
     public String getDonorContact() {
-        System.out.print("\nEnter Donor's Contact with (-) (eg: 012-345678) :");
+        System.out.print("\nEnter Donor's Contact (eg: 012-345678) :");
         String contact = scanner.nextLine();
         return contact;
     }
@@ -100,7 +98,7 @@ public class DonorUI {
         return address;
     }
     
-    public int getDonorSearchMenu(){
+    public String getDonorSearchMenu(){
          System.out.println(""
                 + "\n Search Donor by : "
                 + "\n 1. Donor ID"
@@ -109,12 +107,11 @@ public class DonorUI {
                 + "\n 4. Back"
                 );
           System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
     
-    public int getDonorDeleteMenu(){
+    public String getDonorDeleteMenu(){
          System.out.println(""
                 + "\n Remove Donor: "
                 + "\n 1. Donor ID"
@@ -122,21 +119,16 @@ public class DonorUI {
                 + "\n 3. Back"
                 );
           System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
     
-    public int getAgainOrBack(String action){
-        System.out.println(""
-                + "\n Do you want to : "
-                + "\n 1. " + action +" again"
-                + "\n 2. Go Back"
+    public String getAgainOrBack(String action){
+        System.out.print(
+                 "\nDo you want to  " + action +" again ? (Y/N) : "
                 );
-        System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
-        return opt;
+        String yesNo = scanner.nextLine();
+        return yesNo;
     }
             
     public String getConfirmation(String action){
@@ -151,7 +143,7 @@ public class DonorUI {
         return donorID;
     }
     
-    public int getDonorStatus(){
+    public String getDonorStatus(){
         System.out.println(""
                 + "\n Update Donor Status : "
                 + "\n 1. Active"
@@ -160,12 +152,11 @@ public class DonorUI {
                 + "\n 4. Banned"
                 );
           System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
     
-    public int getDonorUpdateMenu(){
+    public String getDonorUpdateMenu(){
         System.out.println(""
                 + "\n Update Donor Details by : "
                 + "\n 1. Donor Name"
@@ -177,29 +168,27 @@ public class DonorUI {
                 + "\n 7. Back"
                 );
           System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
     
-    public int getFilterCategoryOption(){
+    public String getFilterCategoryOption(){
         System.out.println(""
                 + "\n Filter Donor List by category: "
                 + "\n 1. Individual"
-                + "\n 2. All Organisation"
-                + "\n 3. Public Organisation"
-                + "\n 4. Private Organisation"
-                + "\n 5. Government Organisation"
+                + "\n 2. All Organization"
+                + "\n 3. Public Organization"
+                + "\n 4. Private Organization"
+                + "\n 5. Government Organization"
                 + "\n 6. None"
                 + "\n 7. Back"
                 );
           System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
     
-    public int getFilterStatusOption(){
+    public String getFilterStatusOption(){
          System.out.println(""
                 + "\n Filter Donor List by status: "
                 + "\n 1. Active"
@@ -210,8 +199,7 @@ public class DonorUI {
                 + "\n 6. Back"
                 );
           System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
     
@@ -220,19 +208,19 @@ public class DonorUI {
             System.out.print("-");
     }
     
-    public int getReportOption(){
+    public String getReportOption(){
         System.out.println(""
                 + "\n Report List: "
                 + "\n 1. Top 5 Individual Donor with Highest Donated Value"
-                + "\n 2. Top 5 Organisation Donor with Highest Donated Value"
+                + "\n 2. Top 5 Organization Donor with Highest Donated Value"
                 + "\n 3. Number of Donors  and total donation value for each Category"
                 + "\n 4. Number of new Registered Donor within a month"
                 + "\n 5. Percentages of active donors"
                 + "\n 6. Back"
                 );
           System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
+
         return opt;
     }
     

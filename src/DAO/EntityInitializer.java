@@ -58,9 +58,9 @@ public class EntityInitializer {
 
     public void entityEnitialize() {
 
-        Donor donor1 = new Donor("DR001", "Public Organisation", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
-        Donor donor2 = new Donor("DR002", "Private Organisation","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
-        Donor donor3 = new Donor("DR003", "Government Organisation", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", new Date(21, 5, 2022), "Active");
+        Donor donor1 = new Donor("DR001", "Public Organization", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
+        Donor donor2 = new Donor("DR002", "Private Organization","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
+        Donor donor3 = new Donor("DR003", "Government Organization", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", new Date(21, 5, 2022), "Active");
         
         Donor donor4 =new Donor("DR004", "Individual", "Zhang Wei", "-", "012-6754321", "zhangwei@gmail.com", "Jalan SS 7/3, SS 7, 47301 Petaling Jaya, Selangor", new Date(18, 6, 2022), "Prospect");
         Donor donor5 =new Donor("DR005", "Private Organisation", "ABC Pvt Ltd", "John Lee", "012-6837281", "johnlee@abc.com", "20, Jalan Tun Razak, 50400 Kuala Lumpur", new Date(25, 6, 2022), "Active");
@@ -362,52 +362,83 @@ public class EntityInitializer {
 
         distribution8.addDonee(donee9);
         distribution8.addSelectedItem(new SelectedItem("I012", 1));
+        distribution8.addSelectedItem(new SelectedItem("I034", 150.00));
+        distribution8.addSelectedItem(new SelectedItem("I017", 8));
+
         distribution9.addDonee(donee10);
         distribution9.addSelectedItem(new SelectedItem("I013", 2));
+        distribution9.addSelectedItem(new SelectedItem("I022", 1));
+        distribution9.addSelectedItem(new SelectedItem("I023", 2));
+
         distribution10.addDonee(donee11);
-        distribution10.addSelectedItem(new SelectedItem("I012", 5));
+        distribution10.addSelectedItem(new SelectedItem("I014", 5));
+        distribution12.addSelectedItem(new SelectedItem("I016", 10));
+        distribution9.addSelectedItem(new SelectedItem("I023", 3));
+
+
         distribution11.addDonee(donee12);
-        distribution11.addSelectedItem(new SelectedItem("I013", 3));
-        distribution12.addDonee(donee13);
-        distribution12.addSelectedItem(new SelectedItem("I014", 10));
-        distribution13.addDonee(donee14);
-        distribution13.addSelectedItem(new SelectedItem("I003", 4));
-        distribution14.addDonee(donee18);
-        distribution14.addSelectedItem(new SelectedItem("I015", 2));
-        distribution15.addDonee(donee1);
-        distribution15.addSelectedItem(new SelectedItem("I013", 2));
-        distribution16.addDonee(donee19);
-        distribution16.addSelectedItem(new SelectedItem("I016", 3));
-        distribution18.addDonee(donee20);
-        distribution18.addSelectedItem(new SelectedItem("I017", 1));
-        distribution19.addDonee(donee13);
-        distribution19.addSelectedItem(new SelectedItem("I011", 1));
-        distribution20.addDonee(donee11);
-        distribution20.addSelectedItem(new SelectedItem("I015", 1));
-        distribution21.addDonee(donee12);
-        distribution21.addSelectedItem(new SelectedItem("I015", 1));
-        distribution22.addDonee(donee13);
-        distribution22.addSelectedItem(new SelectedItem("I010", 100.00));
-        distribution23.addDonee(donee14);
-        distribution23.addSelectedItem(new SelectedItem("I014", 1));
-        distribution24.addDonee(donee9);
-        distribution24.addSelectedItem(new SelectedItem("I018", 5));
-        distribution25.addDonee(donee8);
-        distribution25.addSelectedItem(new SelectedItem("I017", 4));
-        distribution26.addDonee(donee7);
-        distribution26.addSelectedItem(new SelectedItem("I014", 1));
-        distribution27.addDonee(donee6);
-        distribution27.addSelectedItem(new SelectedItem("I016", 2));
-        distribution28.addDonee(donee10);
-        distribution28.addSelectedItem(new SelectedItem("I010", 200.00));
-        distribution29.addDonee(donee11);
-        distribution29.addSelectedItem(new SelectedItem("I002", 3));
+        distribution11.addSelectedItem(new SelectedItem("I016", 1));
+        distribution11.addSelectedItem(new SelectedItem("I027", 2));
+   
         
+        distribution12.addDonee(donee13);
+        distribution12.addSelectedItem(new SelectedItem("I016", 10));
+        distribution9.addSelectedItem(new SelectedItem("I023", 2));
+        distribution13.addDonee(donee14);
+        distribution13.addSelectedItem(new SelectedItem("I017", 4));
+        distribution13.addSelectedItem(new SelectedItem("I048", 400.00));
+
+        
+        distribution14.addDonee(donee18);
+        distribution14.addSelectedItem(new SelectedItem("I018", 2));
+        
+        distribution15.addDonee(donee1);
+        distribution15.addSelectedItem(new SelectedItem("I019", 200.00));
+        distribution9.addSelectedItem(new SelectedItem("I022", 5));
+
+        distribution16.addDonee(donee19);
+        distribution16.addSelectedItem(new SelectedItem("I020", 350.00));
+        distribution18.addDonee(donee20);
+        distribution18.addSelectedItem(new SelectedItem("I021", 3));
+        distribution18.addSelectedItem(new SelectedItem("I034", 3000.00));
+
+        distribution19.addDonee(donee13);
+        distribution19.addSelectedItem(new SelectedItem("I022", 2));
+        distribution20.addDonee(donee11);
+        distribution20.addSelectedItem(new SelectedItem("I023", 10));
+        distribution20.addSelectedItem(new SelectedItem("I033", 100.00));
+        
+        distribution21.addDonee(donee12);
+        distribution21.addSelectedItem(new SelectedItem("I024", 8));
+        distribution21.addSelectedItem(new SelectedItem("I033", 80.00));
+        distribution21.addSelectedItem(new SelectedItem("I035", 10));
+        distribution21.addSelectedItem(new SelectedItem("I040", 10));
+
+        distribution22.addDonee(donee13);
+        distribution22.addSelectedItem(new SelectedItem("I025", 10));
+        distribution22.addSelectedItem(new SelectedItem("I026", 2));
+
+        distribution23.addDonee(donee14);
+        distribution23.addSelectedItem(new SelectedItem("I026", 3));
+        distribution24.addDonee(donee9);
+        distribution24.addSelectedItem(new SelectedItem("I027", 2));
+        distribution25.addDonee(donee8);
+        distribution25.addSelectedItem(new SelectedItem("I028", 50.00));
+
+        distribution26.addDonee(donee7);
+        distribution26.addSelectedItem(new SelectedItem("I029", 50));
+        distribution27.addDonee(donee6);
+        distribution27.addSelectedItem(new SelectedItem("I030", 50));
+        distribution28.addDonee(donee10);
+        distribution28.addSelectedItem(new SelectedItem("I031", 20));
+        distribution29.addDonee(donee11);
+        distribution29.addSelectedItem(new SelectedItem("I033", 300.00));
+
 
         distribution7.addSelectedItem(selectedItem6);
-        distribution17.addSelectedItem(new SelectedItem("I019", 1000.00));
         distribution17.addSelectedItem(new SelectedItem("I017", 1));
-        distribution17.addSelectedItem(new SelectedItem("I002", 5));
+        distribution17.addSelectedItem(new SelectedItem("I019", 1000.00));
+
         distribution21.addSelectedItem(selectedItem6);
         distribution21.addSelectedItem(new SelectedItem("I007", 500.00));
         distribution30.addSelectedItem(new SelectedItem("I010", 100.00));

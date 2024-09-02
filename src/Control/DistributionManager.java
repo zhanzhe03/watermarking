@@ -178,7 +178,7 @@ public class DistributionManager {
         boolean foundType;
 
         double minttlAmt = 0.0;
-        int minQty = 0;
+        int minQty = 0 ;
 
         do {
             // Generate new distribution info
@@ -227,9 +227,7 @@ public class DistributionManager {
 
             do {
                 try {
-                    // Display Donee request each time before prompting for item input
-                    //  displayDoneeRequest(selectedDonee);
-
+                    
                     CommonUse.printItemHeader();
                     distributionUI.displayMessage("\n");
                     distributionUI.displayMessage("" + availableItemList);
@@ -896,6 +894,7 @@ public class DistributionManager {
     }
 
     //**** Update purpose
+    
     //**** Search purpose
     public void SearchDonationDistribution(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
         String input = distributionUI.getInputString("Please enter the keyword to search > ");
@@ -1040,6 +1039,7 @@ public class DistributionManager {
     }
 
     //**** Search purpose
+    
     //**** Remove purpose
     public void RemoveDonationDistribution(SortedListSetInterface<Distribution> distributions) {
         distributionUI.displayMessage("Remove Distribution Donation : ");
@@ -1077,6 +1077,7 @@ public class DistributionManager {
 
         } while (!removeSuccessful); // Repeat until a valid ID is entered and removal is successful
     }
+    //**** Remove purpose
 
     public void TrackDistributedItems(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
 
@@ -1283,13 +1284,11 @@ public class DistributionManager {
     }
 
     private Date getStartOfYear(int year) {
-        // Assuming the Date class has a constructor for day, month, and year
-        return new Date(1, 1, year); // Start date: January 1st of the year
+        return new Date(1, 1, year); 
     }
 
     private Date getEndOfYear(int year) {
-        // Assuming the Date class has a constructor for day, month, and year
-        return new Date(31, 12, year); // End date: December 31st of the year
+        return new Date(31, 12, year); 
     }
 
     private boolean validateDate(int day, int month, int year) {
