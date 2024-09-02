@@ -462,7 +462,8 @@ public class DonationMaintenance {
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
-            boolean isFullyDistributed = checkDonationFullyDistributed(donation);
+            //boolean isFullyDistributed = checkDonationFullyDistributed(donation);
+            boolean isFullyDistributed = false;
             if (donation.getStatus().equalsIgnoreCase("Pending") && !donation.getDonationDate().withinTwoDays(getCurrentDate())) {
                 donation.setStatus("Processing");
             } else if (!donation.getStatus().equalsIgnoreCase("Fully Distributed") && isFullyDistributed) {
@@ -476,16 +477,21 @@ public class DonationMaintenance {
         Iterator<Item> iterator = donation.getDonatedItemList().getIterator();
         do {
             Item item = iterator.next();
-            ttlAmount += item.getTotalAmount();
+            if (item.getTotalAmount() == 0) {
+                return false;
+            }
         } while (iterator.hasNext());
-        return ttlAmount == 0;
+        return true;
     }
 
     //1. list
     public void ListDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
         donationUI.printTitle("All Donation and Item Records");
+        System.out.println("1");
         Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONID_INASC);
+        System.out.println("2");
         donations.reSort();
+        System.out.println("3");
         listAllDonation(donations);
         int opt;
         do {
@@ -1352,12 +1358,14 @@ public class DonationMaintenance {
             if (type.equalsIgnoreCase("Food and Beverage") && item.getType().equalsIgnoreCase(type)) {
                 SortedListSetInterface<Item> expiredItems = new SortedDoublyLinkedListSet<>();
                 filterByExpiredItem(itemsInDonation, expiredItems);
-                if (expiredItems.contains(item)) {
-                    MessageUI.displayExpiredItemInRedColor(item);
-                    count++;
-                } else {
-                    donationUI.printOneItem(item);
-                    count++;
+                if (!expiredItems.isEmpty()) {
+                    if (expiredItems.contains(item)) {
+                        MessageUI.displayExpiredItemInRedColor(item);
+                        count++;
+                    } else {
+                        donationUI.printOneItem(item);
+                        count++;
+                    }
                 }
             } else {
                 if (item.getType().equalsIgnoreCase(type)) {
