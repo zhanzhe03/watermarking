@@ -45,19 +45,19 @@ public class StockUI {
     public static int minimunInventory(String type) {
         switch (type) {
             case "Monetary":
-                return 1000; //10000
+                return 10000; //10000
             case "Clothing and Apparel":
-                return 30;  //300
+                return 300;  //300
             case "Food and Beverage":
-                return 50;  //500
+                return 500;  //500
             case "Household Items":
-                return 5;  //50
+                return 50;  //50
             case "Educational Materials":
-                return 15;  //300
+                return 300;  //300
             case "Electronic":
-                return 3;  //50
+                return 50;  //50
             case "Medical":
-                return 5; //100
+                return 100; //100
             default:
                 return 0;
         }
