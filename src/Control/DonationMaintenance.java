@@ -17,6 +17,9 @@ import Utility.ClearScreen;
 import Utility.CommonUse;
 import Utility.StockUI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +36,7 @@ public class DonationMaintenance {
         SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
         SortedListSetInterface<Donor> donors = entityInitialize.getDonors();
         SortedListSetInterface<Item> items = entityInitialize.getItems();
-        SortedListSetInterface<Donation> donationsHistory = entityInitialize.getDonationsHistory();
+        SortedListSetInterface<Donation> donationHistory = entityInitialize.getDonationsHistory();
 
         int opt;
         do {
@@ -46,7 +49,7 @@ public class DonationMaintenance {
                     break;
                 case 2:
                     ClearScreen.clearJavaConsoleScreen();
-                    AddDonation(donations, donors, items, donationsHistory);
+                    AddDonation(donations, donors, items, donationHistory);
                     break;
                 case 3:
                     ClearScreen.clearJavaConsoleScreen();
@@ -70,7 +73,7 @@ public class DonationMaintenance {
                     break;
                 case 8:
                     ClearScreen.clearJavaConsoleScreen();
-                    summaryReport();
+                    summaryReport(donations, items, donationHistory);
                     break;
                 case 9:
                     break;
@@ -847,7 +850,7 @@ public class DonationMaintenance {
                     }
                     break;
                 case 4:
-                    if (item.getType().equalsIgnoreCase("Monetory")) {
+                    if (item.getType().equalsIgnoreCase("Monetary")) {
                         double amount = validateNumberFormatDoubleInput("Amount: ");
                         item.setTotalAmount(amount);
                         MessageUI.displaySuccessfulMessage();
@@ -1379,7 +1382,368 @@ public class DonationMaintenance {
     }
 
     //8. report
-    public void summaryReport() {
+    public void summaryReport(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donation> donationHistory) {
+        int opt;
+        do {
+            opt = validateMenuNumberFormatInput(donationUI.getSummaryReport());
+            switch (opt) {
+                case 1:
+                    ClearScreen.clearJavaConsoleScreen();
+                    donationStatusSummary(donations);
+                    break;
+                case 2:
+                    ClearScreen.clearJavaConsoleScreen();
+                    itemTypeReceivedSummary(donationHistory);
+                    break;
+                default:
 
+            }
+            if (opt >= 1 && opt <= 2) {
+                donationUI.getInputString("\n\n\nPress ENTER or any key to continue...");
+                donationUI.printText("\n");
+            }
+        } while (opt != 9);
+    }
+
+    //2. Item Type reception
+    public void itemTypeReceivedSummary(SortedListSetInterface<Donation> donationHistory) {
+        SortedListSetInterface<Item> itemHistory = new SortedDoublyLinkedListSet<>();
+        getAllItemHistory(itemHistory, donationHistory);
+
+        for (int i = 0; i < 110; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
+        donationUI.printText("\n\n\t\t\t\tDONATED ITEM TYPE RECEPTION ANALYSIS REPORT");
+        donationUI.printText("\t\t\t\t------------------------------------------");
+        donationUI.printText("\nGenerated at: " + getGeneratedReportDate());
+        //dividing line
+        for (int i = 0; i < 110; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        //dividing line
+
+        donationUI.printText("\n\n\t       Table of number of reception and proportions of various types of donated items\n");
+        donationUI.printTextWithoutNextLine("\t\t+");
+        for (int i = 0; i < 74; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("+");
+        donationUI.sentence1();
+        donationUI.printTextWithoutNextLine("\t\t+");
+        for (int i = 0; i < 74; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("+");
+        for (int index = 1; index < 8; index++) {
+            String type = StockUI.getItemType(index);
+            int num = countNumberOfReceptionOfItemType(type, itemHistory);
+            double percentage = (double) num * 100 / (double) itemHistory.getNumberOfEntries();
+            donationUI.sentence2(index, type, num, percentage);
+        }
+        donationUI.printTextWithoutNextLine("\t\t+");
+        for (int i = 0; i < 74; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("+");
+        donationUI.printText("\nTotal number of Donation > " + itemHistory.getNumberOfEntries());
+        donationUI.printText("");
+
+        //dividing line
+        for (int i = 0; i < 110; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        //dividing line
+
+        donationUI.printText("\n\n\t\t\t\tBar chart of Number of Reception of various Item Type\n");
+        donationUI.printText("Number of Reception");
+        donationUI.printText("       ^");
+        for (int y = getY_axis(getMostAndLeastOfItemTypeReception("most", itemHistory)); y > 0; y--) {
+            if (y % 5 == 0) {
+                donationUI.sentence3(y);
+            } else {
+                donationUI.printTextWithoutNextLine("       | ");
+            }
+            for (int x = 1; x < 8; x++) {
+                if (countNumberOfReceptionOfItemType(StockUI.getItemType(x), itemHistory) == y) {
+                    donationUI.printTextWithoutNextLine("   +-----+   ");
+                } else if (countNumberOfReceptionOfItemType(StockUI.getItemType(x), itemHistory) > y) {
+                    donationUI.printTextWithoutNextLine("   |     |   ");
+                } else {
+                    donationUI.printTextWithoutNextLine("             ");
+                }
+            }
+            donationUI.printText("");
+        }
+        donationUI.printTextWithoutNextLine("       +");
+        for (int i = 0; i < 93; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("> Item Type");
+        donationUI.printText("       0    Monetary     Clothing     Food and    Household   Educational   Electronic    Medical");
+        donationUI.printText("                        and Apparel   Beverage      Items      Materials");
+        donationUI.printText("\n\nThe most Number of Reception of Item Type > " + StockUI.getItemType(getMostAndLeastOfItemTypeReception("most", itemHistory)));
+        donationUI.printText("The least Number of Reception of Item Type > " + StockUI.getItemType(getMostAndLeastOfItemTypeReception("least", itemHistory)));
+        donationUI.printText("");
+
+        //dividing line
+        for (int i = 0; i < 110; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        //dividing line
+        donationUI.printText("\n\n\t\t\tTop 3 Item Type of number of reception\n");
+        SortedListSetInterface<Item> tempHistory = new SortedDoublyLinkedListSet<>();
+        tempHistory.merge(itemHistory);
+        String first = StockUI.getItemType(getTop3(tempHistory));
+        String second = StockUI.getItemType(getTop3(tempHistory));
+        String third = StockUI.getItemType(getTop3(tempHistory));
+        donationUI.sentence4(first);
+        donationUI.printText("\t                          +------------+               ");
+        donationUI.printText("\t                          |    Top 1   | ");
+        donationUI.sentence5(second, third);
+        donationUI.printText("\t             +------------+            +------------+     ");
+        donationUI.printText("\t             |   Top 2    |            |    Top 3   |     ");
+        donationUI.printText("\t             |            |            |            |     ");
+        donationUI.printText("");
+        //dividing line
+        for (int i = 0; i < 110; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        //dividing line
+
+        donationUI.printText("\n\t\t\t\t\tEND OF THE REPORT");
+        for (int i = 0; i < 110; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
+    }
+
+    private void getAllItemHistory(SortedListSetInterface<Item> itemHistory, SortedListSetInterface<Donation> donationHistory) {
+        Iterator<Donation> iterator = donationHistory.getIterator();
+        do {
+            Donation donation = iterator.next();
+            itemHistory.merge(donation.getDonatedItemList());
+        } while (iterator.hasNext());
+    }
+
+    private int countNumberOfReceptionOfItemType(String type, SortedListSetInterface<Item> itemList) {
+        int count = 0;
+        Iterator<Item> iterator = itemList.getIterator();
+        do {
+            Item item = iterator.next();
+            if (item.getType().equalsIgnoreCase(type)) {
+                count++;
+            }
+        } while (iterator.hasNext());
+        return count;
+    }
+
+    private int getMostAndLeastOfItemTypeReception(String input, SortedListSetInterface<Item> itemList) {
+        int index;
+        if (input.equalsIgnoreCase("most")) {
+            int most = countNumberOfReceptionOfItemType(StockUI.getItemType(1), itemList);
+            index = 1;
+            for (int i = 2; i < 8; i++) {
+                int temp = countNumberOfReceptionOfItemType(StockUI.getItemType(i), itemList);
+                if (temp > most) {
+                    most = temp;
+                    index = i;
+                }
+            }
+            return index;
+        } else {
+            int least = countNumberOfReceptionOfItemType(StockUI.getItemType(1), itemList);
+            index = 1;
+            for (int i = 2; i < 8; i++) {
+                int temp = countNumberOfReceptionOfItemType(StockUI.getItemType(i), itemList);
+                if (temp < least) {
+                    least = temp;
+                    index = i;
+                }
+            }
+            return index;
+        }
+    }
+
+    private int getTop3(SortedListSetInterface<Item> itemList) {
+        int index;
+        int most = countNumberOfReceptionOfItemType(StockUI.getItemType(1), itemList);
+        index = 1;
+        for (int i = 2; i < 8; i++) {
+            int temp = countNumberOfReceptionOfItemType(StockUI.getItemType(i), itemList);
+            if (temp > most) {
+                most = temp;
+                index = i;
+            }
+        }
+        removeAllItemForOneType(StockUI.getItemType(index), itemList);
+        return index;
+    }
+
+    private void removeAllItemForOneType(String type, SortedListSetInterface<Item> itemList) {
+        Iterator<Item> iterator = itemList.getIterator();
+        do {
+            Item item = iterator.next();
+            if (item.getType().equalsIgnoreCase(type)) {
+                itemList.remove(item);
+            }
+        } while (iterator.hasNext());
+    }
+
+    //1. donation status
+    public void donationStatusSummary(SortedListSetInterface<Donation> donations) {
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
+        donationUI.printText("\n\n\t\t\t\tDONATION STATUS ANALYSIS REPORT");
+        donationUI.printText("\t\t\t\t-------------------------------");
+        donationUI.printText("\nGenerated at: " + getGeneratedReportDate());
+        //dividing line
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        //dividing line
+
+        donationUI.printText("\n\n\t\t     Table of the count and percentage of donations in each status\n");
+        donationUI.printTextWithoutNextLine("\t\t+");
+        for (int i = 0; i < 69; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("+");
+        donationUI.sentence6();
+        donationUI.printTextWithoutNextLine("\t\t+");
+        for (int i = 0; i < 69; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("+");
+        for (int index = 1; index < 5; index++) {
+            String status = getStatus(index);
+            int num = countDonationStatus(status, donations);
+            double percentage = (double) num * 100 / (double) donations.getNumberOfEntries();
+            donationUI.sentence7(index, status, num, percentage);
+        }
+        donationUI.printTextWithoutNextLine("\t\t+");
+        for (int i = 0; i < 69; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("+");
+        donationUI.printText("\nTotal number of Donation > " + donations.getNumberOfEntries());
+        donationUI.printText("");
+
+        //dividing line
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        //dividing line
+
+        donationUI.printText("\n\n\t\t\t\tBar chart of All Donation Status\n");
+        donationUI.printText("Number of Donation");
+        donationUI.printText("       ^");
+        for (int y = getY_axis(getMostAndLeastOfDonationStatus("most", donations)); y > 0; y--) {
+            if (y % 5 == 0) {
+                donationUI.sentence8(y);
+            } else {
+                donationUI.printTextWithoutNextLine("       |   ");
+            }
+            for (int x = 1; x < 5; x++) {
+                if (countDonationStatus(getStatus(x), donations) == y) {
+                    donationUI.printTextWithoutNextLine("      +-----+      ");
+                } else if (countDonationStatus(getStatus(x), donations) > y) {
+                    donationUI.printTextWithoutNextLine("      |     |      ");
+                } else {
+                    donationUI.printTextWithoutNextLine("                   ");
+                }
+            }
+            donationUI.printText("");
+        }
+        donationUI.printTextWithoutNextLine("       +");
+        for (int i = 0; i < 80; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("> Status");
+        donationUI.printText("       0         Pending           Processing        Distributing    Fully Distributed");
+        donationUI.printText("\n\nThe most Donation Status > " + getStatus(getMostAndLeastOfDonationStatus("most", donations)));
+        donationUI.printText("The least Donation Status > " + getStatus(getMostAndLeastOfDonationStatus("least", donations)));
+
+        donationUI.printText("");
+        //dividing line
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        //dividing line
+
+        donationUI.printText("\n\t\t\t\t\tEND OF THE REPORT");
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
+    }
+
+    private String getStatus(int n) {
+        switch (n) {
+            case 1:
+                return "Pending";
+            case 2:
+                return "Processing";
+            case 3:
+                return "Distributing";
+            case 4:
+                return "Fully Distributed";
+            default:
+                return null;
+        }
+    }
+
+    private int countDonationStatus(String status, SortedListSetInterface<Donation> donations) {
+        int count = 0;
+        Iterator<Donation> iterator = donations.getIterator();
+        do {
+            Donation donation = iterator.next();
+            if (donation.getStatus().equalsIgnoreCase(status)) {
+                count++;
+            }
+        } while (iterator.hasNext());
+        return count;
+    }
+
+    private int getMostAndLeastOfDonationStatus(String input, SortedListSetInterface<Donation> donations) {
+        int index;
+        if (input.equalsIgnoreCase("most")) {
+            int most = countDonationStatus(getStatus(1), donations);
+            index = 1;
+            for (int i = 2; i < 5; i++) {
+                int temp = countDonationStatus(getStatus(i), donations);
+                if (temp > most) {
+                    most = temp;
+                    index = i;
+                }
+            }
+            return index;
+        } else {
+            int least = countDonationStatus(getStatus(1), donations);
+            index = 1;
+            for (int i = 2; i < 5; i++) {
+                int temp = countDonationStatus(getStatus(i), donations);
+                if (temp < least) {
+                    least = temp;
+                    index = i;
+                }
+            }
+            return index;
+        }
+    }
+
+    private int getY_axis(int higher) {
+        if (higher % 5 == 0) {
+            return higher + 5;
+        } else {
+            while (higher % 5 != 0) {
+                higher++;
+            }
+            return higher;
+        }
+    }
+
+    private String getGeneratedReportDate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyyy, hh:mm a", Locale.ENGLISH);
+        return now.format(formatter);
     }
 }

@@ -220,7 +220,7 @@ public class Donor implements Comparable<Donor> , Cloneable{
         }else{
             outputStr += String.format(" %-15s %-20s", "-", "-");
         }
-        // Return the formatted string
+
         return outputStr.toString();
     }
 }

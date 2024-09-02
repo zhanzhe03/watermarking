@@ -94,6 +94,18 @@ public class MessageUI {
         System.out.println(ANSI_RED + "Invalid email address. Please make sure the email contains the '@' symbol." + ANSI_BLACK);
     }
     
+    public static void displayInvalidAddressMessage() {
+        System.out.println(ANSI_RED + "Invalid address length. Please make sure the address is not too long." + ANSI_BLACK);
+    }
+    
+    public static void displayInvalidDonorNameMessage() {
+        System.out.println(ANSI_RED + "Invalid name length. Please make sure the name is not too long." + ANSI_BLACK);
+    }
+    
+    public static void displayInvalidDonorContactNameMessage() {
+        System.out.println(ANSI_RED + "Invalid contact name length. Please make sure the contact name is not too long." + ANSI_BLACK);
+    }
+    
     public static void displayInvalidContactMessage() {
         System.out.println(ANSI_RED + "Invalid contact number. It must start with '0' and be no longer than 11 digits."+ ANSI_BLACK);
     }

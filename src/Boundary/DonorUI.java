@@ -77,19 +77,19 @@ public class DonorUI {
     }
 
     public String getDonorEmail() {
-        System.out.print("\nEnter Donor's Email :");
+        System.out.print("\nEnter Donor's Email (eg: yihang@gmail.com) :");
         String email = scanner.nextLine();
         return email;
     }
     
     public String getDonorContactPerson() {
-        System.out.print("\nEnter Donor's Contact Person :");
+        System.out.print("\nEnter Donor's Contact Name :");
         String contact = scanner.nextLine();
         return contact;
     }
 
     public String getDonorContact() {
-        System.out.print("\nEnter Donor's Contact with (-) :");
+        System.out.print("\nEnter Donor's Contact with (-) (eg: 012-345678) :");
         String contact = scanner.nextLine();
         return contact;
     }
@@ -219,5 +219,29 @@ public class DonorUI {
         for (int i = 0; i < 300; i++) 
             System.out.print("-");
     }
+    
+    public int getReportOption(){
+        System.out.println(""
+                + "\n Report List: "
+                + "\n 1. Top 5 Individual Donor with Highest Donated Value"
+                + "\n 2. Top 5 Organisation Donor with Highest Donated Value"
+                + "\n 3. Number of Donors  and total donation value for each Category"
+                + "\n 4. Number of new Registered Donor within a month"
+                + "\n 5. Percentages of active donors"
+                + "\n 6. Back"
+                );
+          System.out.print("\nopt > ");
+        int opt = scanner.nextInt();
+        scanner.nextLine();
+        return opt;
+    }
+    
+    public void printEqualsDash(){
+        for (int i = 0; i < 120; i++) 
+            System.out.print("=");
+        System.out.print("\n");
+    }
+    
+    
     
 }

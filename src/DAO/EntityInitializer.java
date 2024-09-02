@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author USER
+ * @author CHEWZHANZHE
  */
 public class EntityInitializer {
 
@@ -57,30 +57,60 @@ public class EntityInitializer {
     }
 
     public void entityEnitialize() {
+
         Donor donor1 = new Donor("DR001", "Public Organisation", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
-        Donor donor2 = new Donor("DR002", "Private Organisation", "Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
+        Donor donor2 = new Donor("DR002", "Private Organisation","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
         Donor donor3 = new Donor("DR003", "Government Organisation", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", new Date(21, 5, 2022), "Active");
+        
+        donors.add(new Donor("DR004", "Individual", "Zhang Wei", "-", "012-6754321", "zhangwei@gmail.com", "Jalan SS 7/3, SS 7, 47301 Petaling Jaya, Selangor", new Date(18, 6, 2022), "Prospect"));
+        donors.add(new Donor("DR005", "Private Organisation", "ABC Pvt Ltd", "John Lee", "012-6837281", "johnlee@abc.com", "20, Jalan Tun Razak, 50400 Kuala Lumpur", new Date(25, 6, 2022), "Active"));
+        donors.add(new Donor("DR006", "Public Organisation", "XYZ Foundation", "Wong Mei", "012-6472819", "wongmei@xyz.org", "15, Jalan Bukit Bintang, 55100 Kuala Lumpur", new Date(5, 7, 2022), "Inactive"));
+        donors.add(new Donor("DR007", "Government Organisation", "Ministry of Health", "Tan Ah Kow", "012-7351827", "tanahkow@moh.gov.my", "Jalan Cempaka, 50490 Kuala Lumpur", new Date(11, 7, 2022), "Active"));
+        donors.add(new Donor("DR008", "Individual", "Lee Ai Ling", "-", "012-7428910", "ailing_lee@gmail.com", "12, Jalan Ampang, 50450 Kuala Lumpur", new Date(20, 7, 2022), "Banned"));
+        donors.add(new Donor("DR009", "Private Organisation", "MNO Corporation", "Ong Siew Mun", "012-8129837", "ongsm@mno.com", "18, Jalan Raja Chulan, 50200 Kuala Lumpur", new Date(28, 7, 2022), "Active"));
+        donors.add(new Donor("DR010", "Public Organisation", "DEF Trust", "Lim Swee Ling", "012-8734590", "limsweeling@deftrust.org", "Jalan Tun HS Lee, 50000 Kuala Lumpur", new Date(3, 8, 2022), "Prospect"));
+        donors.add(new Donor("DR011", "Government Organisation", "Department of Education", "Chong Kar Ling", "012-8491023", "karling.chong@education.gov.my", "Jalan Bukit Jalil, 57000 Kuala Lumpur", new Date(10, 8, 2022), "Inactive"));
+        donors.add(new Donor("DR012", "Individual", "Chen Wei", "-", "012-7821049", "chenwei@gmail.com", "Jalan Damansara, 60000 Kuala Lumpur", new Date(15, 8, 2022), "Active"));
+        donors.add(new Donor("DR013", "Private Organisation", "GHI Sdn Bhd", "Cheong Siew Fong", "012-6745120", "cheongsf@ghi.com", "Jalan Sultan Ismail, 50250 Kuala Lumpur", new Date(21, 8, 2022), "Banned"));
+        donors.add(new Donor("DR014", "Public Organisation", "UVW Charities", "Yap Wei Jian", "012-6845127", "yapweijian@uvw.org", "Jalan Raja Abdullah, 50300 Kuala Lumpur", new Date(29, 8, 2022), "Active"));
+        donors.add(new Donor("DR015", "Government Organisation", "National Welfare Department", "Low Kah Meng", "012-7891034", "kahmeng@welfare.gov.my", "Jalan Kuching, 51200 Kuala Lumpur", new Date(5, 9, 2022), "Inactive"));
+        donors.add(new Donor("DR016", "Individual", "Ng Ai Lin", "-", "012-6712384", "ngailin@gmail.com", "Jalan Loke Yew, 55200 Kuala Lumpur", new Date(10, 9, 2022), "Prospect"));
+        donors.add(new Donor("DR017", "Private Organisation", "JKL Holdings", "Khoo Kai Ling", "012-8749123", "kailing@jkl.com", "Jalan Tun Sambanthan, 50470 Kuala Lumpur", new Date(15, 9, 2022), "Active"));
+        donors.add(new Donor("DR018", "Public Organisation", "MNZ Association", "Chia Wei Liang", "012-8941235", "chiaweiliang@mnz.org", "Jalan Raja Laut, 50350 Kuala Lumpur", new Date(22, 9, 2022), "Inactive"));
+        donors.add(new Donor("DR019", "Government Organisation", "Ministry of Finance", "Tan Cheng Wee", "012-8120456", "chengwee@mof.gov.my", "Jalan Duta, 50480 Kuala Lumpur", new Date(28, 9, 2022), "Active"));
+        donors.add(new Donor("DR020", "Individual", "Soh Wei Ling", "-", "012-6758342", "weiling.soh@gmail.com", "Jalan Pudu, 55100 Kuala Lumpur", new Date(5, 10, 2022), "Banned"));
+        donors.add(new Donor("DR021", "Public Organisation", "Tan Mei Ling", "Tan Mei Ling", "012-4567890", "meiling.tan@gmail.com", "11, Jalan Taman Megah, 47301 Petaling Jaya, Selangor", new Date(5, 8, 2022), "Active"));
+        donors.add(new Donor("DR022", "Private Organisation", "Khoo Wen Jian", "Khoo Wen Jian", "016-2345678", "wenjian.khoo@gmail.com", "22, Lorong Bukit Anggerik, 56100 Kuala Lumpur", new Date(12, 9, 2022), "Inactive"));
+        donors.add(new Donor("DR023", "Government Organisation", "Education Support Fund", "Low Zhi Hao", "013-9876543", "zhihao.low@gov.my", "5, Persiaran Perdana, 62100 Putrajaya", new Date(18, 7, 2022), "Banned"));
+        donors.add(new Donor("DR024", "Individual", "Siti Nur Aisyah", "-", "017-8765432", "aisyah.siti@gmail.com", "16, Jalan SS 2/45, 47300 Petaling Jaya, Selangor", new Date(28, 6, 2022), "Active"));
+        donors.add(new Donor("DR025", "Public Organisation", "Green Earth Foundation", "Lai Wai Mun", "014-2345678", "waimun.lai@gmail.com", "3, Jalan Damansara, 60000 Kuala Lumpur", new Date(22, 8, 2022), "Prospect"));
+        donors.add(new Donor("DR026", "Private Organisation", "Tech Innovators", "Yap Wei Jie", "019-3456789", "weijie.yap@techinnovators.com", "10, Jalan Teknologi, 47810 Petaling Jaya, Selangor", new Date(3, 10, 2022), "Inactive"));
+        donors.add(new Donor("DR027", "Government Organisation", "Healthcare Development Fund", "Ng Wei Keat", "012-5436789", "weikeat.ng@gov.my", "7, Jalan Bukit Bintang, 55100 Kuala Lumpur", new Date(1, 9, 2022), "Active"));
+        donors.add(new Donor("DR028", "Individual", "Lee Zhi Xuan", "-", "018-2345678", "zhixuan.lee@gmail.com", "12, Jalan Tun Razak, 50400 Kuala Lumpur", new Date(7, 7, 2022), "Banned"));
+        donors.add(new Donor("DR029", "Public Organisation", "Wildlife Conservation Society", "Chong Wai Leng", "011-2345678", "waileng.chong@gmail.com", "4, Jalan Ampang, 50450 Kuala Lumpur", new Date(25, 8, 2022), "Active"));
+        donors.add(new Donor("DR030", "Private Organisation", "Youth Empowerment Hub", "Chan Mei Yen", "013-7654321", "meiyen.chan@gmail.com", "9, Jalan Bangsar, 59000 Kuala Lumpur", new Date(15, 9, 2022), "Prospect"));
+
 
         Donee donee1 = new Donee("DE001", "INDIVIDUAL", "TAN JIAN QUAN", "jianquan@gmail.com", "0125030510", "No80 Taman Gembira", "Location A", new Date(10, 2, 2022));
-        Donee donee2 = new Donee("DE002", "ORGANIZATION", "TARUMT FOOD BANK", "tarumtoffice@gmail.com", "0125558888", "JALAN TUNKU ABDUL RAHMAN", "Location B", new Date(2, 3, 2022));
+        Donee donee2 = new Donee("DE002", "ORGANISATION", "TARUMT FOOD BANK", "tarumtoffice@gmail.com", "0125558888", "JALAN TUNKU ABDUL RAHMAN", "Location B", new Date(2, 3, 2022));
         Donee donee3 = new Donee("DE003", "FAMILY", "LIM FAMILY", "qiern@gmail.com", "0125030512", "No82 Taman Gilang", "Location C", new Date(14, 3, 2022));
         Donee donee4 = new Donee("DE004", "INDIVIDUAL", "KIKI GUO", "kiki@gmail.com", "012503251", "No20 Taman Gembira", "Location A", new Date(10, 5, 2022));
         Donee donee5 = new Donee("DE005", "INDIVIDUAL", "DARREN LIM", "darren@gmail.com", "0123030520", "No30 Taman Gembira", "Location A", new Date(2, 4, 2021));
         Donee donee6 = new Donee("DE006", "INDIVIDUAL", "GUO JING LIM", "jinglim@gmail.com", "0133030520", "No11 Taman Kuching", "Location A", new Date(2, 5, 2021));
         Donee donee7 = new Donee("DE007", "FAMILY", "QUAN FAMILY", "quan@gmail.com", "0143030520", "No2 Jalan Kuching", "Location A", new Date(2, 6, 2021));
         Donee donee8 = new Donee("DE008", "FAMILY", "JIAN FAMILY", "jian@gmail.com", "0155030510", "No32 Sungai Besar Jalan Tepi", "Location A", new Date(8, 2, 2022));
-        Donee donee9 = new Donee("DE009", "ORGANIZATION", "SUNWAY FOOD BANK", "sunway@gmail.com", "0125558888", "PJ Jalan Sunway", "Location B", new Date(3, 3, 2022));
-        Donee donee10 = new Donee("DE0010", "FAMILY", "KIKI FAMILY", "kiki@gmail.com", "0125130512", "No81 Bagan Pasir", "Location C", new Date(14, 9, 2022));
-        Donee donee11 = new Donee("DE0011", "INDIVIDUAL", "QIAN ER", "qianer@gmail.com", "012523251", "No11 Bagan Pasir", "Location A", new Date(10, 11, 2022));
-        Donee donee12 = new Donee("DE0012", "INDIVIDUAL", "DEBBIE", "debbie@gmail.com", "0163030520", "No30 Bagan Pasir", "Location A", new Date(2, 12, 2021));
-        Donee donee13 = new Donee("DE0013", "ORGANIZATION", "TAYLOR FOOD BANK", "taylor@gmail.com", "0123032520", "KL Jalan Taylor", "Location A", new Date(13, 4, 2021));
-        Donee donee14 = new Donee("DE0014", "ORGANIZATION", "SEGI FOOD BANK", "segi@gmail.com", "0123012520", "BLOCK A PV16 09-12", "Location A", new Date(8, 4, 2021));
-        Donee donee15 = new Donee("DE0015", "INDIVIDUAL", "BAODING", "baoding@gmail.com", "0125030534", "PV18 BLOCK B 0813", "Location A", new Date(11, 5, 2022));
-        Donee donee16 = new Donee("DE0016", "ORGANIZATION", "VTAR FOOD BANK", "vtar@gmail.com", "0125458888", "JALAN TUNKU ABDUL RAHMAN", "Location B", new Date(2, 6, 2022));
-        Donee donee17 = new Donee("DE0017", "FAMILY", "ABU FAMILY", "abu@gmail.com", "0125030345", "No89 Taman Gila", "Location C", new Date(11, 2, 2020));
-        Donee donee18 = new Donee("DE0018", "INDIVIDUAL", "ANG XIAO", "ang@gmail.com", "017523251", "No20 Taman Gembira", "Location A", new Date(10, 5, 2021));
-        Donee donee19 = new Donee("DE0019", "ORGANIZATION", "CITC FOOD BANK", "citc@gmail.com", "0143232520", "JALAN TUNKU ABDUL RAHMAN", "Location A", new Date(3, 11, 2021));
-        Donee donee20 = new Donee("DE0020", "ORGANIZATION", "UTAR FOOD BANK", "utar@gmail.com", "0163240520", "SUNGAI BULOH UTAR", "Location A", new Date(1, 1, 2021));
+        Donee donee9 = new Donee("DE009", "ORGANISATION", "SUNWAY FOOD BANK", "sunway@gmail.com", "0125558888", "PJ Jalan Sunway", "Location B", new Date(3, 3, 2022));
+        Donee donee10 = new Donee("DE010", "FAMILY", "KIKI FAMILY", "kiki@gmail.com", "0125130512", "No81 Bagan Pasir", "Location C", new Date(14, 9, 2022));
+        Donee donee11 = new Donee("DE011", "INDIVIDUAL", "QIAN ER", "qianer@gmail.com", "012523251", "No11 Bagan Pasir", "Location A", new Date(10, 11, 2022));
+        Donee donee12 = new Donee("DE012", "INDIVIDUAL", "DEBBIE", "debbie@gmail.com", "0163030520", "No30 Bagan Pasir", "Location A", new Date(2, 12, 2021));
+        Donee donee13 = new Donee("DE013", "ORGANISATION", "TAYLOR FOOD BANK", "taylor@gmail.com", "0123032520", "KL Jalan Taylor", "Location A", new Date(13, 4, 2021));
+        Donee donee14 = new Donee("DE014", "ORGANISATION", "SEGI FOOD BANK", "segi@gmail.com", "0123012520", "BLOCK A PV16 09-12", "Location A", new Date(8, 4, 2021));
+        Donee donee15 = new Donee("DE015", "INDIVIDUAL", "BAODING", "baoding@gmail.com", "0125030534", "PV18 BLOCK B 0813", "Location A", new Date(11, 5, 2022));
+        Donee donee16 = new Donee("DE016", "ORGANISATION", "VTAR FOOD BANK", "vtar@gmail.com", "0125458888", "JALAN TUNKU ABDUL RAHMAN", "Location B", new Date(2, 6, 2022));
+        Donee donee17 = new Donee("DE017", "FAMILY", "ABU FAMILY", "abu@gmail.com", "0125030345", "No89 Taman Gila", "Location C", new Date(11, 2, 2020));
+        Donee donee18 = new Donee("DE018", "INDIVIDUAL", "ANG XIAO", "ang@gmail.com", "017523251", "No20 Taman Gembira", "Location A", new Date(10, 5, 2021));
+        Donee donee19 = new Donee("DE019", "ORGANISATION", "CITC FOOD BANK", "citc@gmail.com", "0143232520", "JALAN TUNKU ABDUL RAHMAN", "Location A", new Date(3, 11, 2021));
+        Donee donee20 = new Donee("DE020", "ORGANISATION", "UTAR FOOD BANK", "utar@gmail.com", "0163240520", "SUNGAI BULOH UTAR", "Location A", new Date(1, 1, 2021));
 
         Request request1 = new Request(new Date(10, 2, 2023), "Food and Beverage");
         Request request2 = new Request(new Date(11, 3, 2022), "Clothing and Apparel");
@@ -90,6 +120,8 @@ public class EntityInitializer {
         Request request6 = new Request(new Date(8, 5, 2023), "Food and Beverage");
         Request request7 = new Request(new Date(5, 5, 2022), "Monetary");
         Request request8 = new Request(new Date(2, 6, 2021), "Educational Materials");
+        Request request9 = new Request(new Date(5, 1, 2022), "Electronic");
+        Request request10 = new Request(new Date(2, 1, 2021), "Monetary");
 
         Item item1 = new Item("I001", "Monetary", "Cash", 200);
         Item item2 = new Item("I002", "Household Items", "Bed", 2, 120);
@@ -335,12 +367,48 @@ public class EntityInitializer {
         donee3.addRequest(request3);
         donee4.addRequest(request4);
         donee5.addRequest(request5);
+        donee6.addRequest(request1);
+        donee7.addRequest(request2);
+        donee7.addRequest(request9);
+        donee8.addRequest(request2);
+        donee9.addRequest(request4);
+        donee10.addRequest(request7);
+        donee11.addRequest(request3);
+        donee12.addRequest(request4);
+        donee12.addRequest(request5);
+        donee12.addRequest(request1);
+        donee13.addRequest(request2);
+        donee15.addRequest(request2);
+        donee15.addRequest(request4);
+        donee16.addRequest(request7);
+        donee16.addRequest(request3);
+        donee17.addRequest(request4);
+        donee18.addRequest(request5);
+        donee19.addRequest(request9);
+        donee20.addRequest(request10);
+        donee19.addRequest(request8);
+        donee20.addRequest(request6);
 
         donees.add(donee1);
         donees.add(donee2);
         donees.add(donee3);
         donees.add(donee4);
         donees.add(donee5);
+        donees.add(donee6);
+        donees.add(donee7);
+        donees.add(donee8);
+        donees.add(donee9);
+        donees.add(donee10);
+        donees.add(donee11);
+        donees.add(donee12);
+        donees.add(donee13);
+        donees.add(donee14);
+        donees.add(donee15);
+        donees.add(donee16);
+        donees.add(donee17);
+        donees.add(donee18);
+        donees.add(donee19);
+        donees.add(donee20);
 
 //        donor1.addDonationToList(donation1.clone());
 //        donor2.addDonationToList(donation2.clone());

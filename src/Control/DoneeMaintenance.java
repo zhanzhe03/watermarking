@@ -128,7 +128,7 @@ public class DoneeMaintenance {
                         validInput = true; //
                         break;
                     case 2:
-                        doneeType = "ORGANIZATION";
+                        doneeType = "ORGANISATION";
                         validInput = true; // 
                         break;
                     case 3:
@@ -545,7 +545,7 @@ public class DoneeMaintenance {
                 // Determine donee type and update counts
                 doneeType = donee.getDoneeType();
                 totalIndividual = updateDoneeTypeCounts(doneeType, totalIndividual, "INDIVIDUAL");
-                totalOrganization = updateDoneeTypeCounts(doneeType, totalOrganization, "ORGANIZATION");
+                totalOrganization = updateDoneeTypeCounts(doneeType, totalOrganization, "ORGANISATION");
                 totalFamily = updateDoneeTypeCounts(doneeType, totalFamily, "FAMILY");
             }
             doneeUI.displayEnDash();
@@ -560,7 +560,7 @@ public class DoneeMaintenance {
             // Print donee types and their totals
             doneeUI.printText("\n                                         Donee Types and Their Counts:");
             doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Individual:", totalIndividual));
-            doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Organization:", totalOrganization));
+            doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Organisation:", totalOrganization));
             doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Family:", totalFamily));
         } else {
             doneeUI.printText("No donees found within the specified date range.");

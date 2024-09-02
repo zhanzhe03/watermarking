@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author USER
+ * @author TANJIANQUAN
  */
 public class Donee implements Comparable<Donee> {
 
