@@ -21,6 +21,17 @@ import java.util.regex.Pattern;
  */
 public class CommonUse {
 
+    public static void getLogo() {
+        System.out.println(" _______         __        __      __   ___        __    __         __       ___________    __           ______     __    __         __        _______     __      ___________   ___  ___  ");
+        System.out.println("|   _  \"\\       /\"\"\\      |\" \\    |/\"| /  \")      /\" |  | \"\\       /\"\"\\     (\"     _   \")  |\" \\         /\" _  \"\\   /\" |  | \"\\       /\"\"\\      /\"      \\   |\" \\    (\"     _   \") |\"  \\/\"  | ");
+        System.out.println("(. |_)  :)     /    \\     ||  |   (: |/   /      (:  (__)  :)     /    \\     )__/  \\\\__/   ||  |       (: ( \\___) (:  (__)  :)     /    \\    |:        |  ||  |    )__/  \\\\__/   \\   \\  /  ");
+        System.out.println("|:     \\/     /' /\\  \\    |:  |   |    __/        \\/      \\/     /' /\\  \\       \\\\_ /      |:  |        \\/ \\       \\/      \\/     /' /\\  \\   |_____/   )  |:  |       \\\\_ /       \\\\  \\/   ");
+        System.out.println("(|  _  \\\\    //  __'  \\   |.  |   (// _  \\        //  __  \\\\    //  __'  \\      |.  |      |.  |        //  \\ _    //  __  \\\\    //  __'  \\   //      /   |.  |       |.  |       /   /    ");
+        System.out.println("|: |_)  :)  /   /  \\\\  \\  /\\  |\\  |: | \\  \\      (:  (  )  :)  /   /  \\\\  \\     \\:  |      /\\  |\\      (:   _) \\  (:  (  )  :)  /   /  \\\\  \\ |:  __   \\   /\\  |\\      \\:  |      /   /     ");
+        System.out.println("(_______/  (___/    \\___)(__\\_|_) (__|  \\__)      \\__|  |__/  (___/    \\___)     \\__|     (__\\_|_)      \\_______)  \\__|  |__/  (___/    \\___)|__|  \\___) (__\\_|_)      \\__|     |___/     ");
+
+    }
+
     public static int countType(String type, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> items) {
         int count = 0;
         Iterator<Distribution> iterator = distributions.getIterator();
@@ -38,10 +49,6 @@ public class CommonUse {
         } while (iterator.hasNext());
         return count;
     }
-    
-   
-    
-  
 
     public static Donor findDonor(String contact, SortedListSetInterface<Donor> donors) {
         Iterator<Donor> iterator = donors.getIterator();
@@ -75,7 +82,7 @@ public class CommonUse {
         } while (iterator.hasNext());
         return null;
     }
-    
+
     public static Donation findDonationByItem(Item item, SortedListSetInterface<Donation> donations) {
         Iterator<Donation> iterator = donations.getIterator();
         do {

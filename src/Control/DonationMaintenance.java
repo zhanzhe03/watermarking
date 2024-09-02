@@ -33,6 +33,7 @@ public class DonationMaintenance {
         SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
         SortedListSetInterface<Donor> donors = entityInitialize.getDonors();
         SortedListSetInterface<Item> items = entityInitialize.getItems();
+        SortedListSetInterface<Donation> donationsHistory = entityInitialize.getDonationsHistory();
 
         int opt;
         do {
@@ -45,7 +46,7 @@ public class DonationMaintenance {
                     break;
                 case 2:
                     ClearScreen.clearJavaConsoleScreen();
-                    AddDonation(donations, donors, items);
+                    AddDonation(donations, donors, items, donationsHistory);
                     break;
                 case 3:
                     ClearScreen.clearJavaConsoleScreen();
@@ -304,13 +305,14 @@ public class DonationMaintenance {
     }
 
     //return method
-    private String generateNextDonationId(SortedListSetInterface<Donation> donations) {
-        int nextDonationId = Integer.parseInt(donations.getLastEntries().getDonationId().substring(1)) + 1;
+    private String generateNextDonationId(SortedListSetInterface<Donation> donationsHistory) {
+        int nextDonationId = Integer.parseInt(donationsHistory.getLastEntries().getDonationId().substring(1)) + 1;
         return "D" + String.format("%03d", nextDonationId);
     }
 
-    private String generateNextItemId(SortedListSetInterface<Item> items, int n) {
-        int nextItemId = Integer.parseInt(items.getLastEntries().getItemId().substring(1)) + n;
+    private String generateNextItemId(SortedListSetInterface<Donation> donationsHistory, int n) {
+        Item item = donationsHistory.getLastEntries().getDonatedItemList().getLastEntries();
+        int nextItemId = Integer.parseInt(item.getItemId().substring(1)) + n;
         return "I" + String.format("%03d", nextItemId);
     }
 
@@ -614,31 +616,13 @@ public class DonationMaintenance {
     }
 
     //2. add
-    public void AddDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
-        donationUI.printTitle("Add donation in different method");
-        int opt;
-        do {
-            opt = validateMenuNumberFormatInput(donationUI.getAddDonationMenu());
-
-            switch (opt) {
-                case 1:
-                    ClearScreen.clearJavaConsoleScreen();
-                    AddNewDonation(donations, donors, items);
-                    break;
-                case 2:
-                    ClearScreen.clearJavaConsoleScreen();
-                    AddItemToExistingDonation(donations, donors, items);
-                    break;
-                case 9:
-                    break;
-                default:
-                    MessageUI.displayInvalidOptionMessage();
-                    break;
-            }
-        } while (opt != 9);
+    public void AddDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items, SortedListSetInterface<Donation> donationsHistory) {
+        donationUI.printTitle("Add a new Donation");
+        ClearScreen.clearJavaConsoleScreen();
+        AddNewDonation(donations, donors, items, donationsHistory);
     }
 
-    public void processDonation(SortedListSetInterface<Item> newDonatedItems, SortedListSetInterface<Item> items) {
+    public void processDonation(SortedListSetInterface<Item> newDonatedItems, SortedListSetInterface<Donation> donationsHistory) {
         int n = 1;
         int opt;
         char keepDonate = 'Y';
@@ -646,7 +630,7 @@ public class DonationMaintenance {
         do {
             opt = validateMenuNumberFormatInput(donationUI.getItemTypeMenu());
             Item item = null;
-            String itemId = generateNextItemId(items, n);
+            String itemId = generateNextItemId(donationsHistory, n);
             String type = StockUI.getItemType(opt);
             switch (opt) {
                 case 1:
@@ -687,14 +671,14 @@ public class DonationMaintenance {
         } while (keepDonate == 'Y' && !isDiscontinue);
     }
 
-    public void AddNewDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
+    public void AddNewDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items, SortedListSetInterface<Donation> donationsHistory) {
         donationUI.printTitle("Add New Donation");
         SortedListSetInterface<Item> newDonatedItems = new SortedDoublyLinkedListSet<>();
-        processDonation(newDonatedItems, items);
+        processDonation(newDonatedItems, donationsHistory);
 
         if (!newDonatedItems.isEmpty()) {
             Date donatedDate = getCurrentDate();
-            String nextDonationId = generateNextDonationId(donations);
+            String nextDonationId = generateNextDonationId(donationsHistory);
             Donation newDonation = new Donation(nextDonationId, donatedDate, "Pending");
             newDonation.setDonatedItemList(newDonatedItems);
 
@@ -711,6 +695,7 @@ public class DonationMaintenance {
                         MessageUI.displaySuccessfulMessage();
                         Donation clonedDonation = newDonation.clone();
                         donor.addDonationToList(clonedDonation);
+                        donationsHistory.add(clonedDonation);
                     } else {
                         MessageUI.displayDonorStatusUnsuccessfulMessage();
                     }
@@ -723,34 +708,11 @@ public class DonationMaintenance {
                     MessageUI.displaySuccessfulMessage();
                     Donation clonedDonation = newDonation.clone();
                     donor.addDonationToList(clonedDonation);
+                    donationsHistory.add(clonedDonation);
                 }
             } else {
                 MessageUI.displayUnsuccessfulMessage();
             }
-        }
-    }
-
-    public void AddItemToExistingDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Donor> donors, SortedListSetInterface<Item> items) {
-        donationUI.printTitle("Add Item to an existing donation");
-        String id = donationUI.getInputString("Donation ID : ");
-        Donation donation = CommonUse.findDonation(id, donations);
-        if (donation != null) {
-            listOneDonation(donation);
-            donationUI.printText("\nDonation Record " + id + " Found, proceed to adding...");
-            SortedListSetInterface<Item> newDonatedItems = new SortedDoublyLinkedListSet<>();
-            processDonation(newDonatedItems, items);
-            if (!newDonatedItems.isEmpty()) {
-                listAllItem(newDonatedItems);
-                if (validateYesNoOption("Donation Confirmation (Y = yes, N = No)? ") == 'Y') {
-                    donation.getDonatedItemList().merge(newDonatedItems);
-                    items.merge(newDonatedItems);
-                    MessageUI.displaySuccessfulMessage();
-                } else {
-                    MessageUI.displayUnsuccessfulMessage();
-                }
-            }
-        } else {
-            donationUI.printText("This Donation ID " + id + " Not Found !");
         }
     }
 
