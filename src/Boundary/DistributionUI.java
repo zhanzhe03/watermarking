@@ -83,20 +83,20 @@ public class DistributionUI {
     }
 
     public void printCategoryCountTableHeader() {
-         System.out.println("+------------------------+----------------+--------------------+");
-        System.out.println("|                      Category Count Table                    |");
-        System.out.println("+------------------------+----------------+--------------------+");
-        System.out.println("| Category               | Category Count | Items              |");
-        System.out.println("+------------------------+----------------+--------------------+");
+         System.out.println("+------------------------+----------------+----------------------------------------------------------+");
+        System.out.println("|                                Category Count Table                                                 |");
+        System.out.println("+------------------------+----------------+----------------------------------------------------------+");
+        System.out.println("| Category               | Category Count | Items                                                    |");
+        System.out.println("+------------------------+----------------+----------------------------------------------------------+");
 
     }
 
     public void printCategoryCountTableContent(String type, int itemCount, StringBuilder items) {
-        System.out.printf("| %-22s | %-14d | %-18s |\n", type, itemCount, items.toString());
+        System.out.printf("| %-22s | %-14d | %-56s |\n", type, itemCount, items.toString());
     }
 
     public void printCategoryCountTableFooter() {
-        System.out.println("+------------------------+----------------+--------------------+");
+        System.out.println("+------------------------+----------------+----------------------------------------------------------+");
     }
 
     private void printDistributionTitle() {

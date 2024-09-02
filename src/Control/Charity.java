@@ -54,7 +54,6 @@ public class Charity {
                         MessageUI.displayInvalidOptionMessage();
                 }
             } catch (NumberFormatException ex) {
-                System.out.println("1");
                 MessageUI.displayInvalidIntegerMessage();
             }
 
