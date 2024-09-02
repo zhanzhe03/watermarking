@@ -462,7 +462,6 @@ public class DonationMaintenance {
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
-            //boolean isFullyDistributed = checkDonationFullyDistributed(donation);
             boolean isFullyDistributed = false;
             if (donation.getStatus().equalsIgnoreCase("Pending") && !donation.getDonationDate().withinTwoDays(getCurrentDate())) {
                 donation.setStatus("Processing");
@@ -470,18 +469,6 @@ public class DonationMaintenance {
                 donation.setStatus("Fully Distributed");
             }
         } while (iterator.hasNext());
-    }
-
-    private boolean checkDonationFullyDistributed(Donation donation) {
-        double ttlAmount = 0;
-        Iterator<Item> iterator = donation.getDonatedItemList().getIterator();
-        do {
-            Item item = iterator.next();
-            if (item.getTotalAmount() == 0) {
-                return false;
-            }
-        } while (iterator.hasNext());
-        return true;
     }
 
     //1. list
