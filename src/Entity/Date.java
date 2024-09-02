@@ -4,7 +4,7 @@
  */
 package Entity;
 
-public class Date  implements Cloneable {
+public class Date implements Cloneable {
 
     private int day;
     private int month;
@@ -49,7 +49,7 @@ public class Date  implements Cloneable {
             return Integer.compare(this.day, otherDate.day);
         }
     }
-    
+
     public boolean afterDate(Date otherDate) {
         return this.compareTo(otherDate) > 0;
     }
@@ -57,17 +57,17 @@ public class Date  implements Cloneable {
     public boolean beforeDate(Date otherDate) {
         return this.compareTo(otherDate) < 0;
     }
-    
-    public boolean withinTwoDays(Date otherDate){
+
+    public boolean withinTwoDays(Date otherDate) {
         int numberOfDays = 3;
-        if(this.year + 1 == otherDate.year){
-            if(this.month == 12 && otherDate.month == 1){
+        if (this.year + 1 == otherDate.year) {
+            if (this.month == 12 && otherDate.month == 1) {
                 numberOfDays = (31 - this.day) + otherDate.day;
             }
-        }else if(this.year == otherDate.year){
+        } else if (this.year == otherDate.year) {
             numberOfDays = otherDate.convertToDays() - this.convertToDays();
         }
-        
+
         return numberOfDays <= 2;
     }
 
@@ -98,7 +98,7 @@ public class Date  implements Cloneable {
 
         return numberOfDays <= 31;
     }
-    
+
     public boolean moreThanThreeMonthsAgo(Date otherDate) {
         int daysDifference = otherDate.daysBetween(this);
         return daysDifference > 90;
@@ -155,18 +155,36 @@ public class Date  implements Cloneable {
 
     // This method calculates the difference in days between this date and another date
     public int daysBetween(Date otherDate) {
-        return this.convertToDays() - otherDate.convertToDays();
+        if (this.year == otherDate.year) {
+            // If dates are in the same year, just subtract the converted days
+            return this.convertToDays() - otherDate.convertToDays();
+        } else {
+            // Calculate days remaining in the start year
+            int daysRemainingInStartYear = (isLeapYear(this.year) ? 366 : 365) - this.convertToDays();
+
+            // Calculate days passed in the end year
+            int daysPassedInEndYear = otherDate.convertToDays();
+
+            // Calculate days for the full years between
+            int daysInBetweenYears = 0;
+            for (int year = this.year + 1; year < otherDate.year; year++) {
+                daysInBetweenYears += isLeapYear(year) ? 366 : 365;
+            }
+
+            // Total days between the two dates
+            return daysRemainingInStartYear + daysInBetweenYears + daysPassedInEndYear;
+        }
     }
 
     //szewen
-       public Date addDays(int daysToAdd) {
+    public Date addDays(int daysToAdd) {
         int newDay = this.day;
         int newMonth = this.month;
         int newYear = this.year;
-        
+
         while (daysToAdd > 0) {
             int daysInCurrentMonth = getDaysInMonth(newMonth, newYear);
-            
+
             if (newDay + daysToAdd <= daysInCurrentMonth) {
                 newDay += daysToAdd;
                 daysToAdd = 0;  // All days have been added
@@ -190,9 +208,18 @@ public class Date  implements Cloneable {
     // Helper method to get the number of days in a month considering leap years
     private int getDaysInMonth(int month, int year) {
         switch (month) {
-            case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
                 return 31;
-            case 4: case 6: case 9: case 11:
+            case 4:
+            case 6:
+            case 9:
+            case 11:
                 return 30;
             case 2:
                 return isLeapYear(year) ? 29 : 28;
@@ -211,7 +238,7 @@ public class Date  implements Cloneable {
             return year % 400 == 0;
         }
     }
-    
+
     @Override
     public String toString() {
         return String.format("%02d-%02d-%04d", day, month, year);
@@ -237,7 +264,7 @@ public class Date  implements Cloneable {
         }
         return this.year == other.year;
     }
-    
+
     @Override
     public Date clone() {
         try {
