@@ -16,6 +16,7 @@ import Utility.MessageUI;
 import Utility.StockUI;
 import ADT.SortedDoublyLinkedListSet;
 import ADT.SortedListSetInterface;
+import Boundary.DoneeUI;
 import Entity.Date;
 import Entity.Distribution;
 import Entity.Donation;
@@ -30,6 +31,7 @@ public class DistributionManager {
 
     private DistributionUI distributionUI = new DistributionUI();
     private DonationUI donationUI = new DonationUI();
+    private DoneeUI doneeUI = new DoneeUI();
 
     private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
     private int localDay = distributionUI.getLocalDate().getDayOfMonth();
@@ -41,10 +43,12 @@ public class DistributionManager {
         SortedListSetInterface<Distribution> distributions = entityInitialize.getDistributions();
         SortedListSetInterface<Item> donatedItemList = entityInitialize.getItems();
 
+
         SortedListSetInterface<Donee> donees = entityInitialize.getDonees();
         SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
 
         SortedListSetInterface<Item> availableItemList = StockUI.getAvailableItemList(donations);
+        
 
         updateDistributionStatus(distributions);
 
@@ -200,6 +204,10 @@ public class DistributionManager {
             Donee selectedDonee = null;
             do {
                 try {
+                    distributionUI.displayMessage("Available Donees : ");
+                    doneeUI.displayEnDash();
+                    doneeUI.printDoneeTitle();
+                     doneeUI.displayEnDash();
                     distributionUI.displayMessage("" + donees); // Display the list of donees
                     input = distributionUI.getInputString("Please enter the Donee ID to distribute to ('Q' quit) > ");
 
