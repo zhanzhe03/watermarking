@@ -14,6 +14,7 @@ import Entity.Donation;
 import Entity.Donor;
 import Entity.Item;
 import Utility.ClearScreen;
+import Utility.CommonUse;
 import Utility.MessageUI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ import java.util.Locale;
 
 /**
  *
- * @author LENOVO
+ * @author Yeak Shao Rong
  */
 public class DonorMaintenance {
         private DonorUI donorUI = new DonorUI();
@@ -495,6 +496,7 @@ public class DonorMaintenance {
     private void showReportforTopFiveHighestDonatedValue(SortedListSetInterface<Donor> donors, String category) {
         SortedListSetInterface<Donor> selectedDonors = new SortedDoublyLinkedListSet<>();
 
+        CommonUse.getLogo();
         for (int i = 0; i < 100; i++) {
             donationUI.printTextWithoutNextLine("=");
         }
@@ -506,6 +508,7 @@ public class DonorMaintenance {
             donationUI.printTextWithoutNextLine("-");
         }
         donationUI.printText("\n\n\n");
+        
         while (selectedDonors.getNumberOfEntries() < 5) {
             Donor highestDonor = null;
             double highestTotalDonatedAmount = 0;
@@ -547,6 +550,7 @@ public class DonorMaintenance {
         while (selectedDonorIterator.hasNext()) {
             Donor donor = selectedDonorIterator.next();
             double totalDonatedAmount = getTotalDonatedAmountforDonor(donor);
+            
             if (category.equalsIgnoreCase("Individual")) {
                 donorUI.printText(String.format("[Top %d] : %-10s | %-20s | %-20s | RM%-20.2f",
                         rank,
@@ -577,6 +581,7 @@ public class DonorMaintenance {
         
         String[] categories = {"Public Organization", "Private Organization", "Government Organization", "Individual"};
 
+        CommonUse.getLogo();
         for (int i = 0; i < 100; i++) {
             donationUI.printTextWithoutNextLine("=");
         }
@@ -665,6 +670,7 @@ public class DonorMaintenance {
         
         String[] categories = {"Public Organization", "Private Organization", "Government Organization", "Individual"};
 
+        CommonUse.getLogo();
         for (int i = 0; i < 100; i++) {
             donationUI.printTextWithoutNextLine("=");
         }
@@ -749,6 +755,7 @@ public class DonorMaintenance {
         SortedListSetInterface<Donor> newDonors = getNumberOfNewRegisteredDonorWithinMonth(donors);
 
         if(!newDonors.isEmpty()){
+        CommonUse.getLogo();
         for (int i = 0; i < 100; i++) {
             donationUI.printTextWithoutNextLine("=");
         }
@@ -819,7 +826,7 @@ public class DonorMaintenance {
      String email = "";
         do{
              email = donorUI.getDonorEmail();
-            if(email.contains("@"))
+            if(!email.contains("@"))
                 MessageUI.displayInvalidEmailMessage();
         }while(!email.contains("@"));
         return email;
@@ -915,9 +922,10 @@ public class DonorMaintenance {
    }
     
    private void removeAllBannedDonors(SortedListSetInterface<Donor> donors){
-       Iterator<Donor> iterator = donors.getIterator();
+        Iterator<Donor> iterator = donors.getIterator();
         SortedListSetInterface<Donor> foundDonors = new SortedDoublyLinkedListSet<>();
-
+        Iterator<Donor> foundIterator = foundDonors.getIterator();
+   
        iterator = donors.getIterator();
        while (iterator.hasNext()) {
            Donor donor = iterator.next();
@@ -925,6 +933,7 @@ public class DonorMaintenance {
                foundDonors.add(donor);             
            }
        }
+       
        if(foundDonors != null){
            donorUI.printText("Search Result : ");
                donorUI.printDonorTitle();
@@ -933,15 +942,19 @@ public class DonorMaintenance {
                donorUI.printDonorEnDash();
                donorUI.printNumberOfEntries(donors);
                
-                String YesNo = donorUI.getConfirmation("remove");
-                    if (YesNo.equalsIgnoreCase("y")) {
-                        donors.relativeComplement(foundDonors);
-                        donorUI.printText("All banned donors are removed");
-                    } else {
-                        donorUI.printText("Update cancelled.");
-                    }
-               
-       }else{   
+               String YesNo = donorUI.getConfirmation("remove");
+           if (YesNo.equalsIgnoreCase("y")) {
+               foundIterator = foundDonors.getIterator();
+               while (foundIterator.hasNext()) {
+                   Donor donor = foundIterator.next();
+                   donors.remove(donor);
+               }
+               donorUI.printText("All banned donors are removed");
+           } else {
+               donorUI.printText("Update cancelled.");
+           }
+
+       } else {
            donorUI.printText("\nNo results found for banned Donors \n");
        }
    }
