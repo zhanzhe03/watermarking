@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author USER
+ * @author Chew Zhan Zhe
  */
 public class DonationUI {
 

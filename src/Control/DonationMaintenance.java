@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author USER
+ * @author Chew Zhan Zhe
  */
 public class DonationMaintenance {
 
@@ -1457,7 +1457,8 @@ public class DonationMaintenance {
         donationUI.printText("\n\n\t\t\t\tBar chart of Number of Reception of various Item Type\n");
         donationUI.printText("Number of Reception");
         donationUI.printText("       ^");
-        for (int y = getY_axis(getMostAndLeastOfItemTypeReception("most", itemHistory)); y > 0; y--) {
+        int y_axis = countNumberOfReceptionOfItemType(StockUI.getItemType(getMostAndLeastOfItemTypeReception("most", itemHistory)),itemHistory);
+        for (int y = getY_axis(y_axis); y > 0; y--) {
             if (y % 5 == 0) {
                 donationUI.sentence3(y);
             } else {

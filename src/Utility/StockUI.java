@@ -14,7 +14,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author USER
+ * @author Chew Zhan Zhe
  */
 public class StockUI {
 

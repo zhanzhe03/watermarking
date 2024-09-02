@@ -279,7 +279,7 @@ public class DistributionManager {
                         if (availableItem != null) { // If the item is available
                             if (inputItem.getType().equalsIgnoreCase("Monetary")) {
                                 if (StockUI.checkMonetary("Monetary", donations)) {
-                                    isContinue = handleMonetaryItem(inputItem, newDistribution, distributions, minttlAmt, selectedDonee);
+                                    isContinue = handleMonetaryItem(inputItem, newDistribution, distributions, minttlAmt, selectedDonee, donations);
                                     isDistributionMatchingRequest(newDistribution, selectedDonee, availableItemList);
                                 } else {
                                     MessageUI.displayInsufficientMessage();
@@ -287,7 +287,7 @@ public class DistributionManager {
                                 }
                             } else {
                                 if (StockUI.checkInventory(inputItem.getType(), donations)) {
-                                    isContinue = handleNonMonetaryItem(inputItem, newDistribution, distributions);
+                                    isContinue = handleNonMonetaryItem(inputItem, newDistribution, distributions, donations);
                                     isDistributionMatchingRequest(newDistribution, selectedDonee, availableItemList);
                                 } else {
                                     MessageUI.displayInsufficientMessage();
@@ -389,7 +389,7 @@ public class DistributionManager {
         return null; // Return null if the item is not found
     }
 
-    private boolean handleMonetaryItem(Item inputItem, Distribution newDistribution, SortedListSetInterface<Distribution> distributions, double minAmt, Donee donee) {
+    private boolean handleMonetaryItem(Item inputItem, Distribution newDistribution, SortedListSetInterface<Distribution> distributions, double minAmt, Donee donee, SortedListSetInterface<Donation> donations) {
         boolean isValidAmt = false;
         boolean isContinue = false;
         double inputAmt;
@@ -420,6 +420,8 @@ public class DistributionManager {
                         newDistribution.addSelectedItem(selectedItem); // Add selected item into the new distribution
                         inputItem.setTotalAmount(inputItem.getTotalAmount() - inputAmt);
                         isValidAmt = true; // Exit the amount input loop
+                        Donation donation = CommonUse.findDonationByItem(inputItem, donations);
+                        donation.setStatus("Distributing");
 
                         String keepAdding = distributionUI.getInputString("Do you want to add another item into this distribution? (y/n) > ");
                         if (keepAdding.equalsIgnoreCase("N")) {
@@ -445,7 +447,7 @@ public class DistributionManager {
         return isContinue;
     }
 
-    private boolean handleNonMonetaryItem(Item inputItem, Distribution newDistribution, SortedListSetInterface<Distribution> distributions) {
+    private boolean handleNonMonetaryItem(Item inputItem, Distribution newDistribution, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donation> donations) {
         boolean isValidQty = false;
         boolean isContinue = false;
         int inputQty;
@@ -473,7 +475,9 @@ public class DistributionManager {
                         newDistribution.addSelectedItem(selectedItem); // Add selected item into the new distribution
                         inputItem.setQuantity(inputItem.getQuantity() - inputQty);
                         isValidQty = true; // Exit the quantity input loop
-
+                        Donation donation = CommonUse.findDonationByItem(inputItem, donations);
+                        donation.setStatus("Distributing");
+                        
                         String keepAdding = distributionUI.getInputString("Do you want to add another item into this distribution? (y/n) > ");
                         if (keepAdding.equalsIgnoreCase("N")) {
                             distributions.add(newDistribution); // Add the distribution to the list
