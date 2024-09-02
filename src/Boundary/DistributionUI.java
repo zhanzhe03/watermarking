@@ -87,6 +87,8 @@ public class DistributionUI {
     }
 
     public void printCategoryCountTableHeader() {
+         System.out.println("+------------------------+----------------+--------------------+");
+        System.out.println("|                      Category Count Table                    |");
         System.out.println("+------------------------+----------------+--------------------+");
         System.out.println("| Category               | Category Count | Items              |");
         System.out.println("+------------------------+----------------+--------------------+");

@@ -515,7 +515,7 @@ public class DoneeMaintenance {
                 String doneeType = donee.getDoneeType();
 
                 // Get the donee's requests
-                SortedListSetInterface<Request> doneeRequests = donee.getRequests(); 
+                SortedListSetInterface<Request> doneeRequests = donee.getRequests();
                 Iterator<Request> requestIterator = doneeRequests.getIterator();
 
                 // Start building the output string for this donee
@@ -524,7 +524,7 @@ public class DoneeMaintenance {
 
                 while (requestIterator.hasNext()) {
                     Request request = requestIterator.next();
-                    String requestItem = request.getRequestItems(); 
+                    String requestItem = request.getRequestItems();
 
                     if (firstRequest) {
                         // Print Donee ID, Register Date, and first request item
@@ -532,7 +532,7 @@ public class DoneeMaintenance {
                         firstRequest = false;
                     } else {
                         // Align subsequent request items
-                        outputStr.append(String.format("|%-15s | %-20s | %-20s | %-30s |\n", "", "", "",requestItem));
+                        outputStr.append(String.format("|%-15s | %-20s | %-20s | %-30s |\n", "", "", "", requestItem));
                     }
 
                     // Increase the request count
@@ -562,13 +562,51 @@ public class DoneeMaintenance {
             doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Individual:", totalIndividual));
             doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Organisation:", totalOrganization));
             doneeUI.printText(String.format("\n                                         |%-30s %14d|", "Family:", totalFamily));
+
+            generateBarChart(foundDonees.getNumberOfEntries(), totalRequests, totalIndividual, totalOrganization, totalFamily);
+
         } else {
             doneeUI.printText("No donees found within the specified date range.");
         }
     }
 
-    public void printRegisterDoneeTitle() {
-        System.out.printf("\n%-15s  | %-20s | %-30s\n", "Donee ID", "Register Date", "Request Item");
+    private void generateBarChart(int totalDonees, int totalRequests, int totalIndividual, int totalOrganization, int totalFamily) {
+        doneeUI.displayEnDash();
+        doneeUI.printText("\n\t\t\t\tBar chart of Totals");
+        doneeUI.displayEnDash();
+        doneeUI.printText("\nNumber of Entries");
+        doneeUI.printText("       ^");
+
+        // Find the maximum value among all totals to determine the chart height
+        int maxValue = Math.max(totalDonees, Math.max(totalRequests, Math.max(totalIndividual, Math.max(totalOrganization, totalFamily))));
+
+        // Print the bars from top (max value) to bottom (1)
+        for (int y = maxValue; y > 0; y--) {
+            if (y % 5 == 0) {
+                doneeUI.printTextWithoutNextLine(String.format("%5d  | ", y));  // Print y-axis scale
+            } else {
+                doneeUI.printTextWithoutNextLine("       | ");
+            }
+
+            // Print bar segments
+            donationUI.printTextWithoutNextLine(totalDonees == y ? "   +-----+   " : totalDonees > y ? "   |     |   " : "             ");
+            donationUI.printTextWithoutNextLine(totalRequests == y ? "   +-----+   " : totalRequests > y ? "   |     |   " : "             ");
+            donationUI.printTextWithoutNextLine(totalIndividual == y ? "   +-----+   " : totalIndividual > y ? "   |     |   " : "             ");
+            donationUI.printTextWithoutNextLine(totalOrganization == y ? "   +-----+   " : totalOrganization > y ? "   |     |   " : "             ");
+            donationUI.printTextWithoutNextLine(totalFamily == y ? "   +-----+   " : totalFamily > y ? "   |     |   " : "             ");
+
+            donationUI.printText("");  // New line after each row
+        }
+
+        // Print x-axis line
+        donationUI.printTextWithoutNextLine("       +");
+        for (int i = 0; i < 85; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("> Totals");
+
+        // Print x-axis labels
+        donationUI.printText("            Donees       Requests    Individual   Organisation   Family");
     }
 
     public void ListAllDonee(SortedListSetInterface<Donee> donees) {
@@ -1202,6 +1240,7 @@ public class DoneeMaintenance {
         }
 
         // Print total counts for all donees
+        doneeUI.displayEnDash();
         doneeUI.printText(String.format("\n%-15s :", "Total"));
 
         doneeUI.printText(String.format("%-15s : %-12d | %-12d | %-12d | %-12d | %-12d | %-12d | %-12d",
@@ -1213,6 +1252,100 @@ public class DoneeMaintenance {
                 totalHouseholdReceived, totalEducationalReceived, totalElectronicReceived, totalMedicalReceived));
 
         doneeUI.displayEnDash();
+
+        generateReceivedBarChart(totalMonetaryReceived, totalClothingReceived, totalFoodReceived, totalHouseholdReceived,
+                totalEducationalReceived, totalElectronicReceived, totalMedicalReceived);
+
+        generateRequestedBarChart(totalMonetaryRequested, totalClothingRequested, totalFoodRequested, totalHouseholdRequested,
+                totalEducationalRequested, totalElectronicRequested, totalMedicalRequested);
+    }
+
+    private void generateReceivedBarChart(int totalMonetaryReceived, int totalClothingReceived, int totalFoodReceived,
+            int totalHouseholdReceived, int totalEducationalReceived,
+            int totalElectronicReceived, int totalMedicalReceived) {
+
+        doneeUI.printText("\n\n\t\t\t\tBar chart of Received Items\n");
+        doneeUI.printText("Number of Items");
+        doneeUI.printText("       ^");
+
+        // Find the maximum value among all totals to determine the chart height
+        int maxValueReceived = Math.max(totalMonetaryReceived, Math.max(totalClothingReceived, Math.max(totalFoodReceived,
+                Math.max(totalHouseholdReceived, Math.max(totalEducationalReceived,
+                        Math.max(totalElectronicReceived, totalMedicalReceived))))));
+
+        // Print the bars from top (max value) to bottom (1)
+        for (int y = maxValueReceived; y > 0; y--) {
+            if (y % 5 == 0) {
+                doneeUI.printTextWithoutNextLine(String.format("%5d  | ", y));  // Print y-axis scale
+            } else {
+                doneeUI.printTextWithoutNextLine("       | ");
+            }
+
+            // Print bar segments for each category
+            doneeUI.printTextWithoutNextLine(totalMonetaryReceived == y ? "   +-----+   " : totalMonetaryReceived > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalClothingReceived == y ? "   +-----+   " : totalClothingReceived > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalFoodReceived == y ? "   +-----+   " : totalFoodReceived > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalHouseholdReceived == y ? "   +-----+   " : totalHouseholdReceived > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalEducationalReceived == y ? "   +-----+   " : totalEducationalReceived > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalElectronicReceived == y ? "   +-----+   " : totalElectronicReceived > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalMedicalReceived == y ? "   +-----+   " : totalMedicalReceived > y ? "   |     |   " : "             ");
+            doneeUI.printText("");  // New line after each row
+        }
+
+        // Print x-axis line
+        doneeUI.printTextWithoutNextLine("       +");
+        for (int i = 0; i < 140; i++) { // Adjusted length for the bars
+            doneeUI.printTextWithoutNextLine("-");
+        }
+        doneeUI.printText("> Received Items");
+
+        // Print x-axis labels
+        doneeUI.printText("            Monetary     Clothing      Food      Household    Educational    Electronic    Medical");
+        doneeUI.printText("                                  Received Items");
+    }
+
+    private void generateRequestedBarChart(int totalMonetaryRequested, int totalClothingRequested, int totalFoodRequested,
+            int totalHouseholdRequested, int totalEducationalRequested,
+            int totalElectronicRequested, int totalMedicalRequested) {
+
+        doneeUI.printText("\n\n\t\t\t\tBar chart of Requested Items\n");
+        doneeUI.printText("Number of Items");
+        doneeUI.printText("       ^");
+
+        // Find the maximum value among all totals to determine the chart height
+        int maxValueRequested = Math.max(totalMonetaryRequested, Math.max(totalClothingRequested, Math.max(totalFoodRequested,
+                Math.max(totalHouseholdRequested, Math.max(totalEducationalRequested,
+                        Math.max(totalElectronicRequested, totalMedicalRequested))))));
+
+        // Print the bars from top (max value) to bottom (1)
+        for (int y = maxValueRequested; y > 0; y--) {
+            if (y % 5 == 0) {
+                doneeUI.printTextWithoutNextLine(String.format("%5d  | ", y));  // Print y-axis scale
+            } else {
+                doneeUI.printTextWithoutNextLine("       | ");
+            }
+
+            // Print bar segments for each category
+            doneeUI.printTextWithoutNextLine(totalMonetaryRequested == y ? "   +-----+   " : totalMonetaryRequested > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalClothingRequested == y ? "   +-----+   " : totalClothingRequested > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalFoodRequested == y ? "   +-----+   " : totalFoodRequested > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalHouseholdRequested == y ? "   +-----+   " : totalHouseholdRequested > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalEducationalRequested == y ? "   +-----+   " : totalEducationalRequested > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalElectronicRequested == y ? "   +-----+   " : totalElectronicRequested > y ? "   |     |   " : "             ");
+            doneeUI.printTextWithoutNextLine(totalMedicalRequested == y ? "   +-----+   " : totalMedicalRequested > y ? "   |     |   " : "             ");
+            doneeUI.printText("");  // New line after each row
+        }
+
+        // Print x-axis line
+        doneeUI.printTextWithoutNextLine("       +");
+        for (int i = 0; i < 140; i++) { // Adjusted length for the bars
+            doneeUI.printTextWithoutNextLine("-");
+        }
+        doneeUI.printText("> Requested Items");
+
+        // Print x-axis labels
+        doneeUI.printText("            Monetary     Clothing      Food      Household    Educational    Electronic    Medical");
+        doneeUI.printText("                                  Requested Items");
     }
 
 }

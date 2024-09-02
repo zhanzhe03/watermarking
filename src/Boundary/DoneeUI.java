@@ -165,10 +165,10 @@ public class DoneeUI {
     public void printDoneeTitle() {
         System.out.printf("\n%-15s %-20s %-20s %-25s %-20s %-30s %-14s %-20s %-20s %-20s\n", "Donee ID", "Donee Type", "Donee Name", "Email", "Contact", "Address", "Location", "Register Date", "Request Date", "Request Item");
     }
-    
+
     public void printRegisterDoneeTitle() {
-    System.out.printf("\n|%-15s | %-20s | %-20s | %-30s |\n", "Donee ID", "Donee Type", "Register Date", "Request Item");
-}
+        System.out.printf("\n|%-15s | %-20s | %-20s | %-30s |\n", "Donee ID", "Donee Type", "Register Date", "Request Item");
+    }
 
     public void donationTitle() {
         System.out.printf("\n%-15s %-30s %-20s %-20s %-10s\n", "Donee ID", "Receive Item", "Recevice Date", "Item ID", "Quantity/Amount");
@@ -241,6 +241,10 @@ public class DoneeUI {
         System.out.print("Opt >");
         String yesNo = scanner.nextLine();
         return yesNo;
+    }
+
+    public void printTextWithoutNextLine(String text) {
+        System.out.print(text);
     }
 
 }

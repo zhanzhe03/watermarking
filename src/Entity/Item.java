@@ -6,7 +6,7 @@ package Entity;
 
 /**
  *
- * @author USER
+ * @author Chew Zhan Zhe
  */
 public class Item implements Comparable<Item>, Cloneable {
 

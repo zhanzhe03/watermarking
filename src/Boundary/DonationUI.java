@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author USER
+ * @author Chew Zhan Zhe
  */
 public class DonationUI {
 
@@ -306,11 +306,11 @@ public class DonationUI {
     }
     
     public void sentence4(String first){
-        System.out.printf("\t                             %-25s\n", first);
+        System.out.printf("\t\t                             %-25s\n", first);
     }
     
     public void sentence5(String second, String third){
-        System.out.printf("\t%25s |            | %-25s              \n", second, third);
+        System.out.printf("\t\t%25s |            | %-25s              \n", second, third);
     }
     
     public void sentence6(){
