@@ -204,7 +204,7 @@ public class DistributionManager {
                             displayDoneeRequest(selectedDonee); // Display Donee request
                         }
 
-                        if (selectedDonee.getDoneeType().equalsIgnoreCase("Organization")) {
+                        if (selectedDonee.getDoneeType().equalsIgnoreCase("Organisation")) {
                             minQty = 10;
                             minttlAmt = 1000.00;
                         } else if (selectedDonee.getDoneeType().equalsIgnoreCase("Family")) {
@@ -1163,7 +1163,8 @@ public class DistributionManager {
         ClearScreen.clearJavaConsoleScreen();
         CommonUse.getLogo();
 
-        System.out.println(String.format("\n%40s Distributions Summary Report from " + startDate + " to " + endDate, ""));
+        CommonUse.printSummaryReportHeader("DISTRIBUTION ANALYSIS REPORT", String.format("Distributions Summary Report from " + startDate + " to " + endDate));
+        distributionUI.displayMessage("");
         distributionUI.printDistributionTitleHeader();
 
         Iterator<Distribution> distIterator = distributions.getIterator();
@@ -1235,6 +1236,12 @@ public class DistributionManager {
             }
         }
         distributionUI.printCategoryCountTableFooter();
+        
+        distributionUI.displayMessage("");
+        
+        CommonUse.printSummaryReportFooter();
+        distributionUI.displayMessage("");
+
     }
 
     private SortedListSetInterface<SelectedItem> getItemUniquely(SortedListSetInterface<Distribution> distRecords,

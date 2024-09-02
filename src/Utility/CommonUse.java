@@ -11,7 +11,10 @@ import Entity.Item;
 import Entity.Donee;
 import Entity.Distribution;
 import Entity.SelectedItem;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,6 +129,43 @@ public class CommonUse {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(date);
         return matcher.matches();
+    }
+
+    public static void printSummaryReportHeader(String reportTitle, String tableTitle) {
+        for (int i = 0; i < 120; i++) {
+            System.out.print("=");
+        }
+        System.out.println("\n\n\t\t\t\t" + reportTitle );
+        System.out.println("\t\t\t\t-------------------------------");
+        System.out.println("\nGenerated at: " + getGeneratedReportDate());
+        //dividing line
+        for (int i = 0; i < 120; i++) {
+            System.out.print("-");
+        }
+
+        System.out.println("\n\n\n\t\t     " +tableTitle + "\n");
+        System.out.print("\t\t+");
+        for (int i = 0; i < 69; i++) {
+            System.out.print("-");
+        }  
+        System.out.print("+");
+
+    }
+    
+    
+    public static void printSummaryReportFooter(){
+          for (int i = 0; i < 120; i++) {
+            System.out.print("=");
+        }
+        System.out.println("\n\t\t\t\t\tEND OF THE REPORT");
+        for (int i = 0; i < 120; i++) {
+            System.out.print("=");
+        }}
+
+    private static String getGeneratedReportDate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyyy, hh:mm a", Locale.ENGLISH);
+        return now.format(formatter);
     }
 
 }
