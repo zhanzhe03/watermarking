@@ -16,7 +16,10 @@ import Entity.Item;
 import Utility.ClearScreen;
 import Utility.MessageUI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  *
@@ -33,8 +36,9 @@ public class DonorMaintenance {
         int opt = 0;
         do {
             updatedDonors = checkAndUpdateStatus(donors);
-            try {
-                opt = donorUI.getDonorMenu();
+
+                opt = validateNumberFormatInput(donorUI.getDonorMenu());
+
 
                 switch (opt) {
                     case 1:
@@ -78,9 +82,7 @@ public class DonorMaintenance {
                         break;
                 }
 
-            } catch (NumberFormatException ex) {
-                MessageUI.displayInvalidOptionMessage();
-            }
+            
         } while (opt != 9);
     }
 
@@ -95,6 +97,8 @@ public class DonorMaintenance {
     }
 
     private void AddNewDonor(SortedListSetInterface<Donor> donors) {
+        boolean contLoop = false;
+        do{
        
         String donorId = generateDonorID(donors);
 
@@ -105,7 +109,7 @@ public class DonorMaintenance {
         String name = getName();
         
         String contactName = "";
-        if(category.contains("Organisation")){
+        if(category.contains("Organization")){
             contactName = getContactName();
         }else{
             contactName = "-";
@@ -120,7 +124,10 @@ public class DonorMaintenance {
         Date registedDate = getCurrentDate();
         Donor newDonor = new Donor(donorId, category,name, contactName, contact, email, address,registedDate);
 
-        String YesNo = donorUI.getConfirmation("add");
+        String YesNo = "";
+        do{
+        YesNo = donorUI.getConfirmation("add");
+        }while(!YesNo.equalsIgnoreCase("y") && !YesNo.equalsIgnoreCase("n"));
 
         if (YesNo.equalsIgnoreCase("y")) {
             donors.add(newDonor);
@@ -132,16 +139,29 @@ public class DonorMaintenance {
             donorUI.printText("Add new donor cancelled.");
         }
         
+        String yesNo = "";
+
+        do{
+        yesNo = donorUI.getAgainOrBack("add");
+        if(yesNo.equalsIgnoreCase("y")){
+            contLoop = true;
+        }else if (yesNo.equalsIgnoreCase("n")){
+            ClearScreen.clearJavaConsoleScreen();
+            contLoop = false;
+        }
+        }while(!yesNo.equalsIgnoreCase("y")&& !yesNo.equalsIgnoreCase("n" ));
+        
+        }while(contLoop == true);
     }
 
     private void SearchDonor(SortedListSetInterface<Donor> donors) {
         
         Donor foundDonor = null;
         int opt = 0;
-                   try {
+
             do {
 
-                opt = donorUI.getDonorSearchMenu();
+                opt = validateNumberFormatInput(donorUI.getDonorSearchMenu());
                 switch (opt) {
                     case 1:
                         ClearScreen.clearJavaConsoleScreen();
@@ -173,9 +193,7 @@ public class DonorMaintenance {
                         break;
                 }
             } while (opt != 4);
-        } catch (NumberFormatException ex) {
-            MessageUI.displayInvalidIntegerMessage();
-        }
+       
     }
 
     private void RemoveDonor(SortedListSetInterface<Donor> donors) {
@@ -183,9 +201,9 @@ public class DonorMaintenance {
 
         int opt = 0;
         do {
-            try {
+
                 MessageUI.diplayEnDash();
-                opt = donorUI.getDonorDeleteMenu();
+                opt = validateNumberFormatInput(donorUI.getDonorDeleteMenu());
                 MessageUI.diplayEnDash();
                 switch (opt) {
                     case 1:
@@ -215,9 +233,7 @@ public class DonorMaintenance {
                         MessageUI.displayInvalidOptionMessage();
                         break;              
                 }
-            }catch(NumberFormatException ex){
-                MessageUI.displayInvalidOptionMessage();
-            }
+
         }while(opt != 3);              
     }
 
@@ -229,20 +245,19 @@ public class DonorMaintenance {
         String newEmail;
         String newAddress;
         String newStatus = "";
-        int opt = 0;
-
-        
+        boolean contLoop = false;
+        do{
         Donor foundDonor = searchDonorID(donors);
         String YesNo = "";
 
         
         if (foundDonor != null) {
-            try{
-            int choose = donorUI.getDonorUpdateMenu();          
+ 
+            int choose = validateNumberFormatInput(donorUI.getDonorUpdateMenu());          
             switch (choose) {
                 case 1: 
                    
-                    newName = donorUI.getDonorName();                 
+                    newName = getName();                 
 
                     YesNo = donorUI.getConfirmation("update");
 
@@ -337,11 +352,24 @@ public class DonorMaintenance {
                     MessageUI.displayInvalidOptionMessage();
                     break;
             }
-            } catch(NumberFormatException ex){
-                MessageUI.displayInvalidOptionMessage();
-            }
-        }
 
+            } else {
+                donorUI.printText("Donor are not found ! Please try again !");
+            }
+
+            String yesNo = "";
+
+            do {
+                yesNo = donorUI.getAgainOrBack("update");
+                if (yesNo.equalsIgnoreCase("y")) {
+                    contLoop = true;
+                } else if (yesNo.equalsIgnoreCase("n")){
+                    ClearScreen.clearJavaConsoleScreen();
+                    contLoop = false;
+                }
+            } while (!yesNo.equalsIgnoreCase("y") && !yesNo.equalsIgnoreCase("n"));
+
+        } while (contLoop == true);
     }
 
     private void FilterDonor(SortedListSetInterface<Donor> donors){
@@ -351,23 +379,25 @@ public class DonorMaintenance {
         int opt = 0;
         int choice = 0;
         do{
-        opt = donorUI.getFilterCategoryOption();
+
+            opt = validateNumberFormatInput(donorUI.getFilterCategoryOption());
+
         
         switch(opt){
             case 1:
                 categorizedDonors = getCategorizedDonorSet(donors,"Individual");
                 break;
             case 2:
-                categorizedDonors = getCategorizedDonorSet(donors,"Organisation");
+                categorizedDonors = getCategorizedDonorSet(donors,"Organization");
                 break;
             case 3:
-                categorizedDonors = getCategorizedDonorSet(donors,"Public Organisation");
+                categorizedDonors = getCategorizedDonorSet(donors,"Public Organization");
                 break;
             case 4:
-                categorizedDonors = getCategorizedDonorSet(donors,"Private Organisation");
+                categorizedDonors = getCategorizedDonorSet(donors,"Private Organization");
                 break;
             case 5:
-                categorizedDonors = getCategorizedDonorSet(donors,"Government Organisation");
+                categorizedDonors = getCategorizedDonorSet(donors,"Government Organization");
                 break;
             case 6:
                 categorizedDonors = donors;
@@ -380,7 +410,8 @@ public class DonorMaintenance {
         }
         
         do{
-            choice = donorUI.getFilterStatusOption();
+            choice = validateNumberFormatInput(donorUI.getFilterStatusOption());
+            
             switch(choice){
                 case 1: 
                 categorizedStatus = getCategorizedStatusSet(donors,"Active");
@@ -427,15 +458,17 @@ public class DonorMaintenance {
     private void DonorReports(SortedListSetInterface<Donor> donors) {
         int opt = 0;
 
-        try{
+        
         do{
-        opt = donorUI.getReportOption();
+
+           opt = validateNumberFormatInput(donorUI.getReportOption());
+
         switch(opt){
             case 1:
-                getTopFiveHighestDonatedValue(donors, "Individual");
+                showReportforTopFiveHighestDonatedValue(donors, "Individual");
                 break;
             case 2:
-                getTopFiveHighestDonatedValue(donors, "Organisation");
+                showReportforTopFiveHighestDonatedValue(donors, "Organization");
                 break;
             case 3:
                 showReportforNumberOfDonorAndTotalDonatedValuePerCategory(donors);
@@ -456,20 +489,29 @@ public class DonorMaintenance {
         
         }while(opt != 6);
 
-        }catch(NumberFormatException ex){
-            MessageUI.displayInvalidOptionMessage();
-        }
+
     }
     
-    private void getTopFiveHighestDonatedValue(SortedListSetInterface<Donor> donors, String category) {
-        SortedListSetInterface<Donor> clonedDonors = new SortedDoublyLinkedListSet<>();
+    private void showReportforTopFiveHighestDonatedValue(SortedListSetInterface<Donor> donors, String category) {
         SortedListSetInterface<Donor> selectedDonors = new SortedDoublyLinkedListSet<>();
 
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
+        donationUI.printText("\n\n\t\t TOP 5 DONOR WITH HIGHEST TOTAL DONATED VALUE");
+        donationUI.printText("\t\t---------------------------------------------");
+        donationUI.printText("\nGenerated at: " + getGeneratedReportDate());
+        //dividing line
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("\n\n\n");
         while (selectedDonors.getNumberOfEntries() < 5) {
             Donor highestDonor = null;
             double highestTotalDonatedAmount = 0;
 
             Iterator<Donor> donorIterator = donors.getIterator();
+            donorIterator = donors.getIterator();
 
             while (donorIterator.hasNext()) {
                 Donor donor = donorIterator.next();
@@ -491,12 +533,10 @@ public class DonorMaintenance {
         }
 
         if (category.equals("Individual")) {
-            donorUI.printText("\n[Summary Report]");
             donorUI.printEqualsDash();
             donorUI.printText(String.format("%-7s | %-10s | %-20s | %-20s | %-20s", "Rank", "Donor ID", "Donor Name", "Category", "Total Donation Value"));
             donorUI.printEqualsDash();
         } else {
-            donorUI.printText("\n[Summary Report]");
             donorUI.printEqualsDash();
             donorUI.printText(String.format("%-7s | %-10s | %-40s | %-30s | %-20s", "Rank", "Donor ID", "Donor Name", "Category", "Total Donation Value"));
             donorUI.printEqualsDash();
@@ -507,7 +547,7 @@ public class DonorMaintenance {
         while (selectedDonorIterator.hasNext()) {
             Donor donor = selectedDonorIterator.next();
             double totalDonatedAmount = getTotalDonatedAmountforDonor(donor);
-            if (category.equals("Individual")) {
+            if (category.equalsIgnoreCase("Individual")) {
                 donorUI.printText(String.format("[Top %d] : %-10s | %-20s | %-20s | RM%-20.2f",
                         rank,
                         donor.getDonorId(),
@@ -528,12 +568,26 @@ public class DonorMaintenance {
 
         donorUI.printEqualsDash();
 
+        printReportFooter();
+        
     }
     
     private void showReportforNumberOfDonorAndTotalDonatedValuePerCategory(SortedListSetInterface<Donor> donors) {
-        String[] categories = {"Public Organisation", "Private Organisation", "Government Organisation", "Individual"};
+        
+        
+        String[] categories = {"Public Organization", "Private Organization", "Government Organization", "Individual"};
 
-        donorUI.printText("\n[Summary Report]");
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
+        donationUI.printText("\n\n\t\tTOTAL DONATED VALUE & NUMBER OF DONORS PER CATEGORY REPORT");
+        donationUI.printText("\t\t--------------------------------------------------------------");
+        donationUI.printText("\nGenerated at: " + getGeneratedReportDate());
+        //dividing line
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("\n\n\n");
         donorUI.printEqualsDash();
         donorUI.printText(String.format("%-40s | %-30s | %-30s", "Category", "Total Number of Donors", "Total Donated Amount"));
         donorUI.printEqualsDash();
@@ -546,6 +600,9 @@ public class DonorMaintenance {
 
         donorUI.printEqualsDash();
         donorUI.printNumberOfEntries(donors);
+        
+        printReportFooter();
+         
     }
     
     
@@ -606,9 +663,19 @@ public class DonorMaintenance {
         SortedListSetInterface<Donor> categorizedStatusDonors = getCategorizedStatusSet(donors, "Active");
         SortedListSetInterface<Donor> categorizedDonors;
         
-        String[] categories = {"Public Organisation", "Private Organisation", "Government Organisation", "Individual"};
+        String[] categories = {"Public Organization", "Private Organization", "Government Organization", "Individual"};
 
-        donorUI.printText("\n[Summary Report]");
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
+        donationUI.printText("\n\n\t\t PERCENTAGES OF ACTIVE DONORS REPORT");
+        donationUI.printText("\t\t----------------------------------------");
+        donationUI.printText("\nGenerated at: " + getGeneratedReportDate());
+        //dividing line
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("\n\n\n");
         donorUI.printEqualsDash();
         donorUI.printText(String.format("%-30s | %-20s | %-20s | %-15s", "Category", "Active Donors", "Total Donors", "Active  ( % )"));
         donorUI.printEqualsDash();
@@ -632,6 +699,7 @@ public class DonorMaintenance {
         donorUI.printEqualsDash();
         donorUI.printText(String.format("%-30s | %-20d | %-20d | %-10.2f%%", "All", activeDonorsOverall, totalDonorsOverall, activePercentageOverall));
         donorUI.printEqualsDash();
+        printReportFooter();
     }
 
     
@@ -681,6 +749,17 @@ public class DonorMaintenance {
         SortedListSetInterface<Donor> newDonors = getNumberOfNewRegisteredDonorWithinMonth(donors);
 
         if(!newDonors.isEmpty()){
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
+        donationUI.printText("\n\n\t\tNEW REGISTERED DONOR IN RECENT MONTH REPORT");
+        donationUI.printText("\t\t-----------------------------------------------");
+        donationUI.printText("\nGenerated at: " + getGeneratedReportDate());
+        //dividing line
+        for (int i = 0; i < 100; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("\n\n\n");
         donorUI.printEqualsDash();
         donorUI.printText(String.format("%-10s | %-30s | %-30s | %-20s | %-10s", "Donor ID", "Name", "Category", "Registered Date", "Status"));
         donorUI.printEqualsDash();
@@ -697,6 +776,7 @@ public class DonorMaintenance {
         }
 
         donorUI.printEqualsDash();
+        printReportFooter();
         }else{
             donorUI.printText("No new registered donor in this month !");
         }
@@ -718,13 +798,20 @@ public class DonorMaintenance {
     
     private String getContact(){
         String contact = "";
-        do{
-        contact = donorUI.getDonorContact();
-         if (contact.length() > 12 || !contact.startsWith("0") || !contact.matches("\\d+")) {
-                MessageUI.displayInvalidContactMessage();  // Display an error message if invalid
-                
+        boolean correct = false;
+        do {
+            contact = donorUI.getDonorContact();
+            String lines[] = contact.split("-");
+
+            if (contact.length() > 12 || !contact.startsWith("0") || !contact.matches("[\\d-]+")) {
+                MessageUI.displayInvalidContactMessage();  // Display an error message if invalid       
+            } else if (lines[0].length() != 3) {
+                MessageUI.displayInvalidContactFormatMessage();
+            }else{
+                correct = true;
             }
-        }while(contact.length() > 12 || !contact.startsWith("0") || !contact.matches("\\d+"));
+
+        } while (correct == false);
         return contact;
     }
     
@@ -867,56 +954,56 @@ public class DonorMaintenance {
        donorUI.printDonorEnDash();
    }
      
-   private String setDonorCategory(){
-       int inputType = 0;
-       int inputCategory = 0;
-       String category = "";
-       try {
-            do {
-                inputType = donorUI.getDonorType();
+    private String setDonorCategory() {
+        int inputType = 0;
+        int inputCategory = 0;
+        String category = "";
+
+        do {
+                inputType = validateNumberFormatInput(donorUI.getDonorType());
 
                 if (inputType == 1) {
                     category = "Individual";
                 } else if (inputType == 2) {
                     do {
 
-                        inputCategory = donorUI.getOrganisationCategory();
+                            inputCategory = validateNumberFormatInput(donorUI.getOrganizationCategory());
 
-                        switch (inputCategory) {
-                            case 1:
-                                category = "Public Organisation";
-                                break;
-                            case 2:
-                                category = "Private Organisation";
-                                break;
-                            case 3:
-                                category = "Government Organisation";
-                                break;
-                            default:
-                                MessageUI.displayInvalidOptionMessage();
-                                break;
-                        }
+                            switch (inputCategory) {
+                                case 1:
+                                    category = "Public Organization";
+                                    break;
+                                case 2:
+                                    category = "Private Organization";
+                                    break;
+                                case 3:
+                                    category = "Government Organization";
+                                    break;
+                                default:
+                                    MessageUI.displayInvalidOptionMessage();
+                                    break;
+                            }
+                       
                     } while (inputCategory > 3 || inputCategory < 1);
-                }
+                }        
 
-            } while (inputType > 2 || inputType < 1);
+        } while (inputType > 2 || inputType < 1);
 
-        } catch (Exception ex) {
-            MessageUI.displayInvalidOptionMessage();
-        }
-       return category;
-   }
+        return category;
+    }
    
    
    private String setDonorStatus(){
        String newStatus = "";
        int opt = 0;
        do {
-           opt = donorUI.getDonorStatus();
+
+           opt = validateNumberFormatInput(donorUI.getDonorStatus());
 
            if (opt > 4 || opt < 1) {
                MessageUI.displayInvalidOptionMessage();
            }
+           
        } while (opt > 4 || opt < 1);
 
        switch (opt) {
@@ -1039,5 +1126,33 @@ public class DonorMaintenance {
             }
         }while(contactName.length() > 30);
         return contactName;
+   }
+   
+   private String getGeneratedReportDate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyyy, hh:mm a", Locale.ENGLISH);
+        return now.format(formatter);
+    }
+   
+   private int validateNumberFormatInput(String input) {
+        int num;
+        try {
+            num = Integer.parseInt(input);
+        } catch (NumberFormatException ex) {
+            return 0;
+        }
+        return num;
+    }
+   
+   private void printReportFooter(){
+       // dividing line
+        donationUI.printText("\n\n\n");
+        for (int i = 0; i < 110; i++) {
+            donationUI.printTextWithoutNextLine("-");
+        }
+        donationUI.printText("\n\t\t\tEND OF THE REPORT");
+        for (int i = 0; i < 110; i++) {
+            donationUI.printTextWithoutNextLine("=");
+        }
    }
 }
