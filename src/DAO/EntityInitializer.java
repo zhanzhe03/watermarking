@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author USER
+ * @author CHEWZHANZHE
  */
 public class EntityInitializer {
 
@@ -100,17 +100,17 @@ public class EntityInitializer {
         Donee donee7 = new Donee("DE007", "FAMILY", "QUAN FAMILY", "quan@gmail.com", "0143030520", "No2 Jalan Kuching", "Location A", new Date(2, 6, 2021));
         Donee donee8 = new Donee("DE008", "FAMILY", "JIAN FAMILY", "jian@gmail.com", "0155030510", "No32 Sungai Besar Jalan Tepi", "Location A", new Date(8, 2, 2022));
         Donee donee9 = new Donee("DE009", "ORGANIZATION", "SUNWAY FOOD BANK", "sunway@gmail.com", "0125558888", "PJ Jalan Sunway", "Location B", new Date(3, 3, 2022));
-        Donee donee10 = new Donee("DE0010", "FAMILY", "KIKI FAMILY", "kiki@gmail.com", "0125130512", "No81 Bagan Pasir", "Location C", new Date(14, 9, 2022));
-        Donee donee11 = new Donee("DE0011", "INDIVIDUAL", "QIAN ER", "qianer@gmail.com", "012523251", "No11 Bagan Pasir", "Location A", new Date(10, 11, 2022));
-        Donee donee12 = new Donee("DE0012", "INDIVIDUAL", "DEBBIE", "debbie@gmail.com", "0163030520", "No30 Bagan Pasir", "Location A", new Date(2, 12, 2021));
-        Donee donee13 = new Donee("DE0013", "ORGANIZATION", "TAYLOR FOOD BANK", "taylor@gmail.com", "0123032520", "KL Jalan Taylor", "Location A", new Date(13, 4, 2021));
-        Donee donee14 = new Donee("DE0014", "ORGANIZATION", "SEGI FOOD BANK", "segi@gmail.com", "0123012520", "BLOCK A PV16 09-12", "Location A", new Date(8, 4, 2021));
-        Donee donee15 = new Donee("DE0015", "INDIVIDUAL", "BAODING", "baoding@gmail.com", "0125030534", "PV18 BLOCK B 0813", "Location A", new Date(11, 5, 2022));
-        Donee donee16 = new Donee("DE0016", "ORGANIZATION", "VTAR FOOD BANK", "vtar@gmail.com", "0125458888", "JALAN TUNKU ABDUL RAHMAN", "Location B", new Date(2, 6, 2022));
-        Donee donee17 = new Donee("DE0017", "FAMILY", "ABU FAMILY", "abu@gmail.com", "0125030345", "No89 Taman Gila", "Location C", new Date(11, 2, 2020));
-        Donee donee18 = new Donee("DE0018", "INDIVIDUAL", "ANG XIAO", "ang@gmail.com", "017523251", "No20 Taman Gembira", "Location A", new Date(10, 5, 2021));
-        Donee donee19 = new Donee("DE0019", "ORGANIZATION", "CITC FOOD BANK", "citc@gmail.com", "0143232520", "JALAN TUNKU ABDUL RAHMAN", "Location A", new Date(3, 11, 2021));
-        Donee donee20 = new Donee("DE0020", "ORGANIZATION", "UTAR FOOD BANK", "utar@gmail.com", "0163240520", "SUNGAI BULOH UTAR", "Location A", new Date(1, 1, 2021));
+        Donee donee10 = new Donee("DE010", "FAMILY", "KIKI FAMILY", "kiki@gmail.com", "0125130512", "No81 Bagan Pasir", "Location C", new Date(14, 9, 2022));
+        Donee donee11 = new Donee("DE011", "INDIVIDUAL", "QIAN ER", "qianer@gmail.com", "012523251", "No11 Bagan Pasir", "Location A", new Date(10, 11, 2022));
+        Donee donee12 = new Donee("DE012", "INDIVIDUAL", "DEBBIE", "debbie@gmail.com", "0163030520", "No30 Bagan Pasir", "Location A", new Date(2, 12, 2021));
+        Donee donee13 = new Donee("DE013", "ORGANIZATION", "TAYLOR FOOD BANK", "taylor@gmail.com", "0123032520", "KL Jalan Taylor", "Location A", new Date(13, 4, 2021));
+        Donee donee14 = new Donee("DE014", "ORGANIZATION", "SEGI FOOD BANK", "segi@gmail.com", "0123012520", "BLOCK A PV16 09-12", "Location A", new Date(8, 4, 2021));
+        Donee donee15 = new Donee("DE015", "INDIVIDUAL", "BAODING", "baoding@gmail.com", "0125030534", "PV18 BLOCK B 0813", "Location A", new Date(11, 5, 2022));
+        Donee donee16 = new Donee("DE016", "ORGANIZATION", "VTAR FOOD BANK", "vtar@gmail.com", "0125458888", "JALAN TUNKU ABDUL RAHMAN", "Location B", new Date(2, 6, 2022));
+        Donee donee17 = new Donee("DE017", "FAMILY", "ABU FAMILY", "abu@gmail.com", "0125030345", "No89 Taman Gila", "Location C", new Date(11, 2, 2020));
+        Donee donee18 = new Donee("DE018", "INDIVIDUAL", "ANG XIAO", "ang@gmail.com", "017523251", "No20 Taman Gembira", "Location A", new Date(10, 5, 2021));
+        Donee donee19 = new Donee("DE019", "ORGANIZATION", "CITC FOOD BANK", "citc@gmail.com", "0143232520", "JALAN TUNKU ABDUL RAHMAN", "Location A", new Date(3, 11, 2021));
+        Donee donee20 = new Donee("DE020", "ORGANIZATION", "UTAR FOOD BANK", "utar@gmail.com", "0163240520", "SUNGAI BULOH UTAR", "Location A", new Date(1, 1, 2021));
 
         Request request1 = new Request(new Date(10, 2, 2023), "Food and Beverage");
         Request request2 = new Request(new Date(11, 3, 2022), "Clothing and Apparel");
@@ -120,6 +120,8 @@ public class EntityInitializer {
         Request request6 = new Request(new Date(8, 5, 2023), "Food and Beverage");
         Request request7 = new Request(new Date(5, 5, 2022), "Monetary");
         Request request8 = new Request(new Date(2, 6, 2021), "Educational Materials");
+        Request request9 = new Request(new Date(5, 1, 2022), "Electronic");
+        Request request10 = new Request(new Date(2, 1, 2021), "Monetary");
 
         Item item1 = new Item("I001", "Monetary", "Cash", 200);
         Item item2 = new Item("I002", "Household Items", "Bed", 2, 120);
@@ -345,12 +347,48 @@ public class EntityInitializer {
         donee3.addRequest(request3);
         donee4.addRequest(request4);
         donee5.addRequest(request5);
+        donee6.addRequest(request1);
+        donee7.addRequest(request2);
+        donee7.addRequest(request9);
+        donee8.addRequest(request2);
+        donee9.addRequest(request4);
+        donee10.addRequest(request7);
+        donee11.addRequest(request3);
+        donee12.addRequest(request4);
+        donee12.addRequest(request5);
+        donee12.addRequest(request1);
+        donee13.addRequest(request2);
+        donee15.addRequest(request2);
+        donee15.addRequest(request4);
+        donee16.addRequest(request7);
+        donee16.addRequest(request3);
+        donee17.addRequest(request4);
+        donee18.addRequest(request5);
+        donee19.addRequest(request9);
+        donee20.addRequest(request10);
+        donee19.addRequest(request8);
+        donee20.addRequest(request6);
 
         donees.add(donee1);
         donees.add(donee2);
         donees.add(donee3);
         donees.add(donee4);
         donees.add(donee5);
+        donees.add(donee6);
+        donees.add(donee7);
+        donees.add(donee8);
+        donees.add(donee9);
+        donees.add(donee10);
+        donees.add(donee11);
+        donees.add(donee12);
+        donees.add(donee13);
+        donees.add(donee14);
+        donees.add(donee15);
+        donees.add(donee16);
+        donees.add(donee17);
+        donees.add(donee18);
+        donees.add(donee19);
+        donees.add(donee20);
 
 //        donor1.addDonationToList(donation1.clone());
 //        donor2.addDonationToList(donation2.clone());
