@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.util.Iterator;
 import Entity.Date;
 import Entity.Request;
-import java.util.Stack;
 import Entity.SelectedItem;
 
 /**
@@ -499,10 +498,11 @@ public class DoneeMaintenance {
 
         Date startDate = getValidDate("Enter start date (DD-MM-YYYY): ");
         Date endDate = getValidDate("Enter end date (DD-MM-YYYY): ");
+        CommonUse.getLogo();
         SortedListSetInterface<Donee> foundDonees = findDoneesDateInRange(donees, startDate, endDate);
 
         if (foundDonees != null && foundDonees.getNumberOfEntries() > 0) {
-            doneeUI.printText("Donees registered between " + startDate + " and " + endDate + ":");
+            doneeUI.printText("\n\t\tDonees registered between " + startDate + " and " + endDate + ":");
             doneeUI.printRegisterDoneeTitle();
             doneeUI.displayEnDash();
 
@@ -845,7 +845,7 @@ public class DoneeMaintenance {
                 }
                 break;
             case 3:
-                doneeUI.printText("Enter first Donee ID and seconde Donee ID");
+                doneeUI.printText("\nEnter first Donee ID and seconde Donee ID");
                 doneeUI.displayEnDash();
                 String inputId1 = doneeUI.getDoneeID();
                 String inputId2 = doneeUI.getDoneeID();
@@ -861,7 +861,7 @@ public class DoneeMaintenance {
                     String yesNo = doneeUI.confirmOperation();
                     if (yesNo.equalsIgnoreCase("Y")) {
                         donees.relativeComplement(foundDonee);
-                        doneeUI.printText("Donee(s) with ID: " + inputId1 + "to" + "inputId2" + "have been removed successfully.");
+                        doneeUI.printText("\nDonee(s) with ID: " + inputId1 + " to " + inputId2 + "have been removed successfully.");
                     } else {
                         doneeUI.printText("Removal cancelled.");
                     }
@@ -955,7 +955,7 @@ public class DoneeMaintenance {
     }
 
     public void DoneeWithDistribute(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
-
+        doneeUI.displayEnDash();
         doneeUI.donationTitle();
         doneeUI.displayEnDash();
 
@@ -1102,6 +1102,7 @@ public class DoneeMaintenance {
                     listDoneesByDate(donees);
                     break;
                 case "2":
+                    CommonUse.getLogo();
                     listDoneeRequestReceive(donees, distributions, items);
                     break;
                 case "3":
@@ -1240,7 +1241,6 @@ public class DoneeMaintenance {
         }
 
         // Print total counts for all donees
-        doneeUI.displayEnDash();
         doneeUI.printText(String.format("\n%-15s :", "Total"));
 
         doneeUI.printText(String.format("%-15s : %-12d | %-12d | %-12d | %-12d | %-12d | %-12d | %-12d",

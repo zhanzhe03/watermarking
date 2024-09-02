@@ -21,13 +21,13 @@ public class DonationUI {
         System.out.println(""
                 + "\nDONATION MANAGEMENT SYSTEM"
                 + "\n 1. List all donation and item"
-                + "\n 2. Add donation (donor registration, and any donor status lead to unsuccess donation)"
+                + "\n 2. Add donation"
                 + "\n 3. Search donation details"
                 + "\n 4. Amend donation"
                 + "\n 5. Remove donation"
                 + "\n 6. Filter donation based on criteria"
                 + "\n 7. Track donated items in different type"
-                + "\n 8. Generate summary reports (on hold)"
+                + "\n 8. Generate summary reports"
                 + "\n 9. Back to MAIN MENU");
         System.out.print("\nopt > ");
         return scanner.nextLine();

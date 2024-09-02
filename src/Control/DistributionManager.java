@@ -8,11 +8,22 @@ package Control;
  *
  * @author szewen
  */
-import Boundary.*;
-import Utility.*;
+import Boundary.DonationUI;
+import Boundary.DistributionUI;
+import Utility.ClearScreen;
+import Utility.CommonUse;
+import Utility.MessageUI;
+import Utility.StockUI;
 import ADT.SortedDoublyLinkedListSet;
 import ADT.SortedListSetInterface;
-import Entity.*;
+import Boundary.DoneeUI;
+import Entity.Date;
+import Entity.Distribution;
+import Entity.Donation;
+import Entity.Donee;
+import Entity.Item;
+import Entity.SelectedItem;
+import Entity.Request;
 import java.util.Iterator;
 import DAO.EntityInitializer;
 
@@ -20,6 +31,7 @@ public class DistributionManager {
 
     private DistributionUI distributionUI = new DistributionUI();
     private DonationUI donationUI = new DonationUI();
+    private DoneeUI doneeUI = new DoneeUI();
 
     private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
     private int localDay = distributionUI.getLocalDate().getDayOfMonth();
@@ -31,10 +43,12 @@ public class DistributionManager {
         SortedListSetInterface<Distribution> distributions = entityInitialize.getDistributions();
         SortedListSetInterface<Item> donatedItemList = entityInitialize.getItems();
 
+
         SortedListSetInterface<Donee> donees = entityInitialize.getDonees();
         SortedListSetInterface<Donation> donations = entityInitialize.getDonations();
 
         SortedListSetInterface<Item> availableItemList = StockUI.getAvailableItemList(donations);
+        
 
         updateDistributionStatus(distributions);
 
@@ -45,29 +59,29 @@ public class DistributionManager {
 
                 switch (opt) {
                     case 1:
-                        //ClearScreen.clearJavaConsoleScreen();
+                        ClearScreen.clearJavaConsoleScreen();
                         ListAllDistributions(distributions);
                         break;
                     case 2:
-                        //ClearScreen.clearJavaConsoleScreen();
+                        ClearScreen.clearJavaConsoleScreen();
                         AddNewDistribution(donatedItemList, distributions, donees, donations, availableItemList);
                         break;
                     case 3:
-                        // ClearScreen.clearJavaConsoleScreen();
+                        ClearScreen.clearJavaConsoleScreen();
                         UpdateDonationDistribution(donatedItemList, distributions, donees);
                         break;
                     case 4:
-                        //ClearScreen.clearJavaConsoleScreen();
                         SearchDonationDistribution(distributions, donatedItemList);
                         break;
                     case 5:
-                        //ClearScreen.clearJavaConsoleScreen();
+                        ClearScreen.clearJavaConsoleScreen();
                         RemoveDonationDistribution(distributions);
                         break;
                     case 6:
                         TrackDistributedItems(distributions, donatedItemList);
                         break;
                     case 7:
+                        ClearScreen.clearJavaConsoleScreen();
                         GenerateSummaryReport(distributions, donatedItemList);
                         break;
                     case 9:
@@ -115,6 +129,7 @@ public class DistributionManager {
         // Default: List all distributions sorted by Distribution ID in ascending order
         Distribution.setSortByCriteria(Distribution.SortByCriteria.DISTID_INASC);
         distributions.reSort();
+        distributionUI.displayMessage("\nAll Distribution Records : ");
         distributionUI.listAllDistributions(distributions);
 
         // Ask user if they want to list distributions with a different sorting method
@@ -178,7 +193,7 @@ public class DistributionManager {
         boolean foundType;
 
         double minttlAmt = 0.0;
-        int minQty = 0;
+        int minQty = 0 ;
 
         do {
             // Generate new distribution info
@@ -189,6 +204,10 @@ public class DistributionManager {
             Donee selectedDonee = null;
             do {
                 try {
+                    distributionUI.displayMessage("Available Donees : ");
+                    doneeUI.displayEnDash();
+                    doneeUI.printDoneeTitle();
+                     doneeUI.displayEnDash();
                     distributionUI.displayMessage("" + donees); // Display the list of donees
                     input = distributionUI.getInputString("Please enter the Donee ID to distribute to ('Q' quit) > ");
 
@@ -227,9 +246,7 @@ public class DistributionManager {
 
             do {
                 try {
-                    // Display Donee request each time before prompting for item input
-                    //  displayDoneeRequest(selectedDonee);
-
+                    
                     CommonUse.printItemHeader();
                     distributionUI.displayMessage("\n");
                     distributionUI.displayMessage("" + availableItemList);
@@ -560,6 +577,11 @@ public class DistributionManager {
                 MessageUI.displayBlueRemindMsg("The distribution record with ID < " + updateDistID + " > is already shipped and cannot be updated.");
                 return;
             }
+            else if (updateDist.getStatus().equalsIgnoreCase("MERGED")) {
+
+                MessageUI.displayBlueRemindMsg("The distribution record with ID < " + updateDistID + " > is merged and not allowed to update.");
+                return;
+            }
 
             while (continueLoop) {
                 distributionUI.displayMessage("\nWhat would you like to update? ");
@@ -823,8 +845,14 @@ public class DistributionManager {
 
     private void updateDoneeDetails(Distribution updateDist, SortedListSetInterface<Donee> donees) {
 
-        distributionUI.displayMessage("\nDistribution Details: " + updateDist + "\n");
-        MessageUI.displayMagentaPreviewMsg("Current Donee Details: " + updateDist.getDistributedDoneeList());
+        distributionUI.displayMessage("\nDistribution Details: " );
+        distributionUI.printDistributionTitleHeader();
+        distributionUI.displayMessage(""+ updateDist + "\n");
+        MessageUI.displayMagentaPreviewMsg("Current Donee Details: \n");
+        doneeUI.displayEnDash();
+                    doneeUI.printDoneeTitle();
+                     doneeUI.displayEnDash();
+        distributionUI.displayMessage("" + updateDist.getDistributedDoneeList());
 
         String yesNo;
         Donee foundDonee;
@@ -896,6 +924,7 @@ public class DistributionManager {
     }
 
     //**** Update purpose
+    
     //**** Search purpose
     public void SearchDonationDistribution(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
         String input = distributionUI.getInputString("Please enter the keyword to search > ");
@@ -1040,6 +1069,7 @@ public class DistributionManager {
     }
 
     //**** Search purpose
+    
     //**** Remove purpose
     public void RemoveDonationDistribution(SortedListSetInterface<Distribution> distributions) {
         distributionUI.displayMessage("Remove Distribution Donation : ");
@@ -1077,6 +1107,7 @@ public class DistributionManager {
 
         } while (!removeSuccessful); // Repeat until a valid ID is entered and removal is successful
     }
+    //**** Remove purpose
 
     public void TrackDistributedItems(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Item> donatedItemList) {
 
@@ -1283,13 +1314,11 @@ public class DistributionManager {
     }
 
     private Date getStartOfYear(int year) {
-        // Assuming the Date class has a constructor for day, month, and year
-        return new Date(1, 1, year); // Start date: January 1st of the year
+        return new Date(1, 1, year); 
     }
 
     private Date getEndOfYear(int year) {
-        // Assuming the Date class has a constructor for day, month, and year
-        return new Date(31, 12, year); // End date: December 31st of the year
+        return new Date(31, 12, year); 
     }
 
     private boolean validateDate(int day, int month, int year) {

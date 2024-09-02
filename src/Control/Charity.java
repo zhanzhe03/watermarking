@@ -31,7 +31,7 @@ public class Charity {
         do {
             ClearScreen.clearJavaConsoleScreen();
             try {
-                charityUI.getLogo();
+                CommonUse.getLogo();
                 opt = Integer.parseInt(charityUI.getMenu());
 
                 switch (opt) {
@@ -54,7 +54,6 @@ public class Charity {
                         MessageUI.displayInvalidOptionMessage();
                 }
             } catch (NumberFormatException ex) {
-                System.out.println("1");
                 MessageUI.displayInvalidIntegerMessage();
             }
 

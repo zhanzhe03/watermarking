@@ -8,58 +8,59 @@ package DAO;
 import ADT.*;
 import Entity.*;
 import java.util.Iterator;
+import Utility.CommonUse;
 
 /**
  *
  * @author CHEWZHANZHE
  */
 public class EntityInitializer {
-
+    
     private SortedListSetInterface<Donation> donations = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donation> donationsHistory = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donor> donors = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Donee> donees = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Distribution> distributions = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Item> items = new SortedDoublyLinkedListSet<>();
-    private SortedListSetInterface<SelectedItem> distributedItem = new SortedDoublyLinkedListSet<>();
     private SortedListSetInterface<Request> request = new SortedDoublyLinkedListSet<>();
-
+    private SortedListSetInterface<SelectedItem> distributedItemList = new SortedDoublyLinkedListSet<>();
+    
     public SortedListSetInterface<Request> getRequest() {
         return request;
     }
-
+    
     public SortedListSetInterface<Donation> getDonations() {
         return donations;
     }
-
+    
     public SortedListSetInterface<Donation> getDonationsHistory() {
         return donationsHistory;
     }
-
+    
     public SortedListSetInterface<Donor> getDonors() {
         return donors;
     }
-
+    
     public SortedListSetInterface<Donee> getDonees() {
         return donees;
     }
-
+    
     public SortedListSetInterface<Distribution> getDistributions() {
         return distributions;
     }
-
+    
     public SortedListSetInterface<Item> getItems() {
         return items;
     }
-
-    public SortedListSetInterface<SelectedItem> getDistributedItem() {
-        return distributedItem;
+    
+    public SortedListSetInterface<SelectedItem> getDistributedItemList(){
+        return distributedItemList;
     }
-
+    
     public void entityEnitialize() {
-
+        
         Donor donor1 = new Donor("DR001", "Public Organization", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
-        Donor donor2 = new Donor("DR002", "Private Organization","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
+        Donor donor2 = new Donor("DR002", "Private Organization", "Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
         Donor donor3 = new Donor("DR003", "Government Organization", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", new Date(21, 5, 2022), "Active");
         
         Donor donor4 =new Donor("DR004", "Individual", "Zhang Wei", "-", "012-6754321", "zhangwei@gmail.com", "Jalan SS 7/3, SS 7, 47301 Petaling Jaya, Selangor", new Date(18, 6, 2022), "Prospect");
@@ -111,7 +112,7 @@ public class EntityInitializer {
         Donee donee18 = new Donee("DE018", "INDIVIDUAL", "ANG XIAO", "ang@gmail.com", "017523251", "No20 Taman Gembira", "Location A", new Date(10, 5, 2021));
         Donee donee19 = new Donee("DE019", "ORGANISATION", "CITC FOOD BANK", "citc@gmail.com", "0143232520", "JALAN TUNKU ABDUL RAHMAN", "Location A", new Date(3, 11, 2021));
         Donee donee20 = new Donee("DE020", "ORGANISATION", "UTAR FOOD BANK", "utar@gmail.com", "0163240520", "SUNGAI BULOH UTAR", "Location A", new Date(1, 1, 2021));
-
+        
         Request request1 = new Request(new Date(10, 2, 2023), "Food and Beverage");
         Request request2 = new Request(new Date(11, 3, 2022), "Clothing and Apparel");
         Request request3 = new Request(new Date(12, 3, 2021), "Household Items");
@@ -122,7 +123,7 @@ public class EntityInitializer {
         Request request8 = new Request(new Date(2, 6, 2021), "Educational Materials");
         Request request9 = new Request(new Date(5, 1, 2022), "Electronic");
         Request request10 = new Request(new Date(2, 1, 2021), "Monetary");
-
+        
         Item item1 = new Item("I001", "Monetary", "Cash", 2000);
         Item item2 = new Item("I002", "Household Items", "Bed", 2, 120);
         Item item3 = new Item("I003", "Electronic", "Accessories", 30, 20);
@@ -134,7 +135,7 @@ public class EntityInitializer {
         Item item9 = new Item("I009", "Educational Materials", "Stationary", 50, 2.40);
         Item item10 = new Item("I010", "Monetary", "QR Code Payment", 120);
         Item item11 = new Item("I011", "Medical", "Wheelchair", 1, 180);
-        Item item12 = new Item("I012", "Clothing and Apparel", "Shoes", 10, 50);
+        Item item12 = new Item("I012", "Clothing and Apparel", "Shoes", 0, 50);
         Item item13 = new Item("I013", "Food and Beverage", "White Rice", 30, 1.00, new Date(1, 9, 2024));
         Item item14 = new Item("I014", "Food and Beverage", "Packaged Snacks", 4, 9, new Date(12, 10, 2024));
         Item item15 = new Item("I015", "Household Items", "Table", 4, 30);
@@ -171,23 +172,23 @@ public class EntityInitializer {
         Item item46 = new Item("I046", "Medical", "Wheelchair", 1, 300);
         Item item47 = new Item("I047", "Electronic", "Ipad", 2, 1300);
         Item item48 = new Item("I048", "Monetary", "Cash", 800);
-        Item item49 = new Item("I049", "Food and Beverage", "Packaged Snacks", 50, 5, new Date(28, 8, 2024));
-        Item item50 = new Item("I050", "Electronic", "Accessories", 10, 100);
+        Item item49 = new Item("I049", "Food and Beverage", "Packaged Snacks", 0, 5, new Date(28, 8, 2024));
+        Item item50 = new Item("I050", "Electronic", "Accessories", 0, 100);
         Item item51 = new Item("I051", "Food and Beverage", "Water Bottle", 50, 1.20, new Date(7, 5, 2024));
         Item item52 = new Item("I052", "Monetary", "Online Transfers", 3000);
         Item item53 = new Item("I053", "Household Items", "Table", 20, 20);
         Item item54 = new Item("I054", "Electronic", "Laptop", 4, 900);
         Item item55 = new Item("I055", "Monetary", "Online Transfers", 2000);
         Item item56 = new Item("I056", "Educational Materials", "Stationary", 20, 4);
-        Item item57 = new Item("I057", "Food and Beverage", "Water Bottle", 30, 1.40, new Date(30,11, 2024));
+        Item item57 = new Item("I057", "Food and Beverage", "Water Bottle", 30, 1.40, new Date(30, 11, 2024));
         Item item58 = new Item("I058", "Clothing and Apparel", "Clothes", 20, 40);
         Item item59 = new Item("I059", "Clothing and Apparel", "Shoes", 25, 120);
         Item item60 = new Item("I060", "Monetary", "QR Code Payment", 7500);
         Item item61 = new Item("I061", "Medical", "First and Kit", 6, 40);
         Item item62 = new Item("I062", "Clothing and Apparel", "Shoes", 100, 35);
         Item item63 = new Item("I063", "Monetary", "Cash", 2000);
-        Item item64 = new Item("I064", "Food and Beverage", "Water Bottle", 70, 1.20, new Date(10,9, 2024));
-        Item item65 = new Item("I065", "Food and Beverage", "Nasi Lemak", 20, 2.20, new Date(5,10, 2024));
+        Item item64 = new Item("I064", "Food and Beverage", "Water Bottle", 70, 1.20, new Date(10, 9, 2024));
+        Item item65 = new Item("I065", "Food and Beverage", "Nasi Lemak", 20, 2.20, new Date(5, 10, 2024));
         Item item66 = new Item("I066", "Electronic", "Mobile Phone", 1, 700);
         
         Donation donation1 = new Donation("D001", new Date(17, 4, 2024), "Processing", donor1);
@@ -198,26 +199,24 @@ public class EntityInitializer {
         Donation donation6 = new Donation("D006", new Date(17, 6, 2024), "Processing", donor7);
         Donation donation7 = new Donation("D007", new Date(24, 6, 2024), "Processing", donor8);
         Donation donation8 = new Donation("D008", new Date(24, 6, 2024), "Processing", donor10);
-        Donation donation9 = new Donation("D009", new Date(30, 6, 2024), "Distributing", donor12);
+        Donation donation9 = new Donation("D009", new Date(30, 6, 2024), "Processing", donor12);
         Donation donation10 = new Donation("D010", new Date(30, 6, 2024), "Processing", donor14);
         Donation donation11 = new Donation("D011", new Date(6, 7, 2024), "Processing", donor14);
-        Donation donation12 = new Donation("D012", new Date(23, 7, 2024), "Distributing", donor15);
+        Donation donation12 = new Donation("D012", new Date(23, 7, 2024), "Processing", donor15);
         Donation donation13 = new Donation("D013", new Date(29, 7, 2024), "Processing", donor15);
         Donation donation14 = new Donation("D014", new Date(3, 8, 2024), "Processing", donor17);
-        Donation donation15 = new Donation("D015", new Date(10, 8, 2024), "Distributing", donor17);
+        Donation donation15 = new Donation("D015", new Date(10, 8, 2024), "Processing", donor17);
         Donation donation16 = new Donation("D016", new Date(11, 8, 2024), "Processing", donor18);
-        Donation donation17 = new Donation("D017", new Date(13, 8, 2024), "Distributing", donor20);
+        Donation donation17 = new Donation("D017", new Date(13, 8, 2024), "Processing", donor20);
         Donation donation18 = new Donation("D018", new Date(13, 8, 2024), "Processing", donor20);
         Donation donation19 = new Donation("D019", new Date(17, 8, 2024), "Processing", donor1);
-        Donation donation20 = new Donation("D020", new Date(30, 8, 2024), "Distributing", donor1);
+        Donation donation20 = new Donation("D020", new Date(30, 8, 2024), "Processing", donor1);
         Donation donation21 = new Donation("D021", new Date(31, 8, 2024), "Pending", donor21);
         Donation donation22 = new Donation("D022", new Date(31, 8, 2024), "Pending", donor30);
         Donation donation23 = new Donation("D023", new Date(31, 8, 2024), "Pending", donor25);
         Donation donation24 = new Donation("D024", new Date(1, 9, 2024), "Pending", donor26);
         Donation donation25 = new Donation("D025", new Date(1, 9, 2024), "Pending", donor27);
         
-        
-
         donation1.assignItems(item1);
         donation1.assignItems(item2);
         donation1.assignItems(item3);
@@ -284,7 +283,7 @@ public class EntityInitializer {
         donation25.assignItems(item64);
         donation25.assignItems(item65);
         donation25.assignItems(item66);
-
+        
         Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2023));
         Distribution distribution2 = new Distribution("DIST002", new Date(3, 1, 2023));
         Distribution distribution3 = new Distribution("DIST003", new Date(12, 2, 2023));
@@ -303,17 +302,17 @@ public class EntityInitializer {
         Distribution distribution18 = new Distribution("DIST018", new Date(1, 7, 2024));
         Distribution distribution19 = new Distribution("DIST019", new Date(1, 7, 2024));
         Distribution distribution20 = new Distribution("DIST020", new Date(21, 7, 2024));
-
+        
         Distribution distribution22 = new Distribution("DIST022", new Date(25, 7, 2024));
         Distribution distribution23 = new Distribution("DIST023", new Date(13, 8, 2024));
         Distribution distribution24 = new Distribution("DIST024", new Date(1, 8, 2024));
         Distribution distribution25 = new Distribution("DIST025", new Date(11, 8, 2024));
         Distribution distribution26 = new Distribution("DIST026", new Date(12, 8, 2024));
         Distribution distribution27 = new Distribution("DIST027", new Date(12, 8, 2024));
-
+        
         Distribution distribution28 = new Distribution("DIST028", new Date(13, 8, 2024));
         Distribution distribution29 = new Distribution("DIST029", new Date(1, 8, 2024));
-
+        
         SortedDoublyLinkedListSet<Donee> doneeList1 = new SortedDoublyLinkedListSet<>();
         doneeList1.add(donee1);
         doneeList1.add(donee4);
@@ -343,75 +342,102 @@ public class EntityInitializer {
         distribution1.addDonee(donee1);
         distribution1.addSelectedItem(selectedItem1);
         distribution1.addSelectedItem(selectedItem2);
-
+        
         distribution2.addDonee(donee2);
         distribution2.addSelectedItem(selectedItem3);
-
+        
         distribution3.addDonee(donee3);
         distribution3.addSelectedItem(selectedItem3);
-
+        
         distribution4.addDonee(donee4);
         distribution4.addSelectedItem(selectedItem4);
         distribution4.addSelectedItem(selectedItem5);
-
+        
         distribution5.addDonee(donee1);
         distribution5.addSelectedItem(selectedItem1);
-
+        
         distribution6.addDonee(donee1);
         distribution6.addSelectedItem(selectedItem6);
-
+        
         distribution8.addDonee(donee9);
         distribution8.addSelectedItem(new SelectedItem("I012", 1));
+        distribution8.addSelectedItem(new SelectedItem("I034", 150.00));
+        distribution8.addSelectedItem(new SelectedItem("I017", 8));
+        
         distribution9.addDonee(donee10);
         distribution9.addSelectedItem(new SelectedItem("I013", 2));
-        distribution10.addDonee(donee11);
-        distribution10.addSelectedItem(new SelectedItem("I012", 5));
-        distribution11.addDonee(donee12);
-        distribution11.addSelectedItem(new SelectedItem("I013", 3));
-        distribution12.addDonee(donee13);
-        distribution12.addSelectedItem(new SelectedItem("I014", 10));
-        distribution13.addDonee(donee14);
-        distribution13.addSelectedItem(new SelectedItem("I003", 4));
-        distribution14.addDonee(donee18);
-        distribution14.addSelectedItem(new SelectedItem("I015", 2));
-        distribution15.addDonee(donee1);
-        distribution15.addSelectedItem(new SelectedItem("I013", 2));
-        distribution16.addDonee(donee19);
-        distribution16.addSelectedItem(new SelectedItem("I016", 3));
-        distribution18.addDonee(donee20);
-        distribution18.addSelectedItem(new SelectedItem("I017", 1));
-        distribution19.addDonee(donee13);
-        distribution19.addSelectedItem(new SelectedItem("I011", 1));
-        distribution20.addDonee(donee11);
-        distribution20.addSelectedItem(new SelectedItem("I015", 1));
-        distribution21.addDonee(donee12);
-        distribution21.addSelectedItem(new SelectedItem("I015", 1));
-        distribution22.addDonee(donee13);
-        distribution22.addSelectedItem(new SelectedItem("I010", 100.00));
-        distribution23.addDonee(donee14);
-        distribution23.addSelectedItem(new SelectedItem("I014", 1));
-        distribution24.addDonee(donee9);
-        distribution24.addSelectedItem(new SelectedItem("I018", 5));
-        distribution25.addDonee(donee8);
-        distribution25.addSelectedItem(new SelectedItem("I017", 4));
-        distribution26.addDonee(donee7);
-        distribution26.addSelectedItem(new SelectedItem("I014", 1));
-        distribution27.addDonee(donee6);
-        distribution27.addSelectedItem(new SelectedItem("I016", 2));
-        distribution28.addDonee(donee10);
-        distribution28.addSelectedItem(new SelectedItem("I010", 200.00));
-        distribution29.addDonee(donee11);
-        distribution29.addSelectedItem(new SelectedItem("I002", 3));
+        distribution9.addSelectedItem(new SelectedItem("I022", 1));
+        distribution9.addSelectedItem(new SelectedItem("I023", 2));
         
-
+        distribution10.addDonee(donee11);
+        distribution10.addSelectedItem(new SelectedItem("I014", 5));
+        distribution10.addSelectedItem(new SelectedItem("I016", 10));
+        distribution10.addSelectedItem(new SelectedItem("I023", 3));
+        
+        distribution11.addDonee(donee12);
+        distribution11.addSelectedItem(new SelectedItem("I016", 1));
+        distribution11.addSelectedItem(new SelectedItem("I027", 2));
+        
+        distribution12.addDonee(donee13);
+        distribution12.addSelectedItem(new SelectedItem("I016", 10));
+        distribution12.addSelectedItem(new SelectedItem("I023", 2));
+        distribution13.addDonee(donee14);
+        distribution13.addSelectedItem(new SelectedItem("I017", 4));
+        distribution13.addSelectedItem(new SelectedItem("I048", 400.00));
+        
+        distribution14.addDonee(donee18);
+        distribution14.addSelectedItem(new SelectedItem("I018", 2));
+        
+        distribution15.addDonee(donee1);
+        distribution15.addSelectedItem(new SelectedItem("I019", 200.00));
+        distribution15.addSelectedItem(new SelectedItem("I022", 5));
+        
+        distribution16.addDonee(donee19);
+        distribution16.addSelectedItem(new SelectedItem("I020", 350.00));
+        distribution18.addDonee(donee20);
+        distribution18.addSelectedItem(new SelectedItem("I021", 3));
+        distribution18.addSelectedItem(new SelectedItem("I034", 3000.00));
+        
+        distribution19.addDonee(donee13);
+        distribution19.addSelectedItem(new SelectedItem("I022", 2));
+        distribution20.addDonee(donee11);
+        distribution20.addSelectedItem(new SelectedItem("I023", 10));
+        distribution20.addSelectedItem(new SelectedItem("I033", 100.00));
+        
+        distribution21.addDonee(donee12);
+        distribution21.addSelectedItem(new SelectedItem("I024", 8));
+        distribution21.addSelectedItem(new SelectedItem("I033", 80.00));
+        distribution21.addSelectedItem(new SelectedItem("I035", 10));
+        distribution21.addSelectedItem(new SelectedItem("I040", 10));
+        
+        distribution22.addDonee(donee13);
+        distribution22.addSelectedItem(new SelectedItem("I025", 10));
+        distribution22.addSelectedItem(new SelectedItem("I026", 2));
+        
+        distribution23.addDonee(donee14);
+        distribution23.addSelectedItem(new SelectedItem("I026", 3));
+        distribution24.addDonee(donee9);
+        distribution24.addSelectedItem(new SelectedItem("I027", 2));
+        distribution25.addDonee(donee8);
+        distribution25.addSelectedItem(new SelectedItem("I028", 50.00));
+        
+        distribution26.addDonee(donee7);
+        distribution26.addSelectedItem(new SelectedItem("I029", 50));
+        distribution27.addDonee(donee6);
+        distribution27.addSelectedItem(new SelectedItem("I030", 50));
+        distribution28.addDonee(donee10);
+        distribution28.addSelectedItem(new SelectedItem("I031", 20));
+        distribution29.addDonee(donee11);
+        distribution29.addSelectedItem(new SelectedItem("I033", 300.00));
+        
         distribution7.addSelectedItem(selectedItem6);
-        distribution17.addSelectedItem(new SelectedItem("I019", 1000.00));
         distribution17.addSelectedItem(new SelectedItem("I017", 1));
-        distribution17.addSelectedItem(new SelectedItem("I002", 5));
+        distribution17.addSelectedItem(new SelectedItem("I019", 1000.00));
+        
         distribution21.addSelectedItem(selectedItem6);
         distribution21.addSelectedItem(new SelectedItem("I007", 500.00));
         distribution30.addSelectedItem(new SelectedItem("I010", 100.00));
-
+        
         distributions.add(distribution1);
         distributions.add(distribution2);
         distributions.add(distribution3);
@@ -442,7 +468,7 @@ public class EntityInitializer {
         distributions.add(distribution28);
         distributions.add(distribution29);
         distributions.add(distribution30);
-
+        
         donors.add(donor1);
         donors.add(donor2);
         donors.add(donor3);
@@ -474,7 +500,6 @@ public class EntityInitializer {
         donors.add(donor29);
         donors.add(donor30);
         
-
         items.add(item1);
         items.add(item2);
         items.add(item3);
@@ -542,9 +567,6 @@ public class EntityInitializer {
         items.add(item65);
         items.add(item66);
         
-        
-        
-
         donations.add(donation1);
         donations.add(donation2);
         donations.add(donation3);
@@ -570,7 +592,7 @@ public class EntityInitializer {
         donations.add(donation23);
         donations.add(donation24);
         donations.add(donation25);
-
+        
         donee1.addRequest(request1);
         donee1.addRequest(request2);
         donee2.addRequest(request2);
@@ -600,7 +622,7 @@ public class EntityInitializer {
         donee20.addRequest(request10);
         donee19.addRequest(request8);
         donee20.addRequest(request6);
-
+        
         donees.add(donee1);
         donees.add(donee2);
         donees.add(donee3);
@@ -633,7 +655,7 @@ public class EntityInitializer {
             Donation donation = donationIterator.next();
             Donation clonedDonation = donation.clone();
             donationsHistory.add(clonedDonation);
-
+            
             Donor donor = clonedDonation.getDonor(); // Get the donor associated with the donation
 
             // Find the corresponding donor in the donors list and set their DonationList
@@ -646,5 +668,19 @@ public class EntityInitializer {
                 }
             }
         }
+        
+        Iterator<Distribution> i1 = distributions.getIterator();
+        do {
+            Distribution distribution = i1.next();
+            Iterator<SelectedItem> i2 = distribution.getDistributedItemList().getIterator();
+            distributedItemList.merge(distribution.getDistributedItemList());
+            do {
+                SelectedItem selectedItem = i2.next();
+                Item item = CommonUse.findItem(selectedItem.getItemId(), items);
+                Donation donation = CommonUse.findDonationByItem(item, donations);
+                donation.setStatus("Distributing");
+            } while (i2.hasNext());
+            
+        } while (i1.hasNext());
     }
 }

@@ -462,7 +462,7 @@ public class DonationMaintenance {
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
-            boolean isFullyDistributed = checkDonationFullyDistributed(donation);
+            boolean isFullyDistributed = false;
             if (donation.getStatus().equalsIgnoreCase("Pending") && !donation.getDonationDate().withinTwoDays(getCurrentDate())) {
                 donation.setStatus("Processing");
             } else if (!donation.getStatus().equalsIgnoreCase("Fully Distributed") && isFullyDistributed) {
@@ -471,21 +471,14 @@ public class DonationMaintenance {
         } while (iterator.hasNext());
     }
 
-    private boolean checkDonationFullyDistributed(Donation donation) {
-        double ttlAmount = 0;
-        Iterator<Item> iterator = donation.getDonatedItemList().getIterator();
-        do {
-            Item item = iterator.next();
-            ttlAmount += item.getTotalAmount();
-        } while (iterator.hasNext());
-        return ttlAmount == 0;
-    }
-
     //1. list
     public void ListDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
         donationUI.printTitle("All Donation and Item Records");
+        System.out.println("1");
         Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONID_INASC);
+        System.out.println("2");
         donations.reSort();
+        System.out.println("3");
         listAllDonation(donations);
         int opt;
         do {
@@ -1040,6 +1033,7 @@ public class DonationMaintenance {
         SortedListSetInterface<Item> expiredItems = new SortedDoublyLinkedListSet<>();
         filterByExpiredItem(items, expiredItems);
         if (!expiredItems.isEmpty()) {
+            listAllItem(expiredItems);
             if (validateYesNoOption("\nRemoved All Expired Items Confirmation (Y = yes, N = No)? ") == 'Y') {
                 Iterator<Donation> iterator = donations.getIterator();
                 do {
@@ -1310,7 +1304,7 @@ public class DonationMaintenance {
                 } else {
                     int ttlQty = StockUI.getTotalInventory(typeOpt, donations);
                     donationUI.printText("Total Number of Available Quantity > " + ttlQty);
-                    donationUI.printText("Distribution Open Minimum Available Quantity > " + min);
+                    donationUI.printText("Distribution Open Minimum Available Quantity: " + min);
                     if (ttlQty < min) {
                         MessageUI.displayNotEnoughStockMessage(typeOpt);
                     } else {
@@ -1351,12 +1345,14 @@ public class DonationMaintenance {
             if (type.equalsIgnoreCase("Food and Beverage") && item.getType().equalsIgnoreCase(type)) {
                 SortedListSetInterface<Item> expiredItems = new SortedDoublyLinkedListSet<>();
                 filterByExpiredItem(itemsInDonation, expiredItems);
-                if (expiredItems.contains(item)) {
-                    MessageUI.displayExpiredItemInRedColor(item);
-                    count++;
-                } else {
-                    donationUI.printOneItem(item);
-                    count++;
+                if (!expiredItems.isEmpty()) {
+                    if (expiredItems.contains(item)) {
+                        MessageUI.displayExpiredItemInRedColor(item);
+                        count++;
+                    } else {
+                        donationUI.printOneItem(item);
+                        count++;
+                    }
                 }
             } else {
                 if (item.getType().equalsIgnoreCase(type)) {
@@ -1395,8 +1391,11 @@ public class DonationMaintenance {
                     ClearScreen.clearJavaConsoleScreen();
                     itemTypeReceivedSummary(donationHistory);
                     break;
+                case 9:
+                    break;
                 default:
-
+                    MessageUI.displayInvalidOptionMessage();
+                    break;
             }
             if (opt >= 1 && opt <= 2) {
                 donationUI.getInputString("\n\n\nPress ENTER or any key to continue...");
@@ -1405,11 +1404,11 @@ public class DonationMaintenance {
         } while (opt != 9);
     }
 
-    //2. Item Type reception
+    //Item Type reception
     public void itemTypeReceivedSummary(SortedListSetInterface<Donation> donationHistory) {
         SortedListSetInterface<Item> itemHistory = new SortedDoublyLinkedListSet<>();
         getAllItemHistory(itemHistory, donationHistory);
-
+        CommonUse.getLogo();
         for (int i = 0; i < 110; i++) {
             donationUI.printTextWithoutNextLine("=");
         }
@@ -1457,7 +1456,7 @@ public class DonationMaintenance {
         donationUI.printText("\n\n\t\t\t\tBar chart of Number of Reception of various Item Type\n");
         donationUI.printText("Number of Reception");
         donationUI.printText("       ^");
-        int y_axis = countNumberOfReceptionOfItemType(StockUI.getItemType(getMostAndLeastOfItemTypeReception("most", itemHistory)),itemHistory);
+        int y_axis = countNumberOfReceptionOfItemType(StockUI.getItemType(getMostAndLeastOfItemTypeReception("most", itemHistory)), itemHistory);
         for (int y = getY_axis(y_axis); y > 0; y--) {
             if (y % 5 == 0) {
                 donationUI.sentence3(y);
@@ -1589,8 +1588,9 @@ public class DonationMaintenance {
         } while (iterator.hasNext());
     }
 
-    //1. donation status
+    //donation status
     public void donationStatusSummary(SortedListSetInterface<Donation> donations) {
+        CommonUse.getLogo();
         for (int i = 0; i < 100; i++) {
             donationUI.printTextWithoutNextLine("=");
         }
@@ -1638,7 +1638,7 @@ public class DonationMaintenance {
         donationUI.printText("\n\n\t\t\t\tBar chart of All Donation Status\n");
         donationUI.printText("Number of Donation");
         donationUI.printText("       ^");
-        int y_axis = countDonationStatus(getStatus(getMostAndLeastOfDonationStatus("most", donations)),donations);
+        int y_axis = countDonationStatus(getStatus(getMostAndLeastOfDonationStatus("most", donations)), donations);
         for (int y = getY_axis(y_axis); y > 0; y--) {
             if (y % 5 == 0) {
                 donationUI.sentence8(y);
