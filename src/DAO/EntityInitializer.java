@@ -58,37 +58,37 @@ public class EntityInitializer {
 
     public void entityEnitialize() {
 
-        Donor donor1 = new Donor("DR001", "Public Organisation", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
-        Donor donor2 = new Donor("DR002", "Private Organisation","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
-        Donor donor3 = new Donor("DR003", "Government Organisation", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", new Date(21, 5, 2022), "Active");
+        Donor donor1 = new Donor("DR001", "Public Organization", "Chew Zhan Zhe", "Chew Zhan Zhe", "012-6730810", "zhanzhe@gmail.com", "Jalan SS 5/2, Ss 5, 47301 Petaling Jaya, Selangor", new Date(10, 2, 2022), "Prospect");
+        Donor donor2 = new Donor("DR002", "Private Organization","Tee Yi Hang", "Tee Yi Hang", "012-5837395", "yihang@gmail.com", "5, Lorong Masria 6, Taman Bunga Raya, 53000 Kuala Lumpur", new Date(16, 3, 2022), "Inactive");
+        Donor donor3 = new Donor("DR003", "Government Organization", "Sustainable Development and Welfare", "Lim Jun Hong", "012-9123389", "junhong@gmail.com", "Jalan 4d/6, Taman Setapak Indah, 53300 Kuala Lumpur", new Date(21, 5, 2022), "Active");
         
-        donors.add(new Donor("DR004", "Individual", "Zhang Wei", "-", "012-6754321", "zhangwei@gmail.com", "Jalan SS 7/3, SS 7, 47301 Petaling Jaya, Selangor", new Date(18, 6, 2022), "Prospect"));
-        donors.add(new Donor("DR005", "Private Organisation", "ABC Pvt Ltd", "John Lee", "012-6837281", "johnlee@abc.com", "20, Jalan Tun Razak, 50400 Kuala Lumpur", new Date(25, 6, 2022), "Active"));
-        donors.add(new Donor("DR006", "Public Organisation", "XYZ Foundation", "Wong Mei", "012-6472819", "wongmei@xyz.org", "15, Jalan Bukit Bintang, 55100 Kuala Lumpur", new Date(5, 7, 2022), "Inactive"));
-        donors.add(new Donor("DR007", "Government Organisation", "Ministry of Health", "Tan Ah Kow", "012-7351827", "tanahkow@moh.gov.my", "Jalan Cempaka, 50490 Kuala Lumpur", new Date(11, 7, 2022), "Active"));
-        donors.add(new Donor("DR008", "Individual", "Lee Ai Ling", "-", "012-7428910", "ailing_lee@gmail.com", "12, Jalan Ampang, 50450 Kuala Lumpur", new Date(20, 7, 2022), "Banned"));
-        donors.add(new Donor("DR009", "Private Organisation", "MNO Corporation", "Ong Siew Mun", "012-8129837", "ongsm@mno.com", "18, Jalan Raja Chulan, 50200 Kuala Lumpur", new Date(28, 7, 2022), "Active"));
-        donors.add(new Donor("DR010", "Public Organisation", "DEF Trust", "Lim Swee Ling", "012-8734590", "limsweeling@deftrust.org", "Jalan Tun HS Lee, 50000 Kuala Lumpur", new Date(3, 8, 2022), "Prospect"));
-        donors.add(new Donor("DR011", "Government Organisation", "Department of Education", "Chong Kar Ling", "012-8491023", "karling.chong@education.gov.my", "Jalan Bukit Jalil, 57000 Kuala Lumpur", new Date(10, 8, 2022), "Inactive"));
-        donors.add(new Donor("DR012", "Individual", "Chen Wei", "-", "012-7821049", "chenwei@gmail.com", "Jalan Damansara, 60000 Kuala Lumpur", new Date(15, 8, 2022), "Active"));
-        donors.add(new Donor("DR013", "Private Organisation", "GHI Sdn Bhd", "Cheong Siew Fong", "012-6745120", "cheongsf@ghi.com", "Jalan Sultan Ismail, 50250 Kuala Lumpur", new Date(21, 8, 2022), "Banned"));
-        donors.add(new Donor("DR014", "Public Organisation", "UVW Charities", "Yap Wei Jian", "012-6845127", "yapweijian@uvw.org", "Jalan Raja Abdullah, 50300 Kuala Lumpur", new Date(29, 8, 2022), "Active"));
-        donors.add(new Donor("DR015", "Government Organisation", "National Welfare Department", "Low Kah Meng", "012-7891034", "kahmeng@welfare.gov.my", "Jalan Kuching, 51200 Kuala Lumpur", new Date(5, 9, 2022), "Inactive"));
-        donors.add(new Donor("DR016", "Individual", "Ng Ai Lin", "-", "012-6712384", "ngailin@gmail.com", "Jalan Loke Yew, 55200 Kuala Lumpur", new Date(10, 9, 2022), "Prospect"));
-        donors.add(new Donor("DR017", "Private Organisation", "JKL Holdings", "Khoo Kai Ling", "012-8749123", "kailing@jkl.com", "Jalan Tun Sambanthan, 50470 Kuala Lumpur", new Date(15, 9, 2022), "Active"));
-        donors.add(new Donor("DR018", "Public Organisation", "MNZ Association", "Chia Wei Liang", "012-8941235", "chiaweiliang@mnz.org", "Jalan Raja Laut, 50350 Kuala Lumpur", new Date(22, 9, 2022), "Inactive"));
-        donors.add(new Donor("DR019", "Government Organisation", "Ministry of Finance", "Tan Cheng Wee", "012-8120456", "chengwee@mof.gov.my", "Jalan Duta, 50480 Kuala Lumpur", new Date(28, 9, 2022), "Active"));
-        donors.add(new Donor("DR020", "Individual", "Soh Wei Ling", "-", "012-6758342", "weiling.soh@gmail.com", "Jalan Pudu, 55100 Kuala Lumpur", new Date(5, 10, 2022), "Banned"));
-        donors.add(new Donor("DR021", "Public Organisation", "Tan Mei Ling", "Tan Mei Ling", "012-4567890", "meiling.tan@gmail.com", "11, Jalan Taman Megah, 47301 Petaling Jaya, Selangor", new Date(5, 8, 2022), "Active"));
-        donors.add(new Donor("DR022", "Private Organisation", "Khoo Wen Jian", "Khoo Wen Jian", "016-2345678", "wenjian.khoo@gmail.com", "22, Lorong Bukit Anggerik, 56100 Kuala Lumpur", new Date(12, 9, 2022), "Inactive"));
-        donors.add(new Donor("DR023", "Government Organisation", "Education Support Fund", "Low Zhi Hao", "013-9876543", "zhihao.low@gov.my", "5, Persiaran Perdana, 62100 Putrajaya", new Date(18, 7, 2022), "Banned"));
-        donors.add(new Donor("DR024", "Individual", "Siti Nur Aisyah", "-", "017-8765432", "aisyah.siti@gmail.com", "16, Jalan SS 2/45, 47300 Petaling Jaya, Selangor", new Date(28, 6, 2022), "Active"));
-        donors.add(new Donor("DR025", "Public Organisation", "Green Earth Foundation", "Lai Wai Mun", "014-2345678", "waimun.lai@gmail.com", "3, Jalan Damansara, 60000 Kuala Lumpur", new Date(22, 8, 2022), "Prospect"));
-        donors.add(new Donor("DR026", "Private Organisation", "Tech Innovators", "Yap Wei Jie", "019-3456789", "weijie.yap@techinnovators.com", "10, Jalan Teknologi, 47810 Petaling Jaya, Selangor", new Date(3, 10, 2022), "Inactive"));
-        donors.add(new Donor("DR027", "Government Organisation", "Healthcare Development Fund", "Ng Wei Keat", "012-5436789", "weikeat.ng@gov.my", "7, Jalan Bukit Bintang, 55100 Kuala Lumpur", new Date(1, 9, 2022), "Active"));
-        donors.add(new Donor("DR028", "Individual", "Lee Zhi Xuan", "-", "018-2345678", "zhixuan.lee@gmail.com", "12, Jalan Tun Razak, 50400 Kuala Lumpur", new Date(7, 7, 2022), "Banned"));
-        donors.add(new Donor("DR029", "Public Organisation", "Wildlife Conservation Society", "Chong Wai Leng", "011-2345678", "waileng.chong@gmail.com", "4, Jalan Ampang, 50450 Kuala Lumpur", new Date(25, 8, 2022), "Active"));
-        donors.add(new Donor("DR030", "Private Organisation", "Youth Empowerment Hub", "Chan Mei Yen", "013-7654321", "meiyen.chan@gmail.com", "9, Jalan Bangsar, 59000 Kuala Lumpur", new Date(15, 9, 2022), "Prospect"));
+        Donor donor4 =new Donor("DR004", "Individual", "Zhang Wei", "-", "012-6754321", "zhangwei@gmail.com", "Jalan SS 7/3, SS 7, 47301 Petaling Jaya, Selangor", new Date(18, 6, 2022), "Prospect");
+        Donor donor5 =new Donor("DR005", "Private Organisation", "ABC Pvt Ltd", "John Lee", "012-6837281", "johnlee@abc.com", "20, Jalan Tun Razak, 50400 Kuala Lumpur", new Date(25, 6, 2022), "Active");
+        Donor donor6 =new Donor("DR006", "Public Organisation", "XYZ Foundation", "Wong Mei", "012-6472819", "wongmei@xyz.org", "15, Jalan Bukit Bintang, 55100 Kuala Lumpur", new Date(5, 7, 2022), "Inactive");
+        Donor donor7 =new Donor("DR007", "Government Organisation", "Ministry of Health", "Tan Ah Kow", "012-7351827", "tanahkow@moh.gov.my", "Jalan Cempaka, 50490 Kuala Lumpur", new Date(11, 7, 2022), "Active");
+        Donor donor8 =new Donor("DR008", "Individual", "Lee Ai Ling", "-", "012-7428910", "ailing_lee@gmail.com", "12, Jalan Ampang, 50450 Kuala Lumpur", new Date(20, 7, 2022), "Banned");
+        Donor donor9 =new Donor("DR009", "Private Organisation", "MNO Corporation", "Ong Siew Mun", "012-8129837", "ongsm@mno.com", "18, Jalan Raja Chulan, 50200 Kuala Lumpur", new Date(28, 7, 2022), "Active");
+        Donor donor10 =new Donor("DR010", "Public Organisation", "DEF Trust", "Lim Swee Ling", "012-8734590", "limsweeling@deftrust.org", "Jalan Tun HS Lee, 50000 Kuala Lumpur", new Date(3, 8, 2022), "Prospect");
+        Donor donor11 =new Donor("DR011", "Government Organisation", "Department of Education", "Chong Kar Ling", "012-8491023", "karling.chong@education.gov.my", "Jalan Bukit Jalil, 57000 Kuala Lumpur", new Date(10, 8, 2022), "Inactive");
+        Donor donor12 =new Donor("DR012", "Individual", "Chen Wei", "-", "012-7821049", "chenwei@gmail.com", "Jalan Damansara, 60000 Kuala Lumpur", new Date(15, 8, 2022), "Active");
+        Donor donor13 =new Donor("DR013", "Private Organisation", "GHI Sdn Bhd", "Cheong Siew Fong", "012-6745120", "cheongsf@ghi.com", "Jalan Sultan Ismail, 50250 Kuala Lumpur", new Date(21, 8, 2022), "Banned");
+        Donor donor14 =new Donor("DR014", "Public Organisation", "UVW Charities", "Yap Wei Jian", "012-6845127", "yapweijian@uvw.org", "Jalan Raja Abdullah, 50300 Kuala Lumpur", new Date(29, 8, 2022), "Active");
+        Donor donor15 =new Donor("DR015", "Government Organisation", "National Welfare Department", "Low Kah Meng", "012-7891034", "kahmeng@welfare.gov.my", "Jalan Kuching, 51200 Kuala Lumpur", new Date(5, 9, 2022), "Inactive");
+        Donor donor16 =new Donor("DR016", "Individual", "Ng Ai Lin", "-", "012-6712384", "ngailin@gmail.com", "Jalan Loke Yew, 55200 Kuala Lumpur", new Date(10, 9, 2022), "Prospect");
+        Donor donor17 =new Donor("DR017", "Private Organisation", "JKL Holdings", "Khoo Kai Ling", "012-8749123", "kailing@jkl.com", "Jalan Tun Sambanthan, 50470 Kuala Lumpur", new Date(15, 9, 2022), "Active");
+        Donor donor18 =new Donor("DR018", "Public Organisation", "MNZ Association", "Chia Wei Liang", "012-8941235", "chiaweiliang@mnz.org", "Jalan Raja Laut, 50350 Kuala Lumpur", new Date(22, 9, 2022), "Inactive");
+        Donor donor19 =new Donor("DR019", "Government Organisation", "Ministry of Finance", "Tan Cheng Wee", "012-8120456", "chengwee@mof.gov.my", "Jalan Duta, 50480 Kuala Lumpur", new Date(28, 9, 2022), "Active");
+        Donor donor20 =new Donor("DR020", "Individual", "Soh Wei Ling", "-", "012-6758342", "weiling.soh@gmail.com", "Jalan Pudu, 55100 Kuala Lumpur", new Date(5, 10, 2022), "Banned");
+        Donor donor21 =new Donor("DR021", "Public Organisation", "Tan Mei Ling", "Tan Mei Ling", "012-4567890", "meiling.tan@gmail.com", "11, Jalan Taman Megah, 47301 Petaling Jaya, Selangor", new Date(5, 8, 2022), "Active");
+        Donor donor22 =new Donor("DR022", "Private Organisation", "Khoo Wen Jian", "Khoo Wen Jian", "016-2345678", "wenjian.khoo@gmail.com", "22, Lorong Bukit Anggerik, 56100 Kuala Lumpur", new Date(12, 9, 2022), "Inactive");
+        Donor donor23 =new Donor("DR023", "Government Organisation", "Education Support Fund", "Low Zhi Hao", "013-9876543", "zhihao.low@gov.my", "5, Persiaran Perdana, 62100 Putrajaya", new Date(18, 7, 2022), "Banned");
+        Donor donor24 =new Donor("DR024", "Individual", "Siti Nur Aisyah", "-", "017-8765432", "aisyah.siti@gmail.com", "16, Jalan SS 2/45, 47300 Petaling Jaya, Selangor", new Date(28, 6, 2022), "Active");
+        Donor donor25 =new Donor("DR025", "Public Organisation", "Green Earth Foundation", "Lai Wai Mun", "014-2345678", "waimun.lai@gmail.com", "3, Jalan Damansara, 60000 Kuala Lumpur", new Date(22, 8, 2022), "Prospect");
+        Donor donor26 =new Donor("DR026", "Private Organisation", "Tech Innovators", "Yap Wei Jie", "019-3456789", "weijie.yap@techinnovators.com", "10, Jalan Teknologi, 47810 Petaling Jaya, Selangor", new Date(3, 10, 2022), "Inactive");
+        Donor donor27 =new Donor("DR027", "Government Organisation", "Healthcare Development Fund", "Ng Wei Keat", "012-5436789", "weikeat.ng@gov.my", "7, Jalan Bukit Bintang, 55100 Kuala Lumpur", new Date(1, 9, 2022), "Active");
+        Donor donor28 =new Donor("DR028", "Individual", "Lee Zhi Xuan", "-", "018-2345678", "zhixuan.lee@gmail.com", "12, Jalan Tun Razak, 50400 Kuala Lumpur", new Date(7, 7, 2022), "Banned");
+        Donor donor29 =new Donor("DR029", "Public Organisation", "Wildlife Conservation Society", "Chong Wai Leng", "011-2345678", "waileng.chong@gmail.com", "4, Jalan Ampang, 50450 Kuala Lumpur", new Date(25, 8, 2022), "Active");
+        Donor donor30 =new Donor("DR030", "Private Organisation", "Youth Empowerment Hub", "Chan Mei Yen", "013-7654321", "meiyen.chan@gmail.com", "9, Jalan Bangsar, 59000 Kuala Lumpur", new Date(15, 9, 2022), "Prospect");
 
 
         Donee donee1 = new Donee("DE001", "INDIVIDUAL", "TAN JIAN QUAN", "jianquan@gmail.com", "0125030510", "No80 Taman Gembira", "Location A", new Date(10, 2, 2022));
@@ -123,15 +123,15 @@ public class EntityInitializer {
         Request request9 = new Request(new Date(5, 1, 2022), "Electronic");
         Request request10 = new Request(new Date(2, 1, 2021), "Monetary");
 
-        Item item1 = new Item("I001", "Monetary", "Cash", 200);
+        Item item1 = new Item("I001", "Monetary", "Cash", 2000);
         Item item2 = new Item("I002", "Household Items", "Bed", 2, 120);
-        Item item3 = new Item("I003", "Electronic", "Accessories", 2, 20);
-        Item item4 = new Item("I004", "Food and Beverage", "Water Bottle", 20, 1.20, new Date(10, 8, 2024));
-        Item item5 = new Item("I005", "Clothing and Apparel", "Clothes", 5, 30);
+        Item item3 = new Item("I003", "Electronic", "Accessories", 30, 20);
+        Item item4 = new Item("I004", "Food and Beverage", "Water Bottle", 60, 1.20, new Date(10, 8, 2024));
+        Item item5 = new Item("I005", "Clothing and Apparel", "Clothes", 40, 30);
         Item item6 = new Item("I006", "Clothing and Apparel", "Gloves", 20, 15);
         Item item7 = new Item("I007", "Monetary", "Online Transfers", 750);
-        Item item8 = new Item("I008", "Electronic", "Laptop", 2, 1500);
-        Item item9 = new Item("I009", "Educational Materials", "Stationary", 3, 2.40);
+        Item item8 = new Item("I008", "Electronic", "Laptop", 2, 2500);
+        Item item9 = new Item("I009", "Educational Materials", "Stationary", 50, 2.40);
         Item item10 = new Item("I010", "Monetary", "QR Code Payment", 120);
         Item item11 = new Item("I011", "Medical", "Wheelchair", 1, 180);
         Item item12 = new Item("I012", "Clothing and Apparel", "Shoes", 10, 50);
@@ -142,13 +142,81 @@ public class EntityInitializer {
         Item item17 = new Item("I017", "Electronic", "Mobile Phone", 1, 800);
         Item item18 = new Item("I018", "Medical", "First and Kit", 3, 50);
         Item item19 = new Item("I019", "Monetary", "Cash", 10000);
-
-        Donation donation1 = new Donation("D001", new Date(22, 7, 2024), "Distributing", donor1);
-        Donation donation2 = new Donation("D002", new Date(28, 7, 2024), "Processing", donor2);
-        Donation donation3 = new Donation("D003", new Date(3, 8, 2024), "Fully Distributed", donor3);
-        Donation donation4 = new Donation("D004", new Date(19, 8, 2024), "Distributing", donor1);
-        Donation donation5 = new Donation("D005", new Date(30, 8, 2024), "Pending", donor2);
-        Donation donation6 = new Donation("D006", new Date(1, 9, 2024), "Pending", donor1);
+        Item item20 = new Item("I020", "Monetary", "QR Code Payment", 750);
+        Item item21 = new Item("I021", "Household Items", "Chair", 20, 15);
+        Item item22 = new Item("I022", "Electronic", "Laptop", 5, 1500);
+        Item item23 = new Item("I023", "Clothing and Apparel", "Clothes", 50, 50);
+        Item item24 = new Item("I024", "Food and Beverage", "Water Bottle", 200, 1.20, new Date(5, 1, 2025));
+        Item item25 = new Item("I025", "Medical", "Wheelchair", 3, 160);
+        Item item26 = new Item("I026", "Clothing and Apparel", "Clothes", 30, 80);
+        Item item27 = new Item("I027", "Food and Beverage", "Nasi Lemak", 100, 3, new Date(15, 9, 2024));
+        Item item28 = new Item("I028", "Monetary", "Online Transfers", 2000);
+        Item item29 = new Item("I029", "Educational Materials", "Stationary", 20, 2.40);
+        Item item30 = new Item("I030", "Household Items", "Table", 20, 30);
+        Item item31 = new Item("I031", "Household Items", "Bed", 3, 250);
+        Item item32 = new Item("I032", "Medical", "First and Kit", 5, 60);
+        Item item33 = new Item("I033", "Monetary", "Online Transfers", 5000);
+        Item item34 = new Item("I034", "Monetary", "Cash", 1500);
+        Item item35 = new Item("I035", "Clothing and Apparel", "Gloves", 30, 23);
+        Item item36 = new Item("I036", "Medical", "First and Kit", 2, 80);
+        Item item37 = new Item("I037", "Food and Beverage", "Water Bottle", 20, 1.20, new Date(10, 8, 2024));
+        Item item38 = new Item("I038", "Electronic", "Ipad", 3, 2000);
+        Item item39 = new Item("I039", "Household Items", "Chair", 40, 12);
+        Item item40 = new Item("I040", "Educational Materials", "Textbook", 50, 2.60);
+        Item item41 = new Item("I041", "Educational Materials", "Storybook", 20, 25);
+        Item item42 = new Item("I042", "Household Items", "Cabinet", 2, 170);
+        Item item43 = new Item("I043", "Electronic", "Mobile Phone", 1, 4000);
+        Item item44 = new Item("I044", "Medical", "Wheelchair", 2, 200);
+        Item item45 = new Item("I045", "Educational Materials", "Textbook", 30, 1.50);
+        Item item46 = new Item("I046", "Medical", "Wheelchair", 1, 300);
+        Item item47 = new Item("I047", "Electronic", "Ipad", 2, 1300);
+        Item item48 = new Item("I048", "Monetary", "Cash", 800);
+        Item item49 = new Item("I049", "Food and Beverage", "Packaged Snacks", 50, 5, new Date(28, 8, 2024));
+        Item item50 = new Item("I050", "Electronic", "Accessories", 10, 100);
+        Item item51 = new Item("I051", "Food and Beverage", "Water Bottle", 50, 1.20, new Date(7, 5, 2024));
+        Item item52 = new Item("I052", "Monetary", "Online Transfers", 3000);
+        Item item53 = new Item("I053", "Household Items", "Table", 20, 20);
+        Item item54 = new Item("I054", "Electronic", "Laptop", 4, 900);
+        Item item55 = new Item("I055", "Monetary", "Online Transfers", 2000);
+        Item item56 = new Item("I056", "Educational Materials", "Stationary", 20, 4);
+        Item item57 = new Item("I057", "Food and Beverage", "Water Bottle", 30, 1.40, new Date(30,11, 2024));
+        Item item58 = new Item("I058", "Clothing and Apparel", "Clothes", 20, 40);
+        Item item59 = new Item("I059", "Clothing and Apparel", "Shoes", 25, 120);
+        Item item60 = new Item("I060", "Monetary", "QR Code Payment", 7500);
+        Item item61 = new Item("I061", "Medical", "First and Kit", 6, 40);
+        Item item62 = new Item("I062", "Clothing and Apparel", "Shoes", 100, 35);
+        Item item63 = new Item("I063", "Monetary", "Cash", 2000);
+        Item item64 = new Item("I064", "Food and Beverage", "Water Bottle", 70, 1.20, new Date(10,9, 2024));
+        Item item65 = new Item("I065", "Food and Beverage", "Nasi Lemak", 20, 2.20, new Date(5,10, 2024));
+        Item item66 = new Item("I066", "Electronic", "Mobile Phone", 1, 700);
+        
+        Donation donation1 = new Donation("D001", new Date(17, 4, 2024), "Processing", donor1);
+        Donation donation2 = new Donation("D002", new Date(20, 4, 2024), "Processing", donor2);
+        Donation donation3 = new Donation("D003", new Date(4, 5, 2024), "Fully Distributed", donor3);
+        Donation donation4 = new Donation("D004", new Date(4, 5, 2024), "Processing", donor5);
+        Donation donation5 = new Donation("D005", new Date(10, 6, 2024), "Processing", donor7);
+        Donation donation6 = new Donation("D006", new Date(17, 6, 2024), "Processing", donor7);
+        Donation donation7 = new Donation("D007", new Date(24, 6, 2024), "Processing", donor8);
+        Donation donation8 = new Donation("D008", new Date(24, 6, 2024), "Processing", donor10);
+        Donation donation9 = new Donation("D009", new Date(30, 6, 2024), "Distributing", donor12);
+        Donation donation10 = new Donation("D010", new Date(30, 6, 2024), "Processing", donor14);
+        Donation donation11 = new Donation("D011", new Date(6, 7, 2024), "Processing", donor14);
+        Donation donation12 = new Donation("D012", new Date(23, 7, 2024), "Distributing", donor15);
+        Donation donation13 = new Donation("D013", new Date(29, 7, 2024), "Processing", donor15);
+        Donation donation14 = new Donation("D014", new Date(3, 8, 2024), "Processing", donor17);
+        Donation donation15 = new Donation("D015", new Date(10, 8, 2024), "Distributing", donor17);
+        Donation donation16 = new Donation("D016", new Date(11, 8, 2024), "Processing", donor18);
+        Donation donation17 = new Donation("D017", new Date(13, 8, 2024), "Distributing", donor20);
+        Donation donation18 = new Donation("D018", new Date(13, 8, 2024), "Processing", donor20);
+        Donation donation19 = new Donation("D019", new Date(17, 8, 2024), "Processing", donor1);
+        Donation donation20 = new Donation("D020", new Date(30, 8, 2024), "Distributing", donor1);
+        Donation donation21 = new Donation("D021", new Date(31, 8, 2024), "Pending", donor21);
+        Donation donation22 = new Donation("D022", new Date(31, 8, 2024), "Pending", donor30);
+        Donation donation23 = new Donation("D023", new Date(31, 8, 2024), "Pending", donor25);
+        Donation donation24 = new Donation("D024", new Date(1, 9, 2024), "Pending", donor26);
+        Donation donation25 = new Donation("D025", new Date(1, 9, 2024), "Pending", donor27);
+        
+        
 
         donation1.assignItems(item1);
         donation1.assignItems(item2);
@@ -169,6 +237,53 @@ public class EntityInitializer {
         donation6.assignItems(item17);
         donation6.assignItems(item18);
         donation6.assignItems(item19);
+        donation7.assignItems(item20);
+        donation7.assignItems(item21);
+        donation8.assignItems(item22);
+        donation8.assignItems(item23);
+        donation8.assignItems(item24);
+        donation9.assignItems(item25);
+        donation9.assignItems(item26);
+        donation9.assignItems(item27);
+        donation9.assignItems(item28);
+        donation9.assignItems(item29);
+        donation10.assignItems(item30);
+        donation10.assignItems(item31);
+        donation10.assignItems(item32);
+        donation11.assignItems(item33);
+        donation12.assignItems(item34);
+        donation12.assignItems(item35);
+        donation12.assignItems(item36);
+        donation12.assignItems(item37);
+        donation13.assignItems(item38);
+        donation13.assignItems(item39);
+        donation13.assignItems(item40);
+        donation14.assignItems(item41);
+        donation14.assignItems(item42);
+        donation14.assignItems(item43);
+        donation15.assignItems(item44);
+        donation15.assignItems(item45);
+        donation15.assignItems(item46);
+        donation16.assignItems(item47);
+        donation16.assignItems(item48);
+        donation17.assignItems(item49);
+        donation17.assignItems(item50);
+        donation18.assignItems(item51);
+        donation19.assignItems(item52);
+        donation20.assignItems(item53);
+        donation20.assignItems(item54);
+        donation21.assignItems(item55);
+        donation21.assignItems(item56);
+        donation22.assignItems(item57);
+        donation23.assignItems(item58);
+        donation23.assignItems(item59);
+        donation23.assignItems(item60);
+        donation23.assignItems(item61);
+        donation24.assignItems(item62);
+        donation24.assignItems(item63);
+        donation25.assignItems(item64);
+        donation25.assignItems(item65);
+        donation25.assignItems(item66);
 
         Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2023));
         Distribution distribution2 = new Distribution("DIST002", new Date(3, 1, 2023));
@@ -247,52 +362,83 @@ public class EntityInitializer {
 
         distribution8.addDonee(donee9);
         distribution8.addSelectedItem(new SelectedItem("I012", 1));
+        distribution8.addSelectedItem(new SelectedItem("I034", 150.00));
+        distribution8.addSelectedItem(new SelectedItem("I017", 8));
+
         distribution9.addDonee(donee10);
         distribution9.addSelectedItem(new SelectedItem("I013", 2));
+        distribution9.addSelectedItem(new SelectedItem("I022", 1));
+        distribution9.addSelectedItem(new SelectedItem("I023", 2));
+
         distribution10.addDonee(donee11);
-        distribution10.addSelectedItem(new SelectedItem("I012", 5));
+        distribution10.addSelectedItem(new SelectedItem("I014", 5));
+        distribution12.addSelectedItem(new SelectedItem("I016", 10));
+        distribution9.addSelectedItem(new SelectedItem("I023", 3));
+
+
         distribution11.addDonee(donee12);
-        distribution11.addSelectedItem(new SelectedItem("I013", 3));
-        distribution12.addDonee(donee13);
-        distribution12.addSelectedItem(new SelectedItem("I014", 10));
-        distribution13.addDonee(donee14);
-        distribution13.addSelectedItem(new SelectedItem("I003", 4));
-        distribution14.addDonee(donee18);
-        distribution14.addSelectedItem(new SelectedItem("I015", 2));
-        distribution15.addDonee(donee1);
-        distribution15.addSelectedItem(new SelectedItem("I013", 2));
-        distribution16.addDonee(donee19);
-        distribution16.addSelectedItem(new SelectedItem("I016", 3));
-        distribution18.addDonee(donee20);
-        distribution18.addSelectedItem(new SelectedItem("I017", 1));
-        distribution19.addDonee(donee13);
-        distribution19.addSelectedItem(new SelectedItem("I011", 1));
-        distribution20.addDonee(donee11);
-        distribution20.addSelectedItem(new SelectedItem("I015", 1));
-        distribution21.addDonee(donee12);
-        distribution21.addSelectedItem(new SelectedItem("I015", 1));
-        distribution22.addDonee(donee13);
-        distribution22.addSelectedItem(new SelectedItem("I010", 100.00));
-        distribution23.addDonee(donee14);
-        distribution23.addSelectedItem(new SelectedItem("I014", 1));
-        distribution24.addDonee(donee9);
-        distribution24.addSelectedItem(new SelectedItem("I018", 5));
-        distribution25.addDonee(donee8);
-        distribution25.addSelectedItem(new SelectedItem("I017", 4));
-        distribution26.addDonee(donee7);
-        distribution26.addSelectedItem(new SelectedItem("I014", 1));
-        distribution27.addDonee(donee6);
-        distribution27.addSelectedItem(new SelectedItem("I016", 2));
-        distribution28.addDonee(donee10);
-        distribution28.addSelectedItem(new SelectedItem("I010", 200.00));
-        distribution29.addDonee(donee11);
-        distribution29.addSelectedItem(new SelectedItem("I002", 3));
+        distribution11.addSelectedItem(new SelectedItem("I016", 1));
+        distribution11.addSelectedItem(new SelectedItem("I027", 2));
+   
         
+        distribution12.addDonee(donee13);
+        distribution12.addSelectedItem(new SelectedItem("I016", 10));
+        distribution9.addSelectedItem(new SelectedItem("I023", 2));
+        distribution13.addDonee(donee14);
+        distribution13.addSelectedItem(new SelectedItem("I017", 4));
+        distribution13.addSelectedItem(new SelectedItem("I048", 400.00));
+
+        
+        distribution14.addDonee(donee18);
+        distribution14.addSelectedItem(new SelectedItem("I018", 2));
+        
+        distribution15.addDonee(donee1);
+        distribution15.addSelectedItem(new SelectedItem("I019", 200.00));
+        distribution9.addSelectedItem(new SelectedItem("I022", 5));
+
+        distribution16.addDonee(donee19);
+        distribution16.addSelectedItem(new SelectedItem("I020", 350.00));
+        distribution18.addDonee(donee20);
+        distribution18.addSelectedItem(new SelectedItem("I021", 3));
+        distribution18.addSelectedItem(new SelectedItem("I034", 3000.00));
+
+        distribution19.addDonee(donee13);
+        distribution19.addSelectedItem(new SelectedItem("I022", 2));
+        distribution20.addDonee(donee11);
+        distribution20.addSelectedItem(new SelectedItem("I023", 10));
+        distribution20.addSelectedItem(new SelectedItem("I033", 100.00));
+        
+        distribution21.addDonee(donee12);
+        distribution21.addSelectedItem(new SelectedItem("I024", 8));
+        distribution21.addSelectedItem(new SelectedItem("I033", 80.00));
+        distribution21.addSelectedItem(new SelectedItem("I035", 10));
+        distribution21.addSelectedItem(new SelectedItem("I040", 10));
+
+        distribution22.addDonee(donee13);
+        distribution22.addSelectedItem(new SelectedItem("I025", 10));
+        distribution22.addSelectedItem(new SelectedItem("I026", 2));
+
+        distribution23.addDonee(donee14);
+        distribution23.addSelectedItem(new SelectedItem("I026", 3));
+        distribution24.addDonee(donee9);
+        distribution24.addSelectedItem(new SelectedItem("I027", 2));
+        distribution25.addDonee(donee8);
+        distribution25.addSelectedItem(new SelectedItem("I028", 50.00));
+
+        distribution26.addDonee(donee7);
+        distribution26.addSelectedItem(new SelectedItem("I029", 50));
+        distribution27.addDonee(donee6);
+        distribution27.addSelectedItem(new SelectedItem("I030", 50));
+        distribution28.addDonee(donee10);
+        distribution28.addSelectedItem(new SelectedItem("I031", 20));
+        distribution29.addDonee(donee11);
+        distribution29.addSelectedItem(new SelectedItem("I033", 300.00));
+
 
         distribution7.addSelectedItem(selectedItem6);
-        distribution17.addSelectedItem(new SelectedItem("I019", 1000.00));
         distribution17.addSelectedItem(new SelectedItem("I017", 1));
-        distribution17.addSelectedItem(new SelectedItem("I002", 5));
+        distribution17.addSelectedItem(new SelectedItem("I019", 1000.00));
+
         distribution21.addSelectedItem(selectedItem6);
         distribution21.addSelectedItem(new SelectedItem("I007", 500.00));
         distribution30.addSelectedItem(new SelectedItem("I010", 100.00));
@@ -331,6 +477,34 @@ public class EntityInitializer {
         donors.add(donor1);
         donors.add(donor2);
         donors.add(donor3);
+        donors.add(donor4);
+        donors.add(donor5);
+        donors.add(donor6);
+        donors.add(donor7);
+        donors.add(donor8);
+        donors.add(donor9);
+        donors.add(donor10);
+        donors.add(donor11);
+        donors.add(donor12);
+        donors.add(donor13);
+        donors.add(donor14);
+        donors.add(donor15);
+        donors.add(donor16);
+        donors.add(donor17);
+        donors.add(donor18);
+        donors.add(donor19);
+        donors.add(donor20);
+        donors.add(donor21);
+        donors.add(donor22);
+        donors.add(donor23);
+        donors.add(donor24);
+        donors.add(donor25);
+        donors.add(donor26);
+        donors.add(donor27);
+        donors.add(donor28);
+        donors.add(donor29);
+        donors.add(donor30);
+        
 
         items.add(item1);
         items.add(item2);
@@ -351,6 +525,56 @@ public class EntityInitializer {
         items.add(item17);
         items.add(item18);
         items.add(item19);
+        items.add(item20);
+        items.add(item21);
+        items.add(item22);
+        items.add(item23);
+        items.add(item24);
+        items.add(item25);
+        items.add(item26);
+        items.add(item27);
+        items.add(item28);
+        items.add(item29);
+        items.add(item30);
+        items.add(item31);
+        items.add(item32);
+        items.add(item33);
+        items.add(item34);
+        items.add(item35);
+        items.add(item36);
+        items.add(item37);
+        items.add(item38);
+        items.add(item39);
+        items.add(item40);
+        items.add(item41);
+        items.add(item42);
+        items.add(item43);
+        items.add(item44);
+        items.add(item45);
+        items.add(item46);
+        items.add(item47);
+        items.add(item48);
+        items.add(item49);
+        items.add(item50);
+        items.add(item51);
+        items.add(item52);
+        items.add(item53);
+        items.add(item54);
+        items.add(item55);
+        items.add(item56);
+        items.add(item57);
+        items.add(item58);
+        items.add(item59);
+        items.add(item60);
+        items.add(item61);
+        items.add(item62);
+        items.add(item63);
+        items.add(item64);
+        items.add(item65);
+        items.add(item66);
+        
+        
+        
 
         donations.add(donation1);
         donations.add(donation2);
@@ -358,6 +582,25 @@ public class EntityInitializer {
         donations.add(donation4);
         donations.add(donation5);
         donations.add(donation6);
+        donations.add(donation7);
+        donations.add(donation8);
+        donations.add(donation9);
+        donations.add(donation10);
+        donations.add(donation11);
+        donations.add(donation12);
+        donations.add(donation13);
+        donations.add(donation14);
+        donations.add(donation15);
+        donations.add(donation16);
+        donations.add(donation17);
+        donations.add(donation18);
+        donations.add(donation19);
+        donations.add(donation20);
+        donations.add(donation21);
+        donations.add(donation22);
+        donations.add(donation23);
+        donations.add(donation24);
+        donations.add(donation25);
 
         donee1.addRequest(request1);
         donee1.addRequest(request2);

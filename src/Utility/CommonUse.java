@@ -114,7 +114,7 @@ public class CommonUse {
     }
 
     private static void printItemTitle() {
-        System.out.printf("\n%-10s  %-24s  %-19s  %-11s  %-17s  %-15s  %-14s\n", "Item ID", "Type", "Description", "Quantity", "Value Per Item", "Total Amount", "Expiry Date");
+        System.out.printf("\n%-10s  %-24s  %-19s  %-11s  %-17s  %-15s  %-14s\n", "Item ID", "Type", "Description", "Quantity", "Value Per Item", "Total Amount (RM)", "Expiry Date");
     }
 
     public static void printItemHeader() {
@@ -131,14 +131,14 @@ public class CommonUse {
     }
 
     public static void printSummaryReportHeader(String reportTitle, String tableTitle) {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 120; i++) {
             System.out.print("=");
         }
         System.out.println("\n\n\t\t\t\t" + reportTitle );
         System.out.println("\t\t\t\t-------------------------------");
         System.out.println("\nGenerated at: " + getGeneratedReportDate());
         //dividing line
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 120; i++) {
             System.out.print("-");
         }
 
@@ -146,11 +146,20 @@ public class CommonUse {
         System.out.print("\t\t+");
         for (int i = 0; i < 69; i++) {
             System.out.print("-");
-        }
-        
-       
+        }  
+        System.out.print("+");
 
     }
+    
+    
+    public static void printSummaryReportFooter(){
+          for (int i = 0; i < 120; i++) {
+            System.out.print("=");
+        }
+        System.out.println("\n\t\t\t\t\tEND OF THE REPORT");
+        for (int i = 0; i < 120; i++) {
+            System.out.print("=");
+        }}
 
     private static String getGeneratedReportDate() {
         LocalDateTime now = LocalDateTime.now();
