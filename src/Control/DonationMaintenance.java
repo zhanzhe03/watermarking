@@ -1491,19 +1491,19 @@ public class DonationMaintenance {
             donationUI.printTextWithoutNextLine("-");
         }
         //dividing line
-        donationUI.printText("\n\n\t\t\tTop 3 Item Type of number of reception\n");
+        donationUI.printText("\n\n\t\t\t\tTop 3 Item Type of number of reception\n");
         SortedListSetInterface<Item> tempHistory = new SortedDoublyLinkedListSet<>();
         tempHistory.merge(itemHistory);
         String first = StockUI.getItemType(getTop3(tempHistory));
         String second = StockUI.getItemType(getTop3(tempHistory));
         String third = StockUI.getItemType(getTop3(tempHistory));
         donationUI.sentence4(first);
-        donationUI.printText("\t                          +------------+               ");
-        donationUI.printText("\t                          |    Top 1   | ");
+        donationUI.printText("\t\t                          +------------+               ");
+        donationUI.printText("\t\t                          |    Top 1   | ");
         donationUI.sentence5(second, third);
-        donationUI.printText("\t             +------------+            +------------+     ");
-        donationUI.printText("\t             |   Top 2    |            |    Top 3   |     ");
-        donationUI.printText("\t             |            |            |            |     ");
+        donationUI.printText("\t\t             +------------+            +------------+     ");
+        donationUI.printText("\t\t             |   Top 2    |            |    Top 3   |     ");
+        donationUI.printText("\t\t             |            |            |            |     ");
         donationUI.printText("");
         //dividing line
         for (int i = 0; i < 110; i++) {
@@ -1638,7 +1638,8 @@ public class DonationMaintenance {
         donationUI.printText("\n\n\t\t\t\tBar chart of All Donation Status\n");
         donationUI.printText("Number of Donation");
         donationUI.printText("       ^");
-        for (int y = getY_axis(getMostAndLeastOfDonationStatus("most", donations)); y > 0; y--) {
+        int y_axis = countDonationStatus(getStatus(getMostAndLeastOfDonationStatus("most", donations)),donations);
+        for (int y = getY_axis(y_axis); y > 0; y--) {
             if (y % 5 == 0) {
                 donationUI.sentence8(y);
             } else {
