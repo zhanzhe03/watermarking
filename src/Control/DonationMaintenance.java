@@ -1412,7 +1412,7 @@ public class DonationMaintenance {
     public void itemTypeReceivedSummary(SortedListSetInterface<Donation> donationHistory) {
         SortedListSetInterface<Item> itemHistory = new SortedDoublyLinkedListSet<>();
         getAllItemHistory(itemHistory, donationHistory);
-
+        CommonUse.getLogo();
         for (int i = 0; i < 110; i++) {
             donationUI.printTextWithoutNextLine("=");
         }
@@ -1594,6 +1594,7 @@ public class DonationMaintenance {
 
     //donation status
     public void donationStatusSummary(SortedListSetInterface<Donation> donations) {
+        CommonUse.getLogo();
         for (int i = 0; i < 100; i++) {
             donationUI.printTextWithoutNextLine("=");
         }
