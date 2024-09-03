@@ -458,13 +458,24 @@ public class DonationMaintenance {
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
-            boolean isFullyDistributed = false;
+            boolean isFullyDistributed = checkFullyDistribute(donation.getDonatedItemList());
             if (donation.getStatus().equalsIgnoreCase("Pending") && !donation.getDonationDate().withinTwoDays(getCurrentDate())) {
                 donation.setStatus("Processing");
             } else if (!donation.getStatus().equalsIgnoreCase("Fully Distributed") && isFullyDistributed) {
                 donation.setStatus("Fully Distributed");
             }
         } while (iterator.hasNext());
+    }
+    
+    private boolean checkFullyDistribute(SortedListSetInterface<Item> items){
+        Iterator<Item> iterator = items.getIterator();
+        do{
+            Item item = iterator.next();
+            if(item.getTotalAmount() != 0){
+                return false;
+            }
+        }while(iterator.hasNext());
+        return true;
     }
 
     //1. list
@@ -689,6 +700,7 @@ public class DonationMaintenance {
                         MessageUI.displayDonorStatusUnsuccessfulMessage();
                     }
                 } else {
+                    donationUI.printText("This contact number not found, please register as a donor.");
                     donor = registeredNewDonor(contact, donors);
                     newDonation.setDonor(donor);
                     donors.add(donor);
@@ -793,7 +805,7 @@ public class DonationMaintenance {
                     String id = donationUI.getInputString("Item Id: ");
                     Item item = CommonUse.findItem(id, currentDonation.getDonatedItemList());
                     if (item != null) {
-                        processItemDetailsAmended(item, items, currentDonation);
+                        processItemDetailsAmended(item, items, currentDonation, donations);
                     } else {
                         donationUI.printText("\nThis Item ID " + id + " Not Found in this donation !" + "\n");
                     }
@@ -807,7 +819,7 @@ public class DonationMaintenance {
         } while (opt != 9);
     }
 
-    public void processItemDetailsAmended(Item item, SortedListSetInterface<Item> items, Donation donation) {
+    public void processItemDetailsAmended(Item item, SortedListSetInterface<Item> items, Donation donation, SortedListSetInterface<Donation> donations) {
         int opt;
         do {
             opt = validateMenuNumberFormatInput(donationUI.getItemAmendedMenu());
@@ -860,6 +872,7 @@ public class DonationMaintenance {
                     break;
             }
             if (opt >= 1 && opt <= 5) {
+                checkDonationStatus(donations);
                 listOneDonation(donation);
             }
         } while (opt < 1 || opt > 5 && opt != 9);

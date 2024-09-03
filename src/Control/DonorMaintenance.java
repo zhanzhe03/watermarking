@@ -520,6 +520,7 @@ public class DonorMaintenance {
                 Donor donor = donorIterator.next();
                 if (donor.getCategory().contains(category) && !selectedDonors.contains(donor)) {
                     double totalDonatedAmount = getTotalDonatedAmountforDonor(donor);
+                    donor.setTotalDonatedAmount(totalDonatedAmount);
 
                     if (totalDonatedAmount > highestTotalDonatedAmount) {
                         highestTotalDonatedAmount = totalDonatedAmount;
@@ -546,11 +547,12 @@ public class DonorMaintenance {
         }
 
         int rank = 1;
+        Donor.setSortByCriteria(Donor.SortByCriteria.TOTALDONATEDAMT_INDESC);
         Iterator<Donor> selectedDonorIterator = selectedDonors.getIterator();
         while (selectedDonorIterator.hasNext()) {
             Donor donor = selectedDonorIterator.next();
-            double totalDonatedAmount = getTotalDonatedAmountforDonor(donor);
-            
+            double totalDonatedAmount = donor.getTotalDonatedAmount();  
+
             if (category.equalsIgnoreCase("Individual")) {
                 donorUI.printText(String.format("[Top %d] : %-10s | %-20s | %-20s | RM%-20.2f",
                         rank,
@@ -558,7 +560,6 @@ public class DonorMaintenance {
                         donor.getName(),
                         donor.getCategory(),
                         totalDonatedAmount));
-
             } else {
                 donorUI.printText(String.format("[Top %d] : %-10s | %-40s | %-30s | RM%-20.2f",
                         rank,
@@ -628,7 +629,7 @@ public class DonorMaintenance {
         return totalNumberOfDonors;
     }
     
-    private double getTotalDonatedAmountforDonor (Donor donor){
+    public double getTotalDonatedAmountforDonor (Donor donor){
         double totalDonatedAmount = 0;
         Iterator<Donation> donationIterator = donor.getDonationList().getIterator();
         donationIterator = donor.getDonationList().getIterator();

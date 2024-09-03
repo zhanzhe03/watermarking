@@ -25,6 +25,7 @@ public class Donor implements Comparable<Donor> , Cloneable{
     private String status; //active,inactive, prospect, banned
     private SortedListSetInterface<Donation> donationList;
     private Date registeredDate;
+    private double totalDonatedAmount;
 
     public Donor() {
         this.donorId = "";
@@ -36,6 +37,7 @@ public class Donor implements Comparable<Donor> , Cloneable{
         this.address = "";
         this.donationList = new SortedDoublyLinkedListSet<>();
         this.status = "";
+        this.totalDonatedAmount= 0;
     }
 
     public Donor(String donorId, String category, String name, String contactPerson, String contact, String email, String address,Date registeredDate, String status) {
@@ -49,6 +51,7 @@ public class Donor implements Comparable<Donor> , Cloneable{
         this.status = status;
         this.registeredDate = registeredDate;
         donationList = new SortedDoublyLinkedListSet<>();
+        this.totalDonatedAmount = 0;
     }
 
     public Donor(String donorId, String category, String name, String contactName, String contact, String email, String address, Date registeredDate) {
@@ -62,6 +65,7 @@ public class Donor implements Comparable<Donor> , Cloneable{
         this.status = "prospect";
         this.registeredDate = registeredDate;
         this.donationList = new SortedDoublyLinkedListSet<>();
+        this.totalDonatedAmount = 0;
     }
 
     public String getDonorId() {
@@ -130,6 +134,7 @@ public class Donor implements Comparable<Donor> , Cloneable{
 
     public void addDonationToList(Donation donation) {
         this.donationList.add(donation);
+        
     }
 
     public String getStatus() {
@@ -148,6 +153,44 @@ public class Donor implements Comparable<Donor> , Cloneable{
         this.registeredDate = registeredDate;
     }
 
+    public double getTotalDonatedAmount() {
+        return totalDonatedAmount;
+    }
+
+    public void setTotalDonatedAmount(double totalDonatedAmount) {
+        this.totalDonatedAmount = totalDonatedAmount;
+    }
+    
+     public static void setSortByCriteria(SortByCriteria criteria) {
+        sortByCriteria = criteria;
+    }
+
+    public static SortByCriteria sortByCriteria = SortByCriteria.DONORID_INASC;
+
+    public enum SortByCriteria {
+        DONORID_INASC,
+        DONORID_INDESC,
+        TOTALDONATEDAMT_INDESC,
+    }
+
+    @Override
+    public int compareTo(Donor other) {
+        if (other == null) {
+            throw new NullPointerException("Cannot compare to a null object");
+        }
+
+        switch (sortByCriteria) {
+            case DONORID_INASC:
+                return this.donorId.compareTo(other.donorId);
+            case DONORID_INDESC:
+                return other.donorId.compareTo(this.donorId);
+            case TOTALDONATEDAMT_INDESC:
+                return Double.compare(other.totalDonatedAmount, this.totalDonatedAmount);
+            default:
+                return this.donorId.compareTo(other.donorId); // Default to ascending by ID
+        }
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;
@@ -175,13 +218,8 @@ public class Donor implements Comparable<Donor> , Cloneable{
                 && Objects.equals(category, other.category)
                 && Objects.equals(status, other.status);
     }
-
-    @Override
-    public int compareTo(Donor other) {
-        return this.donorId.compareTo(other.donorId);
-    }
     
-        @Override
+    @Override
     public Donor clone() {
         try {
             
