@@ -282,7 +282,7 @@ public class DonationUI {
     public String getDonorCategory(){
         System.out.println(""
                 + "\n----------------------------------------------------"
-                + "\nDonor Category"
+                + "\nChoose a Donor Category"
                 + "\n----------------------------------------------------"
                 + "\n 1. Individual"
                 + "\n 2. Public Organisation"

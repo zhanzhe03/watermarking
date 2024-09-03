@@ -700,6 +700,7 @@ public class DonationMaintenance {
                         MessageUI.displayDonorStatusUnsuccessfulMessage();
                     }
                 } else {
+                    donationUI.printText("This contact number not found, please register as a donor.");
                     donor = registeredNewDonor(contact, donors);
                     newDonation.setDonor(donor);
                     donors.add(donor);
