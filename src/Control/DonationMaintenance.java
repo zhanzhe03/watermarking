@@ -470,11 +470,8 @@ public class DonationMaintenance {
     //1. list
     public void ListDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
         donationUI.printTitle("All Donation and Item Records");
-        System.out.println("1");
         Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONID_INASC);
-        System.out.println("2");
         donations.reSort();
-        System.out.println("3");
         listAllDonation(donations);
         int opt;
         do {
@@ -1038,10 +1035,21 @@ public class DonationMaintenance {
                 } while (iterator.hasNext());
                 items.relativeComplement(expiredItems);
                 MessageUI.displaySuccessfulMessage();
+                removedEmptyDonation(donations);
             } else {
                 MessageUI.displayUnsuccessfulMessage();
             }
         }
+    }
+    
+    private void removedEmptyDonation(SortedListSetInterface<Donation> donations){
+        Iterator<Donation> iterator = donations.getIterator();
+        do{
+            Donation donation = iterator.next();
+            if(donation.getDonatedItemList().isEmpty()){
+                donations.remove(donation);
+            }
+        }while(iterator.hasNext());
     }
 
     public void removedAllDonationForDonor(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donor> donors) {
@@ -1282,6 +1290,7 @@ public class DonationMaintenance {
             if (typeOpt != null) {
                 ClearScreen.clearJavaConsoleScreen();
                 donationUI.printText("\n\nAll Donated Item In Type (" + typeOpt + ")");
+
                 printItemsInType(donations, typeOpt);
 
                 MessageUI.displayTextColorExplanation();
@@ -1327,6 +1336,7 @@ public class DonationMaintenance {
             } else {
                 numberOfEntries += printStockItem(donation.getDonatedItemList(), type);
             }
+
         } while (iterator.hasNext());
         donationUI.printItemEnDash();
         donationUI.printText("\nTotal Number of Item in " + type + " > " + numberOfEntries + "\n");
@@ -1356,6 +1366,7 @@ public class DonationMaintenance {
                     count++;
                 }
             }
+
         } while (iterator.hasNext());
         return count;
     }
