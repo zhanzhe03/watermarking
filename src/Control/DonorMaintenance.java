@@ -245,7 +245,6 @@ public class DonorMaintenance {
         String newContact;
         String newEmail;
         String newAddress;
-        String newStatus = "";
         boolean contLoop = false;
         do{
         Donor foundDonor = searchDonorID(donors);
@@ -324,30 +323,20 @@ public class DonorMaintenance {
                     break;
                     
                 case 6:
-                    newStatus = setDonorStatus();
-                    
-                    YesNo = donorUI.getConfirmation("update");
-                    if (YesNo.equalsIgnoreCase("y")) {
-                        foundDonor.setStatus(newStatus);
-                        updatedDonorInfo(foundDonor);
-                    } else {
-                        donorUI.printText("Update cancelled.");
-                    }
-                    break;
-
-                case 7:
                     String newCategory = setDonorCategory();
                     YesNo = donorUI.getConfirmation("update");
                     if (YesNo.equalsIgnoreCase("y")) {
+                        if(newCategory.equals("Individual")){
+                            foundDonor.setContactPerson("-");
+                        }
                         foundDonor.setCategory(newCategory);
                         updatedDonorInfo(foundDonor);
                     } else {
                         donorUI.printText("Update cancelled.");
                     }
                     break;
-                    
-                case 8:
-                    
+
+                case 7:                    
                     break;
                 default:
                     MessageUI.displayInvalidOptionMessage();
@@ -371,6 +360,7 @@ public class DonorMaintenance {
             } while (!yesNo.equalsIgnoreCase("y") && !yesNo.equalsIgnoreCase("n"));
 
         } while (contLoop == true);
+        
     }
 
     private void FilterDonor(SortedListSetInterface<Donor> donors){
@@ -509,6 +499,7 @@ public class DonorMaintenance {
         }
         donationUI.printText("\n\n\n");
         
+        Donor.setSortByCriteria(Donor.SortByCriteria.TOTALDONATEDAMT_INDESC);
         while (selectedDonors.getNumberOfEntries() < 5) {
             Donor highestDonor = null;
             double highestTotalDonatedAmount = 0;
@@ -518,10 +509,10 @@ public class DonorMaintenance {
 
             while (donorIterator.hasNext()) {
                 Donor donor = donorIterator.next();
+                 double totalDonatedAmount = getTotalDonatedAmountforDonor(donor);
+                 donor.setTotalDonatedAmount(totalDonatedAmount);
                 if (donor.getCategory().contains(category) && !selectedDonors.contains(donor)) {
-                    double totalDonatedAmount = getTotalDonatedAmountforDonor(donor);
-                    donor.setTotalDonatedAmount(totalDonatedAmount);
-
+                   
                     if (totalDonatedAmount > highestTotalDonatedAmount) {
                         highestTotalDonatedAmount = totalDonatedAmount;
                         highestDonor = donor;
@@ -547,7 +538,7 @@ public class DonorMaintenance {
         }
 
         int rank = 1;
-        Donor.setSortByCriteria(Donor.SortByCriteria.TOTALDONATEDAMT_INDESC);
+        
         Iterator<Donor> selectedDonorIterator = selectedDonors.getIterator();
         while (selectedDonorIterator.hasNext()) {
             Donor donor = selectedDonorIterator.next();
@@ -574,7 +565,7 @@ public class DonorMaintenance {
         donorUI.printEqualsDash();
 
         printReportFooter();
-        
+        Donor.setSortByCriteria(Donor.SortByCriteria.DONORID_INASC);
     }
     
     private void showReportforNumberOfDonorAndTotalDonatedValuePerCategory(SortedListSetInterface<Donor> donors) {
@@ -1005,39 +996,6 @@ public class DonorMaintenance {
 
         return category;
     }
-   
-   
-   private String setDonorStatus(){
-       String newStatus = "";
-       int opt = 0;
-       do {
-
-           opt = validateNumberFormatInput(donorUI.getDonorStatus());
-
-           if (opt > 4 || opt < 1) {
-               MessageUI.displayInvalidOptionMessage();
-           }
-           
-       } while (opt > 4 || opt < 1);
-
-       switch (opt) {
-           case 1:
-               newStatus = "Active";
-               break;
-           case 2:
-               newStatus = "Inactive";
-               break;
-           case 3:
-               newStatus = "Prospect";
-               break;
-           case 4:
-               newStatus = "Banned";
-               break;
-           default:
-               break;
-       }
-       return newStatus;
-   }
    
    private SortedListSetInterface<Donor>  getCategorizedDonorSet(SortedListSetInterface<Donor> donors, String category){
        Iterator<Donor> iterator = donors.getIterator();

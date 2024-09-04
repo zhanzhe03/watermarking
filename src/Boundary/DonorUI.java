@@ -164,7 +164,7 @@ public class DonorUI {
                 + "\n 3. Donor Contact"
                 + "\n 4. Donor Email"
                 + "\n 5. Donor Address"
-                + "\n 6. Donor Status"
+                + "\n 6. Donor Category"
                 + "\n 7. Back"
                 );
           System.out.print("\nopt > ");
