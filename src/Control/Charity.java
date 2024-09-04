@@ -20,7 +20,7 @@ public class Charity {
     private DonationMaintenance donationMaintenance = new DonationMaintenance();
     private DonorMaintenance donorMaintenance = new DonorMaintenance();
     private DoneeMaintenance doneeMaintenance = new DoneeMaintenance();
-    //szewen
+    //szewen2
     private DistributionManager distributionManager = new DistributionManager();
 
     public void runCharityProgram() {
