@@ -284,7 +284,7 @@ public class EntityInitializer {
         donation25.assignItems(item65);
         donation25.assignItems(item66);
         
-        Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2023));
+        Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2023),donee1);
         Distribution distribution2 = new Distribution("DIST002", new Date(3, 1, 2023));
         Distribution distribution3 = new Distribution("DIST003", new Date(12, 2, 2023));
         Distribution distribution4 = new Distribution("DIST004", new Date(25, 3, 2023));
@@ -339,7 +339,7 @@ public class EntityInitializer {
         SelectedItem selectedItem6 = new SelectedItem(item6.getItemId(), 2);
 
         // Add selected item to the distribution
-        distribution1.addDonee(donee1);
+     //   distribution1.addDonee(donee1);
         distribution1.addSelectedItem(selectedItem1);
         distribution1.addSelectedItem(selectedItem2);
         

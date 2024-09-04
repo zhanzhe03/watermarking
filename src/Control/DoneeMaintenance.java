@@ -169,6 +169,8 @@ public class DoneeMaintenance {
                 MessageUI.displayInvalidContactMessage();
             } else if (contact.startsWith("01") && !contact.startsWith("011") && contact.length() != 10) {
                 MessageUI.displayInvalidContactMessage();
+            } else if (contact.length() > 11) {
+                MessageUI.displayInvalidContactMessage();
             } else if (!contact.matches("\\d+")) {
                 MessageUI.displayInvalidContactMessage();
             } else {
@@ -309,7 +311,7 @@ public class DoneeMaintenance {
                         break;
                     case 3:
                         ClearScreen.clearJavaConsoleScreen();
-                        RemoveDonee(donees);
+                        RemoveDonee(donees, distributions);
                         break;
                     case 4:
                         ClearScreen.clearJavaConsoleScreen();
@@ -345,7 +347,7 @@ public class DoneeMaintenance {
         } while (opt != 9);
     }
 
-    private String printDistributionDetails(String doneeId, Date distributionDate, SortedListSetInterface<SelectedItem> distributedItemList, SortedListSetInterface<Item> donatedItemList) {
+    private String printDistributionDetails(String doneeId, Date distributionDate, SortedListSetInterface<SelectedItem> distributedItemList, SortedListSetInterface<Item> donatedItemList, String status) {
         StringBuilder output = new StringBuilder();
 
         boolean hasPrintedDoneeId = false;
@@ -362,23 +364,27 @@ public class DoneeMaintenance {
             if (!hasPrintedDoneeId) {
                 // Print the Donee ID once
                 output.append(String.format(
-                        "\n%-15s %-30s %-20s %-20s %-10s",
+                        "\n%-15s %-30s %-20s %-20s %-10s %-10s",
                         doneeId, // Donee ID
                         itemType, // Received Item (Item Type)
                         distributionDate, // Receive Date
                         selectedItem.getItemId(), // Item ID
-                        selectedItem.getSelectedQuantity() > 0 ? selectedItem.getSelectedQuantity() : String.format("%.2f", selectedItem.getAmount()) // Quantity/Amount
+
+                        selectedItem.getSelectedQuantity() > 0 ? selectedItem.getSelectedQuantity() : String.format("%.2f", selectedItem.getAmount()),
+                        // Quantity/Amount
+                        status
                 ));
                 hasPrintedDoneeId = true;
             } else {
                 // Print details without Donee ID
                 output.append(String.format(
-                        "\n%-15s %-30s %-20s %-20s %-10s",
+                        "\n%-15s %-30s %-20s %-20s %-10s %-10s",
                         "", // No Donee ID for subsequent items
                         itemType, // Received Item (Item Type)
                         distributionDate, // Receive Date
                         selectedItem.getItemId(), // Item ID
-                        selectedItem.getSelectedQuantity() > 0 ? selectedItem.getSelectedQuantity() : String.format("%.2f", selectedItem.getAmount()) // Quantity/Amount
+                        selectedItem.getSelectedQuantity() > 0 ? selectedItem.getSelectedQuantity() : String.format("%.2f", selectedItem.getAmount()), // Quantity/Amount
+                        status
                 ));
             }
         }
@@ -448,6 +454,56 @@ public class DoneeMaintenance {
         }
 
         return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
+    }
+
+    private boolean isPendingDonee(SortedListSetInterface<Distribution> distributions, Donee foundOneDonee) {
+        // Create an iterator for the distributions
+        Iterator<Distribution> distributionIterator = distributions.getIterator();
+
+        // Create a new SortedListSetInterface to keep track of distributions that contain the foundOneDonee
+        SortedListSetInterface<Distribution> distributionsToRemove = new SortedDoublyLinkedListSet<>(); // Assuming SortedListSet is your implementation of SortedListSetInterface
+
+        // Boolean flag to track if any removal occurred
+        boolean isRemoved = false;
+
+        // Check each distribution
+        while (distributionIterator.hasNext()) {
+            Distribution distribution = distributionIterator.next();
+
+            // Check if the donee is part of this distribution
+            if (distribution.getDistributedDoneeList().contains(foundOneDonee)) {
+                // Check if the distribution status is "shipping"
+                if ("shipping".equalsIgnoreCase(distribution.getStatus())) {
+                    // Inform the user about the situation
+                    doneeUI.printText("The donee with ID: " + foundOneDonee.getDoneeId() + " is part of a distribution that is currently shipping.");
+
+                    // Ask for confirmation to delete
+                    String userResponse = doneeUI.confirmOperation();
+
+                    if ("Y".equalsIgnoreCase(userResponse)) {
+                        // Mark this distribution for removal
+                        distributionsToRemove.add(distribution);
+                    }
+                }
+            }
+        }
+
+        // Remove the found donee and its associated distributions if confirmed
+        if (!distributionsToRemove.isEmpty()) {
+            Iterator<Distribution> removeIterator = distributionsToRemove.getIterator();
+            while (removeIterator.hasNext()) {
+                Distribution dist = removeIterator.next();
+                dist.getDistributedDoneeList().remove(foundOneDonee); // Remove the donee from each distribution
+                distributions.remove(dist); // Remove the entire distribution
+            }
+            doneeUI.printText("Donee and associated distributions have been removed.");
+            isRemoved = true; // Set the flag to true if any removals were made
+        } else {
+            doneeUI.printText("No distributions were removed.");
+        }
+
+        // Return true if any distribution was removed, otherwise return false
+        return isRemoved;
     }
 
     private boolean isInRange(String doneeID, String startID, String endID) {
@@ -786,7 +842,7 @@ public class DoneeMaintenance {
         } while (true);
     }
 
-    public void RemoveDonee(SortedListSetInterface<Donee> donees) {
+    public void RemoveDonee(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions) {
         SortedListSetInterface<Donee> foundDonee;
         int choose;
         boolean validInput = false;
@@ -805,23 +861,30 @@ public class DoneeMaintenance {
                 // Remove Donee by ID
                 String inputID = doneeUI.getDoneeID();
                 Donee foundOneDonee = findDoneeID(donees, inputID);
+
                 if (foundOneDonee != null) {
+                    // Check if the donee is part of any distribution with the status "shipping"
+                    boolean isPending = isPendingDonee(distributions, foundOneDonee);
+
                     doneeUI.printText("Donee(s) found:\n\n");
                     doneeUI.printDoneeTitle();
                     doneeUI.displayEnDash();
                     doneeUI.printText(foundOneDonee.toString());
-                    String yesNo = doneeUI.confirmOperation();
-                    if (yesNo.equalsIgnoreCase("Y")) {
-                        donees.remove(foundOneDonee);
-                        doneeUI.printText("Donee(s) with ID: " + inputID + " have been removed successfully.");
-                    } else {
-                        doneeUI.printText("Removal cancelled.");
+
+                    // If not part of a "shipping" distribution, prompt for removal confirmation
+                    if (!isPending) {
+                        String yesNo = doneeUI.confirmOperation();
+                        if (yesNo.equalsIgnoreCase("Y")) {
+                            donees.remove(foundOneDonee);
+                            doneeUI.printText("Donee(s) with ID: " + inputID + " have been removed successfully.");
+                        } else {
+                            doneeUI.printText("Removal cancelled.");
+                        }
                     }
                 } else {
                     doneeUI.printText("\n\nNo results found for ID: " + inputID + "\n\n");
                 }
                 break;
-
             //remove from location;
             case 2:
                 String doneeLocation = inputLocation();
@@ -971,7 +1034,8 @@ public class DoneeMaintenance {
                 String doneeId = donee.getDoneeId();
                 Date date = distribution.getDistributionDate();
                 SortedListSetInterface<SelectedItem> item = distribution.getDistributedItemList();
-                String outputStr = printDistributionDetails(doneeId, date, item, donatedItemList);
+                String status = distribution.getStatus();
+                String outputStr = printDistributionDetails(doneeId, date, item, donatedItemList, status);
                 doneeUI.printText(outputStr);
             }
         }
