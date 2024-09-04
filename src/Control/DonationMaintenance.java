@@ -466,15 +466,15 @@ public class DonationMaintenance {
             }
         } while (iterator.hasNext());
     }
-    
-    private boolean checkFullyDistribute(SortedListSetInterface<Item> items){
+
+    private boolean checkFullyDistribute(SortedListSetInterface<Item> items) {
         Iterator<Item> iterator = items.getIterator();
-        do{
+        do {
             Item item = iterator.next();
-            if(item.getTotalAmount() != 0){
+            if (item.getTotalAmount() != 0) {
                 return false;
             }
-        }while(iterator.hasNext());
+        } while (iterator.hasNext());
         return true;
     }
 
@@ -700,7 +700,7 @@ public class DonationMaintenance {
                         MessageUI.displayDonorStatusUnsuccessfulMessage();
                     }
                 } else {
-                    donationUI.printText("This contact number not found, please register as a donor.");
+                    donationUI.printText("\nThis contact number not found, please register as a new donor.");
                     donor = registeredNewDonor(contact, donors);
                     newDonation.setDonor(donor);
                     donors.add(donor);
@@ -1054,15 +1054,15 @@ public class DonationMaintenance {
             }
         }
     }
-    
-    private void removedEmptyDonation(SortedListSetInterface<Donation> donations){
+
+    public void removedEmptyDonation(SortedListSetInterface<Donation> donations) {
         Iterator<Donation> iterator = donations.getIterator();
-        do{
+        do {
             Donation donation = iterator.next();
-            if(donation.getDonatedItemList().isEmpty()){
+            if (donation.getDonatedItemList().isEmpty()) {
                 donations.remove(donation);
             }
-        }while(iterator.hasNext());
+        } while (iterator.hasNext());
     }
 
     public void removedAllDonationForDonor(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donor> donors) {
@@ -1201,18 +1201,21 @@ public class DonationMaintenance {
     }
 
     public void filterByDonor(Donor donor, SortedListSetInterface<Donation> donations, SortedListSetInterface<Donation> donationForOneDonor, SortedListSetInterface<Item> itemForOneDonor) {
+        Donation donorOfDonation = null;
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
             if (donation.getDonor().equals(donor)) {
                 donationForOneDonor.add(donation);
                 itemForOneDonor.merge(donation.getDonatedItemList());
+                donorOfDonation = donation;
             }
         } while (iterator.hasNext());
 
         if (!donationForOneDonor.isEmpty()) {
             listAllDonation(donationForOneDonor);
-            donationUI.printText("Total Value: RM" + getTotalValue(itemForOneDonor) + "\n");
+            donationUI.printDonorMade(donorOfDonation);
+            donationUI.printText("Total Value Donated: RM" + getTotalValue(itemForOneDonor) + "\n");
         } else {
             donationUI.printText("\nNo donation record for this donor !!\n");
         }
@@ -1364,14 +1367,12 @@ public class DonationMaintenance {
             if (type.equalsIgnoreCase("Food and Beverage") && item.getType().equalsIgnoreCase(type)) {
                 SortedListSetInterface<Item> expiredItems = new SortedDoublyLinkedListSet<>();
                 filterByExpiredItem(itemsInDonation, expiredItems);
-                if (!expiredItems.isEmpty()) {
-                    if (expiredItems.contains(item)) {
-                        MessageUI.displayExpiredItemInRedColor(item);
-                        count++;
-                    } else {
-                        donationUI.printOneItem(item);
-                        count++;
-                    }
+                if (expiredItems.contains(item)) {
+                    MessageUI.displayExpiredItemInRedColor(item);
+                    count++;
+                } else {
+                    donationUI.printOneItem(item);
+                    count++;
                 }
             } else {
                 if (item.getType().equalsIgnoreCase(type)) {
