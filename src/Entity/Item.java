@@ -4,6 +4,8 @@
  */
 package Entity;
 
+import java.util.Objects;
+
 /**
  *
  * @author Chew Zhan Zhe
@@ -178,6 +180,45 @@ public class Item implements Comparable<Item>, Cloneable {
                 : (quantity != 0)
                         ? String.format("%-10s  %-24s  %-19s  %8d  %17.2f  %15.2f  %14s", itemId, type, desc, quantity, valuePerItem, totalAmount, "-")
                         : String.format("%-10s  %-24s  %-19s  %8s  %17s  %15.2f  %14s", itemId, type, desc, "-", "-", totalAmount, "-");
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Item other = (Item) obj;
+        if (this.quantity != other.quantity) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.valuePerItem) != Double.doubleToLongBits(other.valuePerItem)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.totalAmount) != Double.doubleToLongBits(other.totalAmount)) {
+            return false;
+        }
+        if (!Objects.equals(this.itemId, other.itemId)) {
+            return false;
+        }
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        if (!Objects.equals(this.desc, other.desc)) {
+            return false;
+        }
+        return Objects.equals(this.expiryDate, other.expiryDate);
     }
 
 }

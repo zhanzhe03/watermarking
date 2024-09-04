@@ -89,12 +89,12 @@ public class StockUI {
         Iterator<Item> iterator = itemsInDonation.getIterator();
         do {
             Item item = iterator.next();
-            if (item.getType().equalsIgnoreCase("Food and Beverage")) {
+            if (item.getType().equalsIgnoreCase("Food and Beverage") && type.equalsIgnoreCase(item.getType())) {
                 if (getCurrentDate().beforeDate(item.getExpiryDate())) {
                     qty += item.getQuantity();
                 }
             } else {
-                if (item.getType().equalsIgnoreCase(type)) {
+                if (item.getType().equalsIgnoreCase(type) && !item.getType().equalsIgnoreCase("Food and Beverage")) {
                     qty += item.getQuantity();
                 }
             }

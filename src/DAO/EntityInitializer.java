@@ -172,8 +172,8 @@ public class EntityInitializer {
         Item item46 = new Item("I046", "Medical", "Wheelchair", 1, 300);
         Item item47 = new Item("I047", "Electronic", "Ipad", 2, 1300);
         Item item48 = new Item("I048", "Monetary", "Cash", 800);
-        Item item49 = new Item("I049", "Food and Beverage", "Packaged Snacks", 0, 5, new Date(28, 8, 2024));
-        Item item50 = new Item("I050", "Electronic", "Accessories", 0, 100);
+        Item item49 = new Item("I049", "Food and Beverage", "Packaged Snacks", 20, 5, new Date(28, 8, 2024));
+        Item item50 = new Item("I050", "Electronic", "Accessories", 10, 100);
         Item item51 = new Item("I051", "Food and Beverage", "Water Bottle", 50, 1.20, new Date(7, 5, 2024));
         Item item52 = new Item("I052", "Monetary", "Online Transfers", 3000);
         Item item53 = new Item("I053", "Household Items", "Table", 20, 20);

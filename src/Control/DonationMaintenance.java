@@ -458,7 +458,7 @@ public class DonationMaintenance {
         Iterator<Donation> iterator = donations.getIterator();
         do {
             Donation donation = iterator.next();
-            boolean isFullyDistributed = false;
+            boolean isFullyDistributed = checkFullyDistribute(donation.getDonatedItemList());
             if (donation.getStatus().equalsIgnoreCase("Pending") && !donation.getDonationDate().withinTwoDays(getCurrentDate())) {
                 donation.setStatus("Processing");
             } else if (!donation.getStatus().equalsIgnoreCase("Fully Distributed") && isFullyDistributed) {
@@ -466,15 +466,23 @@ public class DonationMaintenance {
             }
         } while (iterator.hasNext());
     }
+    
+    private boolean checkFullyDistribute(SortedListSetInterface<Item> items){
+        Iterator<Item> iterator = items.getIterator();
+        do{
+            Item item = iterator.next();
+            if(item.getTotalAmount() != 0){
+                return false;
+            }
+        }while(iterator.hasNext());
+        return true;
+    }
 
     //1. list
     public void ListDonation(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items) {
         donationUI.printTitle("All Donation and Item Records");
-        System.out.println("1");
         Donation.setSortByCriteria(Donation.SortByCriteria.DONATIONID_INASC);
-        System.out.println("2");
         donations.reSort();
-        System.out.println("3");
         listAllDonation(donations);
         int opt;
         do {
@@ -692,6 +700,7 @@ public class DonationMaintenance {
                         MessageUI.displayDonorStatusUnsuccessfulMessage();
                     }
                 } else {
+                    donationUI.printText("This contact number not found, please register as a donor.");
                     donor = registeredNewDonor(contact, donors);
                     newDonation.setDonor(donor);
                     donors.add(donor);
@@ -796,7 +805,7 @@ public class DonationMaintenance {
                     String id = donationUI.getInputString("Item Id: ");
                     Item item = CommonUse.findItem(id, currentDonation.getDonatedItemList());
                     if (item != null) {
-                        processItemDetailsAmended(item, items, currentDonation);
+                        processItemDetailsAmended(item, items, currentDonation, donations);
                     } else {
                         donationUI.printText("\nThis Item ID " + id + " Not Found in this donation !" + "\n");
                     }
@@ -810,7 +819,7 @@ public class DonationMaintenance {
         } while (opt != 9);
     }
 
-    public void processItemDetailsAmended(Item item, SortedListSetInterface<Item> items, Donation donation) {
+    public void processItemDetailsAmended(Item item, SortedListSetInterface<Item> items, Donation donation, SortedListSetInterface<Donation> donations) {
         int opt;
         do {
             opt = validateMenuNumberFormatInput(donationUI.getItemAmendedMenu());
@@ -863,6 +872,7 @@ public class DonationMaintenance {
                     break;
             }
             if (opt >= 1 && opt <= 5) {
+                checkDonationStatus(donations);
                 listOneDonation(donation);
             }
         } while (opt < 1 || opt > 5 && opt != 9);
@@ -1038,10 +1048,21 @@ public class DonationMaintenance {
                 } while (iterator.hasNext());
                 items.relativeComplement(expiredItems);
                 MessageUI.displaySuccessfulMessage();
+                removedEmptyDonation(donations);
             } else {
                 MessageUI.displayUnsuccessfulMessage();
             }
         }
+    }
+    
+    private void removedEmptyDonation(SortedListSetInterface<Donation> donations){
+        Iterator<Donation> iterator = donations.getIterator();
+        do{
+            Donation donation = iterator.next();
+            if(donation.getDonatedItemList().isEmpty()){
+                donations.remove(donation);
+            }
+        }while(iterator.hasNext());
     }
 
     public void removedAllDonationForDonor(SortedListSetInterface<Donation> donations, SortedListSetInterface<Item> items, SortedListSetInterface<Donor> donors) {
@@ -1282,6 +1303,7 @@ public class DonationMaintenance {
             if (typeOpt != null) {
                 ClearScreen.clearJavaConsoleScreen();
                 donationUI.printText("\n\nAll Donated Item In Type (" + typeOpt + ")");
+
                 printItemsInType(donations, typeOpt);
 
                 MessageUI.displayTextColorExplanation();
@@ -1327,6 +1349,7 @@ public class DonationMaintenance {
             } else {
                 numberOfEntries += printStockItem(donation.getDonatedItemList(), type);
             }
+
         } while (iterator.hasNext());
         donationUI.printItemEnDash();
         donationUI.printText("\nTotal Number of Item in " + type + " > " + numberOfEntries + "\n");
@@ -1356,6 +1379,7 @@ public class DonationMaintenance {
                     count++;
                 }
             }
+
         } while (iterator.hasNext());
         return count;
     }
