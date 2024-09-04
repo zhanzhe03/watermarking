@@ -165,7 +165,8 @@ public class DonorUI {
                 + "\n 4. Donor Email"
                 + "\n 5. Donor Address"
                 + "\n 6. Donor Category"
-                + "\n 7. Back"
+                + "\n 7. Donor Status to Banned"
+                + "\n 8. Back"
                 );
           System.out.print("\nopt > ");
         String opt = scanner.nextLine();

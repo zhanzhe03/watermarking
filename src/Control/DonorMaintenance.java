@@ -336,7 +336,17 @@ public class DonorMaintenance {
                     }
                     break;
 
-                case 7:                    
+                case 7:
+                    YesNo = donorUI.getConfirmation("update");
+                    if (YesNo.equalsIgnoreCase("y")) {               
+                        foundDonor.setStatus("Banned");
+                        updatedDonorInfo(foundDonor);
+                    } else {
+                        donorUI.printText("Update cancelled.");
+                    }                   
+                    break;
+                    
+                case 8:
                     break;
                 default:
                     MessageUI.displayInvalidOptionMessage();
@@ -363,89 +373,88 @@ public class DonorMaintenance {
         
     }
 
-    private void FilterDonor(SortedListSetInterface<Donor> donors){
+    private void FilterDonor(SortedListSetInterface<Donor> donors) {
         SortedListSetInterface<Donor> categorizedDonors = new SortedDoublyLinkedListSet<>();
         SortedListSetInterface<Donor> categorizedStatus = new SortedDoublyLinkedListSet<>();
 
-        int opt = 0;
-        int choice = 0;
-        do{
-
+        int opt;
+        int choice;
+        do {
             opt = validateNumberFormatInput(donorUI.getFilterCategoryOption());
 
-        
-        switch(opt){
-            case 1:
-                categorizedDonors = getCategorizedDonorSet(donors,"Individual");
-                break;
-            case 2:
-                categorizedDonors = getCategorizedDonorSet(donors,"Organization");
-                break;
-            case 3:
-                categorizedDonors = getCategorizedDonorSet(donors,"Public Organization");
-                break;
-            case 4:
-                categorizedDonors = getCategorizedDonorSet(donors,"Private Organization");
-                break;
-            case 5:
-                categorizedDonors = getCategorizedDonorSet(donors,"Government Organization");
-                break;
-            case 6:
-                categorizedDonors = donors;
-                break;
-            case 7:
-                return;
-            default:
-                MessageUI.displayInvalidOptionMessage();
-                continue;                
-        }
-        
-        do{
-            choice = validateNumberFormatInput(donorUI.getFilterStatusOption());
-            
-            switch(choice){
-                case 1: 
-                categorizedStatus = getCategorizedStatusSet(donors,"Active");
-                break;
-            case 2:
-                categorizedStatus = getCategorizedStatusSet(donors,"Inactive");
-                break;
-            case 3:
-                categorizedStatus = getCategorizedStatusSet(donors,"Prospect");
-                break;
-            case 4:
-                categorizedStatus = getCategorizedStatusSet(donors,"Banned");
-                break;
-            case 5:
-                categorizedStatus = donors;
-                break;
-            case 6:
-                return;
-            default:
-                MessageUI.displayInvalidOptionMessage();
-                continue; 
-                    
+            switch (opt) {
+                case 1:
+                    categorizedDonors = getCategorizedDonorSet(donors, "Individual");
+                    break;
+                case 2:
+                    categorizedDonors = getCategorizedDonorSet(donors, "Organization");
+                    break;
+                case 3:
+                    categorizedDonors = getCategorizedDonorSet(donors, "Public Organization");
+                    break;
+                case 4:
+                    categorizedDonors = getCategorizedDonorSet(donors, "Private Organization");
+                    break;
+                case 5:
+                    categorizedDonors = getCategorizedDonorSet(donors, "Government Organization");
+                    break;
+                case 6:
+                    categorizedDonors = cloneDonorSet(donors); // Clone the original donors set
+                    break;
+                case 7:
+                    return;
+                default:
+                    MessageUI.displayInvalidOptionMessage();
+                    continue;
             }
-            
-            categorizedDonors.intersect(categorizedStatus);
-            if(!categorizedDonors.isEmpty()){
-                donorUI.printText("Filter Result :");
-                donorUI.printDonorEnDash();
-                donorUI.printDonorTitle();
-                donorUI.printDonorEnDash();
-                donorUI.printText(categorizedDonors.toString());
-                donorUI.printDonorEnDash();
-                donorUI.printNumberOfEntries(categorizedDonors);
-            }else{
-                donorUI.printText("No results found for the filter, please try again ! ");
-            }
-            
-            
-        }while(choice > 6 || choice < 1);
-        }while(opt > 7 || opt < 1);
-        
-        
+
+            do {
+                choice = validateNumberFormatInput(donorUI.getFilterStatusOption());
+
+                switch (choice) {
+                    case 1:
+                        categorizedStatus = getCategorizedStatusSet(donors, "Active");
+                        break;
+                    case 2:
+                        categorizedStatus = getCategorizedStatusSet(donors, "Inactive");
+                        break;
+                    case 3:
+                        categorizedStatus = getCategorizedStatusSet(donors, "Prospect");
+                        break;
+                    case 4:
+                        categorizedStatus = getCategorizedStatusSet(donors, "Banned");
+                        break;
+                    case 5:
+                        categorizedStatus = cloneDonorSet(donors); // Clone the original donors set
+                        break;
+                    case 6:
+                        return;
+                    default:
+                        MessageUI.displayInvalidOptionMessage();
+                        continue;
+                }
+
+                SortedListSetInterface<Donor> tempDonors = cloneDonorSet(categorizedDonors); // Clone before intersection
+                tempDonors.intersect(categorizedStatus);
+
+                if (!tempDonors.isEmpty()) {
+                    donorUI.printText("Filter Result:");
+                    donorUI.printDonorEnDash();
+                    donorUI.printDonorTitle();
+                    donorUI.printDonorEnDash();
+                    donorUI.printText(tempDonors.toString());
+                    donorUI.printDonorEnDash();
+                    donorUI.printNumberOfEntries(tempDonors);
+                } else {
+                    donorUI.printText("No results found for the filter, please try again!");
+                }
+
+            } while (choice < 1 || choice > 6);
+
+        } while (opt < 1 || opt > 7);
     }
+
+    
     private void DonorReports(SortedListSetInterface<Donor> donors) {
         int opt = 0;
 
@@ -913,52 +922,50 @@ public class DonorMaintenance {
        return donorId;
    }
     
-   private void removeAllBannedDonors(SortedListSetInterface<Donor> donors){
+    private void removeAllBannedDonors(SortedListSetInterface<Donor> donors) {
         Iterator<Donor> iterator = donors.getIterator();
         SortedListSetInterface<Donor> foundDonors = new SortedDoublyLinkedListSet<>();
-        Iterator<Donor> foundIterator = foundDonors.getIterator();
-   
-       iterator = donors.getIterator();
-       while (iterator.hasNext()) {
-           Donor donor = iterator.next();
-           if (donor.getStatus().equals("Banned")) {
-               foundDonors.add(donor);             
-           }
-       }
-       
-       if(foundDonors != null){
-           donorUI.printText("Search Result : ");
-               donorUI.printDonorTitle();
-               donorUI.printDonorEnDash();              
-               donorUI.printText(foundDonors.toString());
-               donorUI.printDonorEnDash();
-               donorUI.printNumberOfEntries(donors);
-               
-               String YesNo = donorUI.getConfirmation("remove");
-           if (YesNo.equalsIgnoreCase("y")) {
-               foundIterator = foundDonors.getIterator();
-               while (foundIterator.hasNext()) {
-                   Donor donor = foundIterator.next();
-                   donors.remove(donor);
-               }
-               donorUI.printText("All banned donors are removed");
-           } else {
-               donorUI.printText("Update cancelled.");
-           }
 
-       } else {
-           donorUI.printText("\nNo results found for banned Donors \n");
-       }
-   }
-   
-   private void updatedDonorInfo(Donor foundDonor){
-       donorUI.printText("After Update :");
-       donorUI.printDonorTitle();
-       donorUI.printDonorEnDash();
-       donorUI.printText(foundDonor.toString());
-       donorUI.printDonorEnDash();
-   }
-     
+        while (iterator.hasNext()) {
+            Donor donor = iterator.next();
+            if (donor.getStatus().equals("Banned")) {
+                foundDonors.add(donor);
+            }
+        }
+
+        if (!foundDonors.isEmpty()) {
+            donorUI.printText("Search Result:");
+            donorUI.printDonorEnDash();
+            donorUI.printDonorTitle();
+            donorUI.printDonorEnDash();
+            donorUI.printText(foundDonors.toString());
+            donorUI.printDonorEnDash();
+            donorUI.printNumberOfEntries(foundDonors);
+
+            String YesNo = donorUI.getConfirmation("remove");
+            if (YesNo.equalsIgnoreCase("y")) {
+                Iterator<Donor> foundIterator = foundDonors.getIterator();
+                while (foundIterator.hasNext()) {
+                    Donor donor = foundIterator.next();
+                    donors.remove(donor);
+                }
+                donorUI.printText("All banned donors are removed.");
+            } else {
+                donorUI.printText("Update cancelled.");
+            }
+        } else {
+            donorUI.printText("\nNo results found for banned Donors.\n");
+        }
+    }
+
+    private void updatedDonorInfo(Donor foundDonor) {
+        donorUI.printText("After Update :");
+        donorUI.printDonorTitle();
+        donorUI.printDonorEnDash();
+        donorUI.printText(foundDonor.toString());
+        donorUI.printDonorEnDash();
+    }
+
     private String setDonorCategory() {
         int inputType = 0;
         int inputCategory = 0;
@@ -1024,6 +1031,18 @@ public class DonorMaintenance {
        }
        return categorizedDonors;
    }
+   
+    private SortedListSetInterface<Donor> cloneDonorSet(SortedListSetInterface<Donor> originalSet) {
+        SortedListSetInterface<Donor> clonedSet = new SortedDoublyLinkedListSet<>();
+        Iterator<Donor> iterator = originalSet.getIterator();
+
+        while (iterator.hasNext()) {
+            Donor donor = iterator.next();
+                clonedSet.add(donor.clone()); 
+        }
+
+        return clonedSet;
+    }
       
    private void listAllDonation(SortedListSetInterface<Donation> donations) {
         donorUI.printText("Donation History : ");
@@ -1056,7 +1075,7 @@ public class DonorMaintenance {
                 Donation lastDonation = donor.getDonationList().getLastEntries();
                 Date lastDonationDate = lastDonation.getDonationDate();
 
-                if (lastDonationDate.withinPassWeek(currentDate) && !donor.getStatus().equals("Active")) {
+                if (lastDonationDate.withinPassWeek(currentDate) && (donor.getStatus().equals("Inactive") ||donor.getStatus().equals("Prospect") )) {
                     donor.setStatus("Active");
                 } else if (lastDonationDate.moreThanThreeMonthsAgo(currentDate) &&donor.getStatus() .equals("Active")) {
                     donor.setStatus("Inactive");
