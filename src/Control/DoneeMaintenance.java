@@ -902,18 +902,23 @@ public class DoneeMaintenance {
 
     public void RemoveDonee(SortedListSetInterface<Donee> donees, SortedListSetInterface<Distribution> distributions) {
         SortedListSetInterface<Donee> foundDonee;
-        int choose;
+        int choose = 0;
         boolean validInput = false;
 
-        do {
-            doneeUI.displayEnDash();
-            choose = doneeUI.getDoneeDeleteMenu();
-            if (choose >= 1 && choose <= 4) {
-                validInput = true;
-            } else {
-                MessageUI.displayInvalidOptionMessage();
+        while (!validInput) {
+            try {
+                doneeUI.displayEnDash();
+                choose = Integer.parseInt(doneeUI.getDoneeDeleteMenu()); // Ensure input is treated as an integer
+
+                if (choose >= 1 && choose <= 4) {
+                    validInput = true;  // Valid input received
+                } else {
+                    MessageUI.displayInvalidOptionMessage(); // Handle out-of-range values
+                }
+            } catch (NumberFormatException e) {
+                MessageUI.displayInvalidIntegerMessage(); // Handle invalid integer input
             }
-        } while (!validInput);
+        }
 
         doneeUI.displayEnDash();
 
@@ -1039,29 +1044,54 @@ public class DoneeMaintenance {
 
     public void UpdateDonee(SortedListSetInterface<Donee> donees) {
         boolean founded = false;
+        boolean validInput = false;
+        int choose = 0;
         String newLocation;
         Donee targetDonee = null;
         String newName;
         String newContact;
         String inputID;
 
-        do {
+        while (!founded) {
+            doneeUI.displayEnDash();
+
+            // Get Donee ID from the user
             inputID = doneeUI.getDoneeID();
+
+            // Attempt to find the Donee
             Donee foundDonees = findDoneeID(donees, inputID);
+
             if (foundDonees != null) {
                 targetDonee = foundDonees;
-                founded = true;
+                founded = true;  // Exit the loop if donee is found
             } else {
-                doneeUI.printText("Donee with ID " + inputID + " not found");
+                doneeUI.printText("Donee with ID " + inputID + " not found. Returning to menu...");
+                return;  // Exit the method to return to the menu
             }
-        } while (!founded);
+        }
 
         if (founded) {
             boolean continueUpdating;
             do {
-                // Display update menu and perform updates based on user choice
-                int choose = doneeUI.getDoneeUpdateMenu();
-                doneeUI.displayEnDash();
+                while (!validInput) {
+                    doneeUI.displayEnDash();
+
+                    try {
+                        // Attempt to parse the input to an integer
+                        choose = Integer.parseInt(doneeUI.getDoneeUpdateMenu());
+
+                        // Check if the input falls within the valid range
+                        if (choose >= 1 && choose <= 5) {
+                            validInput = true;  // Valid input received, exit loop
+                        } else {
+                            // Display a message if the input is out of range
+                            MessageUI.displayInvalidOptionMessage();
+                        }
+                    } catch (NumberFormatException e) {
+                        // Display a message if the input is not a valid integer
+                        MessageUI.displayInvalidIntegerMessage();
+                    }
+                }
 
                 switch (choose) {
                     case 1:

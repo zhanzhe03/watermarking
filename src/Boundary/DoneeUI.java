@@ -78,7 +78,7 @@ public class DoneeUI {
         return opt;
     }
 
-    public int getDoneeDeleteMenu() {
+    public String getDoneeDeleteMenu() {
         System.out.println(""
                 + "\nDONEE DELETE MANAGEMENT"
                 + "\n 1. Donee ID"
@@ -86,12 +86,11 @@ public class DoneeUI {
                 + "\n 3. Donee Range"
                 + "\n 4. Back to Donee MENU");
         System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
 
-    public int getDoneeUpdateMenu() {
+    public String getDoneeUpdateMenu() {
         System.out.println(""
                 + "\nDONEE UPDATE MANAGEMENT"
                 + "\n 1. Donee Name"
@@ -100,8 +99,7 @@ public class DoneeUI {
                 + "\n 4. Donee Request"
                 + "\n 5. BACK to Donee MENU");
         System.out.print("\nopt > ");
-        int opt = scanner.nextInt();
-        scanner.nextLine();
+        String opt = scanner.nextLine();
         return opt;
     }
 
