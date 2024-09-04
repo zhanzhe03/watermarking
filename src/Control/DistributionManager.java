@@ -97,7 +97,7 @@ public class DistributionManager {
         } while (opt != 9);
     }
 
-    private void updateDistributionStatus(SortedListSetInterface<Distribution> distributions) {
+    public void updateDistributionStatus(SortedListSetInterface<Distribution> distributions) {
         Date currentDate = new Date(localDay, localMonth, localYear); // Assume localDay, localMonth, and localYear are properly initialized
         Iterator<Distribution> iterator = distributions.getIterator();
 

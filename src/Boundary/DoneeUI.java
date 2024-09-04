@@ -230,7 +230,7 @@ public class DoneeUI {
     }
 
     public String confirmOperation() {
-        System.out.println("Confirm to perform this operation ? (Y = Yes)");
+        System.out.println("\nConfirm to perform this operation ? (Y = Yes)");
         System.out.print("Opt >");
         String yesNo = scanner.nextLine();
         return yesNo;

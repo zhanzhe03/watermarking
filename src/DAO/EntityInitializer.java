@@ -284,11 +284,11 @@ public class EntityInitializer {
         donation25.assignItems(item65);
         donation25.assignItems(item66);
         
-        Distribution distribution1 = new Distribution("DIST001", new Date(1, 1, 2023),donee1);
-        Distribution distribution2 = new Distribution("DIST002", new Date(3, 1, 2023));
-        Distribution distribution3 = new Distribution("DIST003", new Date(12, 2, 2023));
-        Distribution distribution4 = new Distribution("DIST004", new Date(25, 3, 2023));
-        Distribution distribution5 = new Distribution("DIST005", new Date(1, 4, 2023));
+        Distribution distribution1 = new Distribution("DIST001", new Date(1, 9, 2024),donee1);
+        Distribution distribution2 = new Distribution("DIST002", new Date(3, 5, 2024));
+        Distribution distribution3 = new Distribution("DIST003", new Date(3, 6, 2024));
+        Distribution distribution4 = new Distribution("DIST004", new Date(3, 7, 2024));
+        Distribution distribution5 = new Distribution("DIST005", new Date(3, 3, 2024));
         Distribution distribution6 = new Distribution("DIST006", new Date(1, 9, 2023));
         Distribution distribution8 = new Distribution("DIST008", new Date(1, 11, 2023));
         Distribution distribution9 = new Distribution("DIST009", new Date(18, 12, 2023));
@@ -299,8 +299,8 @@ public class EntityInitializer {
         Distribution distribution14 = new Distribution("DIST014", new Date(17, 5, 2024));
         Distribution distribution15 = new Distribution("DIST015", new Date(17, 5, 2024));
         Distribution distribution16 = new Distribution("DIST016", new Date(25, 6, 2024));
-        Distribution distribution18 = new Distribution("DIST018", new Date(1, 7, 2024));
-        Distribution distribution19 = new Distribution("DIST019", new Date(1, 7, 2024));
+        Distribution distribution18 = new Distribution("DIST018", new Date(4, 9, 2024));
+        Distribution distribution19 = new Distribution("DIST019", new Date(4, 9, 2024));
         Distribution distribution20 = new Distribution("DIST020", new Date(21, 7, 2024));
         
         Distribution distribution22 = new Distribution("DIST022", new Date(25, 7, 2024));

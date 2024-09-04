@@ -456,54 +456,112 @@ public class DoneeMaintenance {
         return foundDonees.getNumberOfEntries() > 0 ? foundDonees : null;
     }
 
-    private boolean isPendingDonee(SortedListSetInterface<Distribution> distributions, Donee foundOneDonee) {
-        // Create an iterator for the distributions
-        Iterator<Distribution> distributionIterator = distributions.getIterator();
+    private boolean isAnyShippedDonee(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> donees) {
+        // Set to hold donees with shipped distributions
+        SortedListSetInterface<Donee> doneesWithShippedDistribution = new SortedDoublyLinkedListSet<>();
 
-        // Create a new SortedListSetInterface to keep track of distributions that contain the foundOneDonee
-        SortedListSetInterface<Distribution> distributionsToRemove = new SortedDoublyLinkedListSet<>(); // Assuming SortedListSet is your implementation of SortedListSetInterface
+        // Iterate over each donee in the collection
+        Iterator<Donee> doneeIterator = donees.getIterator();
+        while (doneeIterator.hasNext()) {
+            Donee donee = doneeIterator.next();
+            // Check if this donee is part of any shipped distribution
+            if (isShippedDonee(distributions, donee)) {
+                doneesWithShippedDistribution.add(donee);
+            }
+        }
 
-        // Boolean flag to track if any removal occurred
-        boolean isRemoved = false;
+        // Return true if there are any donees with shipped distributions
+        return !doneesWithShippedDistribution.isEmpty();
+    }
 
-        // Check each distribution
-        while (distributionIterator.hasNext()) {
-            Distribution distribution = distributionIterator.next();
+    private void removeShippedDistributions(SortedListSetInterface<Distribution> distributions, SortedListSetInterface<Donee> doneesWithShippedDistribution) {
 
-            // Check if the donee is part of this distribution
-            if (distribution.getDistributedDoneeList().contains(foundOneDonee)) {
-                // Check if the distribution status is "shipping"
-                if ("shipping".equalsIgnoreCase(distribution.getStatus())) {
-                    // Inform the user about the situation
-                    doneeUI.printText("The donee with ID: " + foundOneDonee.getDoneeId() + " is part of a distribution that is currently shipping.");
+        // To keep track of distributions that need to be removed
+        SortedListSetInterface<Distribution> distributionsToRemove = new SortedDoublyLinkedListSet<>();
 
-                    // Ask for confirmation to delete
-                    String userResponse = doneeUI.confirmOperation();
-
-                    if ("Y".equalsIgnoreCase(userResponse)) {
-                        // Mark this distribution for removal
+        // Iterate over each donee and determine their associated distributions
+        Iterator<Donee> doneeIterator = doneesWithShippedDistribution.getIterator();
+        while (doneeIterator.hasNext()) {
+            Donee donee = doneeIterator.next();
+            // Use an iterator to go through the distributions
+            Iterator<Distribution> distributionIterator = distributions.getIterator();
+            while (distributionIterator.hasNext()) {
+                Distribution distribution = distributionIterator.next();
+                // Check if the distribution contains the donee
+                if (distribution.getDistributedDoneeList().contains(donee)) {
+                    // Remove the donee from the distribution
+                    distribution.getDistributedDoneeList().remove(donee);
+                    // Mark the distribution for removal if it is now empty
+                    if (distribution.getDistributedDoneeList().isEmpty()) {
                         distributionsToRemove.add(distribution);
                     }
                 }
             }
         }
 
-        // Remove the found donee and its associated distributions if confirmed
-        if (!distributionsToRemove.isEmpty()) {
-            Iterator<Distribution> removeIterator = distributionsToRemove.getIterator();
-            while (removeIterator.hasNext()) {
-                Distribution dist = removeIterator.next();
-                dist.getDistributedDoneeList().remove(foundOneDonee); // Remove the donee from each distribution
-                distributions.remove(dist); // Remove the entire distribution
+        // Remove the marked distributions
+        Iterator<Distribution> removeDistributionIterator = distributionsToRemove.getIterator();
+        while (removeDistributionIterator.hasNext()) {
+            Distribution dist = removeDistributionIterator.next();
+            distributions.remove(dist); // Remove the distribution from the set
+        }
+        doneeUI.printText("Donees and associated distributions have been removed.");
+    }
+
+    private void removeShippedDistributions1(SortedListSetInterface<Distribution> distributions, Donee donee) {
+        // Set to keep track of distributions that need to be removed
+        SortedListSetInterface<Distribution> distributionsToRemove = new SortedDoublyLinkedListSet<>();
+
+        // Use an iterator to go through the distributions
+        Iterator<Distribution> distributionIterator = distributions.getIterator();
+        while (distributionIterator.hasNext()) {
+            Distribution distribution = distributionIterator.next();
+
+            // Check if this distribution contains the donee
+            if (distribution.getDistributedDoneeList().contains(donee)) {
+                // Remove the donee from the distribution
+                distribution.getDistributedDoneeList().remove(donee);
+
+                // If the distribution is empty after removal, mark it for removal
+                if (distribution.getDistributedDoneeList().isEmpty()) {
+                    distributionsToRemove.add(distribution);
+                }
             }
-            doneeUI.printText("Donee and associated distributions have been removed.");
-            isRemoved = true; // Set the flag to true if any removals were made
-        } else {
-            doneeUI.printText("No distributions were removed.");
         }
 
-        // Return true if any distribution was removed, otherwise return false
-        return isRemoved;
+        // Remove the marked distributions
+        Iterator<Distribution> removeDistributionIterator = distributionsToRemove.getIterator();
+        while (removeDistributionIterator.hasNext()) {
+            Distribution dist = removeDistributionIterator.next();
+            distributions.remove(dist); // Remove the distribution from the set
+        }
+
+        doneeUI.printText("Donee and associated distributions have been removed.");
+    }
+
+    private boolean isShippedDonee(SortedListSetInterface<Distribution> distributions, Donee foundOneDonee) {
+        // Create an iterator for the distributions
+
+        Iterator<Distribution> distributionIterator = distributions.getIterator();
+        DistributionManager distManager = new DistributionManager();
+        distManager.updateDistributionStatus(distributions);
+
+        boolean isShippedFound = false; // Track if any "shipped" status is found
+
+        while (distributionIterator.hasNext()) {
+            Distribution distribution = distributionIterator.next();
+            // Check if the donee is part of this distribution
+            if (distribution.getDistributedDoneeList().contains(foundOneDonee)) {
+                // Check if the distribution status is "shipped"
+                if ("shipped".equalsIgnoreCase(distribution.getStatus())) {
+                    isShippedFound = true; // Mark that at least one "shipped" status was found
+                    doneeUI.printText("\nThe donee with ID: " + foundOneDonee.getDoneeId() + " is part of a distribution that is currently shipping.");
+                    break; // Exit early since we've found a shipped distribution
+                }
+            }
+        }
+
+        return isShippedFound;
     }
 
     private boolean isInRange(String doneeID, String startID, String endID) {
@@ -846,6 +904,7 @@ public class DoneeMaintenance {
         SortedListSetInterface<Donee> foundDonee;
         int choose;
         boolean validInput = false;
+
         do {
             doneeUI.displayEnDash();
             choose = doneeUI.getDoneeDeleteMenu();
@@ -855,7 +914,9 @@ public class DoneeMaintenance {
                 MessageUI.displayInvalidOptionMessage();
             }
         } while (!validInput);
+
         doneeUI.displayEnDash();
+
         switch (choose) {
             case 1:
                 // Remove Donee by ID
@@ -863,16 +924,28 @@ public class DoneeMaintenance {
                 Donee foundOneDonee = findDoneeID(donees, inputID);
 
                 if (foundOneDonee != null) {
-                    // Check if the donee is part of any distribution with the status "shipping"
-                    boolean isPending = isPendingDonee(distributions, foundOneDonee);
-
                     doneeUI.printText("Donee(s) found:\n\n");
                     doneeUI.printDoneeTitle();
                     doneeUI.displayEnDash();
                     doneeUI.printText(foundOneDonee.toString());
 
-                    // If not part of a "shipping" distribution, prompt for removal confirmation
-                    if (!isPending) {
+                    // Check if the donee is part of any distribution with the status "shipped"
+                    boolean isShippedFound = isShippedDonee(distributions, foundOneDonee);
+
+                    // If isShippedDonee returns true, it means there are shipped distributions to handle
+                    if (isShippedFound) {
+                        // Ask for removal confirmation if the donee is part of a shipped distribution
+                        String yesNo = doneeUI.confirmOperation();
+                        if (yesNo.equalsIgnoreCase("Y")) {
+                            // Remove the donee and the associated shipped distributions
+                            removeShippedDistributions1(distributions, foundOneDonee);
+                            donees.remove(foundOneDonee);
+                            doneeUI.printText("Donee(s) with ID: " + inputID + " and associated distributions have been removed successfully.");
+                        } else {
+                            doneeUI.printText("Removal cancelled.");
+                        }
+                    } else {
+                        // If no shipped distribution is found, proceed to remove the donee
                         String yesNo = doneeUI.confirmOperation();
                         if (yesNo.equalsIgnoreCase("Y")) {
                             donees.remove(foundOneDonee);
@@ -885,56 +958,82 @@ public class DoneeMaintenance {
                     doneeUI.printText("\n\nNo results found for ID: " + inputID + "\n\n");
                 }
                 break;
-            //remove from location;
+
             case 2:
+                // Remove Donee by Location
                 String doneeLocation = inputLocation();
                 foundDonee = findDoneeLocation(donees, doneeLocation);
 
                 if (foundDonee != null) {
+                    // Display the found donee information
                     doneeUI.printText("Donee(s) found:\n\n");
                     doneeUI.printDoneeTitle();
                     doneeUI.displayEnDash();
                     doneeUI.printText(foundDonee.toString());
 
-                    String yesNo = doneeUI.confirmOperation();
-                    if (yesNo.equalsIgnoreCase("Y")) {
-                        donees.relativeComplement(foundDonee);
-                        doneeUI.printText("Donee(s) with ID: " + doneeLocation + " have been removed successfully.");
-                    } else {
-                        doneeUI.printText("Removal cancelled.");
+                    // Check if any donee in the collection is part of a distribution with the status "shipped"
+                    boolean anyShipped = isAnyShippedDonee(distributions, foundDonee);
+                    if (anyShipped) {
+                        doneeUI.printText("WARNING: Some of these donees are part of distributions that are currently shipping. Removing them will also remove the associated distributions.");
+                    }
+
+                    if (!anyShipped) {
+                        // Prompt for removal confirmation
+                        String yesNo = doneeUI.confirmOperation();
+                        if (yesNo.equalsIgnoreCase("Y")) {
+                            removeShippedDistributions(distributions, foundDonee);
+                            donees.relativeComplement(foundDonee);
+                            doneeUI.printText("Donee(s) with location: " + doneeLocation + " have been removed successfully.");
+                        } else {
+                            doneeUI.printText("Removal cancelled.");
+                        }
                     }
                 } else {
-                    doneeUI.printText("\n\nNo results found for : " + doneeLocation + "\n\n");
+                    doneeUI.printText("\n\nNo results found for: " + doneeLocation + "\n\n");
                 }
                 break;
+
             case 3:
-                doneeUI.printText("\nEnter first Donee ID and seconde Donee ID");
+                // Remove Donees by ID Range
+                doneeUI.printText("\nEnter first Donee ID and second Donee ID");
                 doneeUI.displayEnDash();
                 String inputId1 = doneeUI.getDoneeID();
                 String inputId2 = doneeUI.getDoneeID();
                 foundDonee = findDoneeIDInRange(donees, inputId1, inputId2);
 
                 if (foundDonee != null) {
-                    // Display Donee information
+                    // Display the found donee information
                     doneeUI.printText("\nDonees within range from " + inputId1 + " to " + inputId2 + ": \n");
                     doneeUI.printDoneeTitle();
                     doneeUI.displayEnDash();
                     doneeUI.printText("\n" + foundDonee.toString());
+                    doneeUI.displayEnDash();
 
+                    // Check if any donee in the range is part of a distribution with the status "shipped"
+                    boolean anyShipped = isAnyShippedDonee(distributions, foundDonee);
+
+                    if (anyShipped) {
+                        doneeUI.printText("WARNING: Some of these donees are part of distributions that are currently shipping. Removing them will also remove the associated distributions.");
+                    }
+
+                    // Prompt for removal confirmation
                     String yesNo = doneeUI.confirmOperation();
                     if (yesNo.equalsIgnoreCase("Y")) {
+                        // Remove the donees and their associated distributions
+                        removeShippedDistributions(distributions, foundDonee);
                         donees.relativeComplement(foundDonee);
-                        doneeUI.printText("\nDonee(s) with ID: " + inputId1 + " to " + inputId2 + "have been removed successfully.");
+                        doneeUI.printText("\nDonee(s) with ID: " + inputId1 + " to " + inputId2 + " have been removed successfully.");
                     } else {
                         doneeUI.printText("Removal cancelled.");
                     }
                 } else {
-                    doneeUI.printText("\n\nNo results found for : " + inputId1 + "to" + inputId2 + "\n\n");
+                    doneeUI.printText("\n\nNo results found for: " + inputId1 + " to " + inputId2 + "\n\n");
                 }
                 break;
-            case 4:
-                break;
 
+            case 4:
+                // Exit or another operation
+                break;
         }
     }
 
@@ -1023,9 +1122,10 @@ public class DoneeMaintenance {
         doneeUI.displayEnDash();
 
         // Create an iterator for the distributions
+        DistributionManager distManager = new DistributionManager();
+        distManager.updateDistributionStatus(distributions);
         Iterator<Distribution> distributionIterator = distributions.getIterator();
 
-        // Iterate through each distribution
         while (distributionIterator.hasNext()) {
             Distribution distribution = distributionIterator.next();
             Iterator<Donee> doneeIterator = distribution.getDistributedDoneeList().getIterator();
@@ -1039,7 +1139,6 @@ public class DoneeMaintenance {
                 doneeUI.printText(outputStr);
             }
         }
-
         doneeUI.displayEnDash();
         doneeUI.printText("\nNumber of distributions: " + distributions.getNumberOfEntries());
     }
