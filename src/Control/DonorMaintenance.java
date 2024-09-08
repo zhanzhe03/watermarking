@@ -132,8 +132,11 @@ public class DonorMaintenance {
 
         if (YesNo.equalsIgnoreCase("y")) {
             donors.add(newDonor);
+            donorUI.printDonorEnDash();
             donorUI.printDonorTitle();
+            donorUI.printDonorEnDash();
             donorUI.printAllDonors(donors);
+            donorUI.printDonorEnDash();
             donorUI.printText("Donor ID : " + newDonor.getDonorId() + " has been added successfully.");
 
         } else {
@@ -328,6 +331,9 @@ public class DonorMaintenance {
                     if (YesNo.equalsIgnoreCase("y")) {
                         if(newCategory.equals("Individual")){
                             foundDonor.setContactPerson("-");
+                        }else if(newCategory.contains("Organization") && foundDonor.getCategory().equalsIgnoreCase("Individual")){
+                            newContactPerson = getContactName();
+                            foundDonor.setContactPerson(newContactPerson);
                         }
                         foundDonor.setCategory(newCategory);
                         updatedDonorInfo(foundDonor);
@@ -784,6 +790,7 @@ public class DonorMaintenance {
         }
 
         donorUI.printEqualsDash();
+        donorUI.printNumberOfEntries(newDonors);
         printReportFooter();
         }else{
             donorUI.printText("No new registered donor in this month !");
