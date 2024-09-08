@@ -49,12 +49,8 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         this.distributionDate = distributionDate;
         this.distributedItemList = new SortedDoublyLinkedListSet<>();
         this.distributedDoneeList = distributedDoneeList;
-        this.status="MERGED";
+        this.status = "MERGED";
     }
-    
-    
-    
-    
 
     public void addSelectedItem(SelectedItem selectedItem) {
         distributedItemList.add(selectedItem);
@@ -108,8 +104,7 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         this.status = status;
     }
 
-    
-        //get the identifier field for sorting, start
+    //get the identifier field for sorting, start
     public static void setSortByCriteria(SortByCriteria criteria) {
         sortByCriteria = criteria;
     }
@@ -142,47 +137,48 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
         }
     }
 
-
     @Override
-public String toString() {
-    String outputStr = String.format("\n%-20s  %-15s  ", distributionId, distributionDate);
+    public String toString() {
+        StringBuilder outputStr = new StringBuilder();
 
-    if (!distributedDoneeList.isEmpty()) {
+        // Print distribution ID and distribution date
+        outputStr.append(String.format("\n%-20s  %-15s  ", distributionId, distributionDate));
+
+        // Since doneeList is never empty, we check if there are multiple donees
         Iterator<Donee> doneeIterator = distributedDoneeList.getIterator();
         boolean firstDonee = true;
 
         while (doneeIterator.hasNext()) {
             Donee donee = doneeIterator.next();
 
+            // For the first donee, print the donee's ID and location
             if (firstDonee) {
-                outputStr += String.format("%-15s  %-15s  ", donee.getDoneeId(), donee.getLocation());
-                firstDonee = false; // Mark that the first donee location has been printed
+                outputStr.append(String.format("%-15s  %-15s  ", donee.getDoneeId(), donee.getLocation()));
+                firstDonee = false;
+                outputStr.append(String.format("%-20s  %-15s  %-8s", "", "", ""));
+
             } else {
-                outputStr += String.format("\n%-20s  %-15s  ", "", ""); // Print empty space for subsequent donees
-                outputStr += String.format("%-15s  %-15s  ", donee.getDoneeId(),"");
+                outputStr.append(String.format("\n%-20s  %-15s  ", "", "")); // Print empty space for subsequent donees
+                outputStr.append(String.format("%-15s  %-15s  ", donee.getDoneeId(), donee.getLocation()));
+                Iterator<SelectedItem> itemIterator = distributedItemList.getIterator();
+                if (itemIterator.hasNext()) {
+                    SelectedItem item = itemIterator.next();
+                    outputStr.append(String.format("%s", item));
+
+                    while (itemIterator.hasNext()) {
+                        item = itemIterator.next();
+                        outputStr.append(String.format("\n%-20s  %-15s  %-15s  %-15s  ", "", "", "", ""));
+                        outputStr.append(String.format("%s", item));
+                    }
+                }
             }
         }
-    } else {
-        outputStr += String.format("%-15s  %-15s  ", donee.getDoneeId(), donee.getLocation());
+
+        // Append the status of the distribution at the end
+        outputStr.append(String.format("%-15s  ", status));
+
+        return outputStr.toString();
     }
-
-    Iterator<SelectedItem> iterator = distributedItemList.getIterator();
-    if (iterator.hasNext()) {
-        SelectedItem item = iterator.next();
-        outputStr += String.format(item + "");
-
-        while (iterator.hasNext()) {
-            item = iterator.next();
-            outputStr += String.format("\n%-20s  %-15s  %-15s  %-15s  ", "", "", "", "");
-            outputStr += String.format(item + "");
-        }
-    }
-
-    outputStr += String.format("%-15s  ", status);
-
-    return outputStr;
-}
-
 
     public SortedListSetInterface<Donee> getDistributedDoneeList() {
         return distributedDoneeList;
