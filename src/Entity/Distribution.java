@@ -139,46 +139,33 @@ public class Distribution implements Comparable<Distribution> {  //Comparable in
 
     @Override
     public String toString() {
-        StringBuilder outputStr = new StringBuilder();
-
-        // Print distribution ID and distribution date
-        outputStr.append(String.format("\n%-20s  %-15s  ", distributionId, distributionDate));
-
-        // Since doneeList is never empty, we check if there are multiple donees
-        Iterator<Donee> doneeIterator = distributedDoneeList.getIterator();
-        boolean firstDonee = true;
-
-        while (doneeIterator.hasNext()) {
-            Donee donee = doneeIterator.next();
-
-            // For the first donee, print the donee's ID and location
-            if (firstDonee) {
-                outputStr.append(String.format("%-15s  %-15s  ", donee.getDoneeId(), donee.getLocation()));
-                firstDonee = false;
-                outputStr.append(String.format("%-20s  %-15s  %-8s", "", "", ""));
-
-            } else {
-                outputStr.append(String.format("\n%-20s  %-15s  ", "", "")); // Print empty space for subsequent donees
-                outputStr.append(String.format("%-15s  %-15s  ", donee.getDoneeId(), donee.getLocation()));
-                Iterator<SelectedItem> itemIterator = distributedItemList.getIterator();
-                if (itemIterator.hasNext()) {
-                    SelectedItem item = itemIterator.next();
-                    outputStr.append(String.format("%s", item));
-
-                    while (itemIterator.hasNext()) {
-                        item = itemIterator.next();
-                        outputStr.append(String.format("\n%-20s  %-15s  %-15s  %-15s  ", "", "", "", ""));
-                        outputStr.append(String.format("%s", item));
-                    }
-                }
+        String outputStr = String.format("\n%-20s  %-15s  ", distributionId, distributionDate);
+        if (!distributedDoneeList.isEmpty()) {
+            Iterator<Donee> doneeiterator = distributedDoneeList.getIterator();
+            Donee doneeList = doneeiterator.next();
+            outputStr += String.format("%-15s  %-15s  ",doneeList.getDoneeId(),doneeList.getLocation());
+            while (doneeiterator.hasNext()) {
+                doneeList = doneeiterator.next();
+                outputStr += String.format("\n%-20s  %-15s  ", "", "");
+                outputStr += String.format("%-15s  %-15s  ",doneeList.getDoneeId(),doneeList.getLocation());
             }
+        }else{
+            outputStr += String.format("%-15s  %-15s  ",donee.getDoneeId(),donee.getLocation());
         }
 
-        // Append the status of the distribution at the end
-        outputStr.append(String.format("%-15s  ", status));
+        Iterator<SelectedItem> iterator = distributedItemList.getIterator();
+        SelectedItem item = iterator.next();
+        outputStr += String.format(item + "");
+        while (iterator.hasNext()) {
+            item = iterator.next();
+            outputStr += String.format("\n%-20s  %-15s  %-15s  %-15s  ", "", "", "", "");
+            outputStr += String.format(item + "");
+        }
+        outputStr += String.format("%-15s  ", status);
 
-        return outputStr.toString();
+        return outputStr;
     }
+
 
     public SortedListSetInterface<Donee> getDistributedDoneeList() {
         return distributedDoneeList;
