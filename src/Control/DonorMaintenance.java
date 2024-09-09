@@ -32,11 +32,10 @@ public class DonorMaintenance {
         
         public void donorManagement(EntityInitializer entityInitialize) {
         SortedListSetInterface<Donor> donors = entityInitialize.getDonors();
-        SortedListSetInterface<Donor> updatedDonors;
         Donor foundDonor = null;
         int opt = 0;
         do {
-            updatedDonors = checkAndUpdateStatus(donors);
+            donors = checkAndUpdateStatus(donors);
 
                 opt = validateNumberFormatInput(donorUI.getDonorMenu());
 
@@ -44,37 +43,37 @@ public class DonorMaintenance {
                 switch (opt) {
                     case 1:
                         ClearScreen.clearJavaConsoleScreen();
-                        ListAllDonor(updatedDonors);                      
+                        ListAllDonor(donors);                      
                         break;
                     case 2:
                         ClearScreen.clearJavaConsoleScreen();
-                        AddNewDonor(updatedDonors);
+                        AddNewDonor(donors);
                         break;
                     case 3:
                         ClearScreen.clearJavaConsoleScreen();
-                        RemoveDonor(updatedDonors);
+                        RemoveDonor(donors);
                         break;
                     case 4:
                         ClearScreen.clearJavaConsoleScreen();
-                        UpdateDonor(updatedDonors);
+                        UpdateDonor(donors);
                         break;
                     case 5:
                         ClearScreen.clearJavaConsoleScreen();
-                        SearchDonor(updatedDonors);
+                        SearchDonor(donors);
                         break;
                     case 6:
                         ClearScreen.clearJavaConsoleScreen();
-                        FilterDonor(updatedDonors);
+                        FilterDonor(donors);
                         break;  
                     case 7:
                         ClearScreen.clearJavaConsoleScreen();
-                        foundDonor = searchDonorID(updatedDonors);  
+                        foundDonor = searchDonorID(donors);  
                         if(foundDonor != null)
                         listAllDonation(foundDonor.getDonationList());
                         break;                  
                     case 8:
                         ClearScreen.clearJavaConsoleScreen();
-                        DonorReports(updatedDonors);
+                        DonorReports(donors);
                         break;
                     case 9:
                         break;
@@ -1078,15 +1077,25 @@ public class DonorMaintenance {
             Donor donor = donorIterator.next();
 
             // Find the last donation in the donor's donation list
+            if(!donor.getStatus().equals("Banned")){
             if (!donor.getDonationList().isEmpty()) {
                 Donation lastDonation = donor.getDonationList().getLastEntries();
                 Date lastDonationDate = lastDonation.getDonationDate();
 
-                if (lastDonationDate.withinPassWeek(currentDate) && (donor.getStatus().equals("Inactive") ||donor.getStatus().equals("Prospect") )) {
-                    donor.setStatus("Active");
-                } else if (lastDonationDate.moreThanThreeMonthsAgo(currentDate) &&donor.getStatus() .equals("Active")) {
+                if (lastDonationDate.withinPassWeek(currentDate)){
+                    if(donor.getStatus().equalsIgnoreCase("Inactive") || donor.getStatus().equalsIgnoreCase("Prospect")){
+                        donor.setStatus("Active");
+                    }
+                }                 
+                 else if (lastDonationDate.moreThanThreeMonthsAgo(currentDate) && donor.getStatus().equals("Active")) {
                     donor.setStatus("Inactive");
                 }
+                 else if(!lastDonationDate.moreThanThreeMonthsAgo(currentDate) && !lastDonationDate.withinPassWeek(currentDate)){
+                     donor.setStatus("Active");
+                 }
+            }else{
+                donor.setStatus("Prospect");
+            }
             }
         }
         
